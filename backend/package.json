@@ -15,10 +15,18 @@
   "devDependencies": {
     "@types/express": "^5.0.0",
     "@types/node": "^22.13.4",
+    "@types/pg": "^8.11.11",
+    "drizzle-kit": "^0.30.4",
     "tsx": "^4.19.2",
     "typescript": "~5.7.2"
   },
   "dependencies": {
-    "express": "^4.21.2"
+    "@flayva-monorepo/shared": "workspace:*",
+    "@types/dotenv": "^8.2.3",
+    "dotenv": "^16.4.7",
+    "drizzle-orm": "^0.39.3",
+    "express": "^4.21.2",
+    "pg": "^8.13.3",
+    "zod": "^3.24.2"
   }
 }

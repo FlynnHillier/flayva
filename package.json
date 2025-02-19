@@ -15,6 +15,7 @@
   "author": "flynnhillier",
   "license": "ISC",
   "devDependencies": {
+    "@types/node": "^22.13.4",
     "nodemon": "^3.1.9"
   }
 }

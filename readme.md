@@ -10,3 +10,7 @@ Flayva is a food-oriented social media web app, that combines the social emphasi
 1. open a terminal in the cloned directory `cd flayva`
 1. install project dependencies `pnpm install`
 1. test run with `pnpm run start:dev`
+
+### Shared folder
+
+once changes have been made run `pnpnm run build` script in shared folder to build and save changes

@@ -1,5 +1,5 @@
 import dotenv from "dotenv";
-dotenv.config({ path: "./.env.local", debug: true });
+dotenv.config({ path: "./.env.local", debug: true, encoding: "utf8" });
 import { z } from "zod";
 
 /**
@@ -7,6 +7,12 @@ import { z } from "zod";
  */
 const envSchema = z.object({
   PORT: z.coerce.number().min(1000),
+
+  // DATABASE
+  DB_USER: z.string().min(1),
+  DB_PASSWORD: z.string().min(1),
+  DB_HOST: z.string().min(1),
+  DB_PORT: z.coerce.number().default(5432),
 });
 
 /**

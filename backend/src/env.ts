@@ -13,6 +13,9 @@ const envSchema = z.object({
   DB_PASSWORD: z.string().min(1),
   DB_HOST: z.string().min(1),
   DB_PORT: z.coerce.number().default(5432),
+
+  // SERVER
+  CLIENT_ORIGIN: z.string().url().optional(),
 });
 
 /**

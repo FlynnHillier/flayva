@@ -1,5 +1,16 @@
+import { Test } from "@/components/Test";
+import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
+
 function App() {
-  return <>Hello World!</>;
+  const queryClient = new QueryClient();
+
+  return (
+    <>
+      <QueryClientProvider client={queryClient}>
+        <Test />
+      </QueryClientProvider>
+    </>
+  );
 }
 
 export default App;

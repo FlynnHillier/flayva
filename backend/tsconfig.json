@@ -10,7 +10,11 @@
     "strict": true,
     "baseUrl": "./",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["src/*"],
+      "@server/*": ["src/server/*"],
+      "@controllers/*": ["src/server/controllers/*"],
+      "@routes/*": ["src/server/routes/*"],
+      "@middleware/*": ["src/server/middleware/*"]
       // "@config/*": ["./src/constants/config/*"]
     },
     "composite": true,

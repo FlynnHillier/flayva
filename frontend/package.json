@@ -10,6 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@lukemorales/query-key-factory": "^1.3.4",
+    "@tanstack/react-query": "^5.66.9",
     "clsx": "^2.1.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

@@ -1,7 +1,9 @@
 import express, { Request, Response, NextFunction, Application } from "express";
 import indexRouter from "@server/routes/index.route";
 import cors from "cors";
+import session from "express-session";
 import { env } from "@/env";
+import passport from "@auth/passport";
 
 const app: Application = express();
 
@@ -12,6 +14,17 @@ app.use(
 );
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Authentication middleware
+app.use(
+  session({
+    secret: env.SESSION_SECRET ?? "defaultSecret",
+    resave: false,
+    saveUninitialized: false,
+  })
+);
+app.use(passport.initialize());
+app.use(passport.session());
 
 // Register Routes
 app.use("/", indexRouter);

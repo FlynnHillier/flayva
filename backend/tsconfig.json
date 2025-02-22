@@ -14,7 +14,8 @@
       "@server/*": ["src/server/*"],
       "@controllers/*": ["src/server/controllers/*"],
       "@routes/*": ["src/server/routes/*"],
-      "@middleware/*": ["src/server/middleware/*"]
+      "@middleware/*": ["src/server/middleware/*"],
+      "@auth/*": ["src/auth/*"]
       // "@config/*": ["./src/constants/config/*"]
     },
     "composite": true,

@@ -6,7 +6,7 @@ import { z } from "zod";
  * SCHEMA FOR BACKEND ENV VARIABLES
  */
 const envSchema = z.object({
-  PORT: z.coerce.number().min(1000),
+  PORT: z.coerce.number().optional().default(3000),
 
   // DATABASE
   DB_USER: z.string().min(1),
@@ -16,6 +16,11 @@ const envSchema = z.object({
 
   // SERVER
   CLIENT_ORIGIN: z.string().url().optional(),
+
+  // AUTH
+  GOOGLE_CLIENT_ID: z.string().min(1),
+  GOOGLE_CLIENT_SECRET: z.string().min(1),
+  SESSION_SECRET: z.string().min(1).optional(),
 });
 
 /**

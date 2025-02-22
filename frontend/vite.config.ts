@@ -13,6 +13,7 @@ export default defineConfig({
       "@api": path.resolve(__dirname, "src/api"),
       "@queries": path.resolve(__dirname, "src/queries"),
       "@hooks": path.resolve(__dirname, "src/hooks"),
+      "@pages": path.resolve(__dirname, "src/pages"),
     },
   },
 });

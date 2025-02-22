@@ -29,7 +29,8 @@
       "@api/*": ["src/api/*"],
       "@components/*": ["src/components/*"],
       "@queries/*": ["src/queries/*"],
-      "@hooks/*": ["src/hooks/*"]
+      "@hooks/*": ["src/hooks/*"],
+      "@pages/*": ["src/pages/*"]
     }
   },
   "include": ["src"]

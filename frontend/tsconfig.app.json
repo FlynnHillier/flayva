@@ -30,7 +30,9 @@
       "@components/*": ["src/components/*"],
       "@queries/*": ["src/queries/*"],
       "@hooks/*": ["src/hooks/*"],
-      "@pages/*": ["src/pages/*"]
+      "@pages/*": ["src/pages/*"],
+      "@flayva-monorepo/shared": ["../shared/src"],
+      "@lib/*": ["src/lib/*"]
     }
   },
   "include": ["src"]

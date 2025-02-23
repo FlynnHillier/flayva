@@ -7,4 +7,8 @@ export const auth = createQueryKeys("auth", {
     queryFn: () => api.auth.getMe(),
     queryKey: ["auth", "me"],
   }),
+  logout: () => ({
+    queryFn: () => api.auth.logout(),
+    queryKey: ["auth", "logout"],
+  }),
 });

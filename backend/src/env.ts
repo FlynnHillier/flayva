@@ -15,7 +15,7 @@ const envSchema = z.object({
   DB_PORT: z.coerce.number().default(5432),
 
   // SERVER
-  CLIENT_ORIGIN: z.string().url().optional(),
+  CLIENT_ORIGIN: z.string().url(),
 
   // AUTH
   GOOGLE_CLIENT_ID: z.string().min(1),

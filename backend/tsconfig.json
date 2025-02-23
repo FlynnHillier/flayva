@@ -24,6 +24,6 @@
     "sourceMap": true
   },
 
-  "include": ["src/**/*"],
-  "references": [{ "path": "../shared" }]
+  "include": ["src/**/*"]
+  // "references": [{ "path": "../shared" }]
 }

@@ -1,3 +1,4 @@
+import { createClientURL } from "@/lib/utils";
 import { Router, Request, Response } from "express";
 import passport from "passport";
 
@@ -10,7 +11,7 @@ router.get(
   passport.authenticate("google", { failureRedirect: "/" }), //TODO: update to redirect to login page on failure (with error message)
   (req: Request, res: Response) => {
     // Successful authentication
-    res.redirect("http://localhost:5173");
+    res.redirect(createClientURL("/")); // Redirect to home page
   }
 );
 

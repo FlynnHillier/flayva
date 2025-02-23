@@ -3,6 +3,7 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { Routes, Route } from "react-router-dom";
 import { AuthTest } from "@pages/AuthTest";
 import { queryClient } from "@lib/query";
+import { Toaster } from "@components/ui/sonner";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
       <Routes>
         <Route path="/auth" element={<AuthTest />} />
       </Routes>
+      <Toaster />
     </QueryClientProvider>
   );
 }

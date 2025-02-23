@@ -1,14 +1,22 @@
 import { Button } from "@/components/ui/button";
 import { useLogout, useMe } from "@/hooks/auth.hooks";
+import { useGlobalErrorToast } from "@/hooks/error.hooks";
 import { User } from "@flayva-monorepo/shared";
+import { toast } from "sonner";
 
 function TestAuthenticated({ user }: { user: User }) {
-  const { isPending, mutate } = useLogout();
+  const { showErrorToast } = useGlobalErrorToast();
+  const { isPending, mutate } = useLogout({
+    onError: () => showErrorToast("failed to log out!"),
+    onSuccess: () => {
+      toast.success("Logged out!");
+    },
+  });
 
   return (
     <>
       <p className="text-green-800"> Authenticated! - '{user.email}' </p>
-      <Button disabled={isPending} onClick={() => mutate()}>
+      <Button disabled={isPending} onClick={() => mutate(undefined)}>
         Logout
       </Button>
     </>

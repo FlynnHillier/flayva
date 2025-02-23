@@ -10,7 +10,7 @@ router.get(
   passport.authenticate("google", { failureRedirect: "/" }), //TODO: update to redirect to login page on failure (with error message)
   (req: Request, res: Response) => {
     // Successful authentication
-    res.redirect("/");
+    res.redirect("http://localhost:5173");
   }
 );
 

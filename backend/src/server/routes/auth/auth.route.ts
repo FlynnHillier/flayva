@@ -6,7 +6,6 @@ const router: Router = Router();
 router.use("/google", google);
 
 router.get("/me", (req: Request, res: Response) => {
-  console.log(req.isAuthenticated());
   if (req.isAuthenticated()) {
     res.json({ user: req.user });
   } else {

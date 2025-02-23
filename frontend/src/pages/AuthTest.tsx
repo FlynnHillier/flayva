@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import { useMe } from "@/hooks/useMe";
 
 export function AuthTest() {
@@ -14,8 +15,8 @@ export function AuthTest() {
 
   return (
     <>
-      <p>"Not authenticated"</p>
-      <button onClick={handleGoogleLogin}>Login with Google</button>
+      <p className="text-red-700">"Not authenticated"</p>
+      <Button onClick={handleGoogleLogin}>Login with Google</Button>
     </>
   );
 }

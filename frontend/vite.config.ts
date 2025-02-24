@@ -14,6 +14,7 @@ export default defineConfig({
       "@queries": path.resolve(__dirname, "src/queries"),
       "@hooks": path.resolve(__dirname, "src/hooks"),
       "@pages": path.resolve(__dirname, "src/pages"),
+      "@lib": path.resolve(__dirname, "src/lib"),
     },
   },
 });

@@ -1,11 +1,11 @@
 import { Test } from "@/components/Test";
-import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { Routes, Route } from "react-router-dom";
 import { AuthTest } from "@pages/AuthTest";
+import { queryClient } from "@lib/query";
+import { Toaster } from "@components/ui/sonner";
 
 function App() {
-  const queryClient = new QueryClient();
-
   return (
     <QueryClientProvider client={queryClient}>
       <Routes>
@@ -14,6 +14,7 @@ function App() {
       <Routes>
         <Route path="/auth" element={<AuthTest />} />
       </Routes>
+      <Toaster />
     </QueryClientProvider>
   );
 }

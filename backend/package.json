@@ -17,6 +17,8 @@
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
     "@types/node": "^22.13.4",
+    "@types/passport": "^1.0.17",
+    "@types/passport-google-oauth20": "^2.0.16",
     "@types/pg": "^8.11.11",
     "drizzle-kit": "^0.30.4",
     "tsx": "^4.19.2",
@@ -25,10 +27,14 @@
   "dependencies": {
     "@flayva-monorepo/shared": "workspace:*",
     "@types/dotenv": "^8.2.3",
+    "@types/express-session": "^1.18.1",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "drizzle-orm": "^0.39.3",
     "express": "^4.21.2",
+    "express-session": "^1.18.1",
+    "passport": "^0.7.0",
+    "passport-google-oauth20": "^2.0.0",
     "pg": "^8.13.3",
     "postgres": "^3.4.5",
     "zod": "^3.24.2"

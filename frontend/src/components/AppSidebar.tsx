@@ -12,6 +12,7 @@ import {
 import { Circle, Heart, Home, Plus, Search, Text } from "lucide-react";
 import SidebarItems from "./SidebarItems";
 import logo from "../assets/Logo.svg";
+import { useMe } from "@/hooks/auth.hooks";
 
 const items = [
     {
@@ -42,6 +43,7 @@ const items = [
 ]
 
 const AppSidebar = () => {
+  const { data: user, isLoading, error } = useMe();
   return (
     <Sidebar>
         <SidebarHeader className="pl-[44px] pt-20">
@@ -66,7 +68,9 @@ const AppSidebar = () => {
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter className="pl-10 mb-10">
-        <SidebarItems title={"Profile"} url={"#"} icon={Circle} />
+        {!isLoading 
+        && !error 
+        && <SidebarItems title={user?.user?.username === undefined ? "Profile" : user?.user?.username} url={"#"} icon={Circle} />}
       </SidebarFooter>
     </Sidebar>
   )

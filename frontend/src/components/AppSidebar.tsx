@@ -8,10 +8,10 @@ import {
     SidebarMenuButton,
     SidebarFooter,
     SidebarHeader,
-} from "@/components/ui/sidebar"
-import { Circle, Heart, Home, Plus, Search, Text } from "lucide-react"
-import SidebarItems from "./SidebarItems"
-import logo from "../assets/Logo.svg"
+} from "@/components/ui/sidebar";
+import { Circle, Heart, Home, Plus, Search, Text } from "lucide-react";
+import SidebarItems from "./SidebarItems";
+import logo from "../assets/Logo.svg";
 
 const items = [
     {

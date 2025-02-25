@@ -1,22 +1,11 @@
-import { 
-    SidebarTrigger, 
-    SidebarProvider,
-} from "@/components/ui/sidebar";
 import AppSidebar from "@/components/AppSidebar";
+import PostHolder from "@/components/PostHolder";
 
-interface HomePageProps {
-    children?: React.ReactNode;
-}
-
-const HomePage = ({ children }: HomePageProps) => {
+const HomePage = () => {
   return (
-    <SidebarProvider>
-        <AppSidebar />
         <main>
-            <SidebarTrigger />
-            {children}
+          <AppSidebar/>
         </main>
-    </SidebarProvider>
   );
 }
 

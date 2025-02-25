@@ -18,7 +18,7 @@ export default function LogoutPage() {
 
   return (
     <>
-      <p className="text-green-800"> Authenticated! - '{data?.user?.email ?? "-"}' </p>
+      <p className="text-green-800"> Authenticated! - '{data?.user?.username ?? "-"}' </p>
       <Button disabled={isPending} onClick={() => mutate(undefined)}>
         Logout
       </Button>

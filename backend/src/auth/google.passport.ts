@@ -1,5 +1,5 @@
 import { Strategy as GoogleStrategy, Profile, VerifyCallback } from "passport-google-oauth20";
-import { accounts, users } from "@/db/schemas/auth.schema";
+import { account_connections, users } from "@/db/schemas/auth.schema";
 import { and, eq } from "drizzle-orm";
 import { db } from "@/db";
 import { env } from "@/env";
@@ -15,8 +15,13 @@ export const googleStrategy = new GoogleStrategy(
       // Check for an existing account with provider "google" and matching profile ID.
       const existingAccounts = await db
         .select()
-        .from(accounts)
-        .where(and(eq(accounts.provider, "google"), eq(accounts.providerAccountId, profile.id)));
+        .from(account_connections)
+        .where(
+          and(
+            eq(account_connections.provider, "google"),
+            eq(account_connections.providerAccountId, profile.id)
+          )
+        );
 
       if (existingAccounts.length > 0) {
         // An account exists; fetch the corresponding user record.
@@ -27,9 +32,10 @@ export const googleStrategy = new GoogleStrategy(
           const foundUser = usersFound[0];
 
           return done(null, {
-            email: foundUser.email,
             id: foundUser.id,
             username: foundUser.username,
+            bio: foundUser.bio,
+            profile_picture_url: foundUser.profile_picture_url ?? undefined,
           });
         }
         // If for some reason the user is not found, pass an error.
@@ -37,30 +43,32 @@ export const googleStrategy = new GoogleStrategy(
         return done(new Error("User not found for the authenticated account"));
       }
 
-      // Account not found – create a new user.
+      // Account not found; create a new user.
       await db.transaction(async (tx) => {
         const insertedUsers = await tx
           .insert(users)
           .values({
-            username: profile.displayName ?? profile.emails?.[0].value ?? "Unnamed",
-            email: profile.emails?.[0].value,
+            username: profile.displayName,
+            profile_picture_url: profile.photos?.[0].value,
           })
           .returning();
 
         const newUser = insertedUsers[0];
 
-        await tx.insert(accounts).values({
+        await tx.insert(account_connections).values({
           userId: newUser.id,
           provider: "google",
           providerAccountId: profile.id,
+          email: profile.emails?.[0].value,
           accessToken: accessToken,
           refreshToken: refreshToken,
         });
 
         return done(null, {
-          email: newUser.email,
           id: newUser.id,
           username: newUser.username,
+          bio: newUser.bio,
+          profile_picture_url: newUser.profile_picture_url ?? undefined,
         });
       });
     } catch (error) {

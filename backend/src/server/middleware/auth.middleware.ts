@@ -1,25 +1,33 @@
 import { Request, Response, NextFunction } from "express";
+import { CtxRequest, Http } from "suvidha";
+
+export const expressEnsureUnauthenticated = (req: Request, res: Response, next: NextFunction) => {
+  if (req.isAuthenticated()) {
+    res.status(403).send("Forbidden. Forbidden. Already authenticated.");
+  }
+
+  next();
+};
 
 /**
  * Middleware to ensure that the user is authenticated
  */
-export const ensureAuthenticated = (req: Request, res: Response, next: NextFunction) => {
+export const ensureAuthenticated = (req: CtxRequest) => {
   if (req.isAuthenticated()) {
-    return next();
+    return { user: req.user };
   }
 
-  // User is not authenticated, send a 401 response or redirect to login
-  res.status(401).json({ message: "Unauthorized. Please log in." });
+  throw Http.Unauthorized.body({ message: "Unauthorized. Please log in." });
 };
 
 /**
  * Middleware to ensure that the user is not authenticated
  */
-export const ensureNotAuthenticated = (req: Request, res: Response, next: NextFunction) => {
+export const ensureNotAuthenticated = (req: CtxRequest) => {
   if (!req.isAuthenticated()) {
-    return next();
+    return { user: undefined };
   }
 
   // User is authenticated, send a 403 response or redirect to home
-  res.status(403).json({ message: "Forbidden. You are already logged in." });
+  throw Http.Forbidden.body({ message: "Forbidden. Already authenticated." });
 };

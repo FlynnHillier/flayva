@@ -1,13 +1,21 @@
 import { Router, Request, Response } from "express";
 import google from "@server/routes/auth/google.route";
-import { ensureAuthenticated, ensureNotAuthenticated } from "@/server/middleware/auth.middleware";
-import { createClientURL } from "@/lib/utils";
-import { authenticate } from "passport";
+import {
+  expressEnsureUnauthenticated,
+  ensureAuthenticated,
+} from "@/server/middleware/auth.middleware";
+import { suvidha } from "@/server/suvidha";
+import { Http } from "suvidha";
 
 const router: Router = Router();
 
-router.use("/google", ensureNotAuthenticated, google);
+router.use("/google", expressEnsureUnauthenticated, google);
 
+/**
+ * /auth/me
+ *
+ * Return details of the status of authentication for the client
+ */
 router.get("/me", (req: Request, res: Response) => {
   if (req.isAuthenticated()) {
     res.json({
@@ -22,23 +30,33 @@ router.get("/me", (req: Request, res: Response) => {
   }
 });
 
-router.get("/logout", ensureAuthenticated, (req: Request, res: Response) => {
-  req.logout((err) => {
-    if (err) {
-      // TODO: log error
-      return res.status(500).json({ message: "Failed to log out" });
-    }
+/**
+ * /auth/logout
+ *
+ * Log out the user if they are authenticated
+ */
+router.get(
+  "/logout",
+  suvidha()
+    .use(ensureAuthenticated)
+    .handler((req) => {
+      req.logout((err) => {
+        if (err) {
+          // TODO: log error
+          return Http.InternalServerError.body({ message: "Failed to log out" });
+        }
 
-    req.session.destroy((sessionErr) => {
-      if (sessionErr) {
-        // TODO: log error
-        return res.status(500).json({ message: "Failed to destroy session" });
-      }
+        req.session.destroy((sessionErr) => {
+          if (sessionErr) {
+            // TODO: log error
+            return Http.InternalServerError.body({ message: "Failed to log out" });
+          }
 
-      res.clearCookie("connect.sid"); // Clear the session cookie
-      res.status(200).send({ message: "successfully logged out" }); // Redirect to login page or home page
-    });
-  });
-});
+          // TODO: Clear 'connect.sid' cookie here
+          return Http.Ok.body({ message: "successfully logged out" }); // Redirect to login page or home page
+        });
+      });
+    })
+);
 
 export default router;

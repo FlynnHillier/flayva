@@ -37,7 +37,7 @@ function TestUnauthenticated() {
   );
 }
 
-export function AuthTest() {
+export default function LoginPage() {
   const { data, isLoading, error } = useMe();
 
   if (isLoading) return "loading...";

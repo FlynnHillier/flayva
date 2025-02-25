@@ -1,21 +1,18 @@
-import { LucideIcon } from 'lucide-react';
-import React from 'react'
-
-interface SidebarItemsProps {
-    title: string;
-    url: string;
-    icon: LucideIcon;
-}
+import { LucideProps } from 'lucide-react';
 
 function SidebarItems({
     title,
     url,
-    icon,
-}: SidebarItemsProps) {
+    Icon,
+}: {
+  title: string,
+  url: string,
+  Icon: React.ElementType<LucideProps>,
+}) {
   return (
-    <a href={url} className='flex items-center space-x-4 p-2 text-yellow-950'>
-       {React.createElement(icon, { className: "w-8 h-8" })}
-        <span className="text-4xl pl-5">{title}</span>
+    <a href={url} className='flex items-center text-yellow-950'>
+       <span className='flex shrink-0 items-center'><Icon className='h-8 w-8'/></span>
+        <span className="text-4xl pl-5 lg:flex hidden">{title}</span>
     </a>
   )
 }

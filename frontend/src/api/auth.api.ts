@@ -5,6 +5,7 @@ import { User } from "@flayva-monorepo/shared";
  * Fetches the user's profile information from the server.
  */
 export async function getMe() {
+  await new Promise((resolve) => setTimeout(resolve, 1000));
   const res = await request({ url: "/auth/me", method: "GET" });
 
   return { authenticated: res.authenticated, user: res.user } as {

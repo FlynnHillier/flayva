@@ -4,7 +4,7 @@ import { useMemo } from "react";
 
 /* Pages */
 import HomePage from "@/pages/Home.page";
-import AppSidebar from "@/components/AppSidebar";
+import AppSidebar from "@/components/layout/Sidebar";
 import FeedPage from "./pages/Feed.page";
 import LoginPage from "./pages/Login.page";
 import { useMe } from "./hooks/auth.hooks";
@@ -53,10 +53,12 @@ function App() {
   const shouldShowSidebar = useMemo(() => !HIDE_SIDEBAR_ROUTES.includes(pathname), [pathname]);
 
   return (
-    <div className="w-screen h-screen flex flex-row flex-nowrap justify-center">
+    <div className="w-screen h-screen flex flex-row flex-nowrap justify-start">
       {shouldShowSidebar && <AppSidebar />}
-      <main className="max-w-7xl border-x-2 border-red-800 border h-screen flex flex-col flex-nowrap overflow-auto">
-        <Routes>
+      <main className="grow bg-amber-200 h-screen flex flex-col flex-nowrap overflow-x-hidden overflow-y-auto">
+        <div className="w-screen h-screen">hello</div>
+
+        {/* <Routes>
           <Route index element={<HomePage />} />
           <Route element={<AuthenticatedRouter />}>
             <Route path="/post" element={<CreatePostPage />} />
@@ -67,7 +69,7 @@ function App() {
             <Route path="/login" element={<LoginPage />} />
           </Route>
           <Route path="*" element={<div>404 - Not found</div>} />
-        </Routes>
+        </Routes> */}
       </main>
     </div>
   );

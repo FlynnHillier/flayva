@@ -53,6 +53,9 @@ importers:
       postgres:
         specifier: ^3.4.5
         version: 3.4.5
+      suvidha:
+        specifier: ^0.4.1
+        version: 0.4.1(@types/express@5.0.0)(express@4.21.2)(zod@3.24.2)
       zod:
         specifier: ^3.24.2
         version: 3.24.2
@@ -2754,6 +2757,13 @@ packages:
     resolution: {integrity: sha512-qpCAvRl9stuOHveKsn7HncJRvv501qIacKzQlO/+Lwxc9+0q2wLyv4Dfvt80/DPn2pqOBsJdDiogXGR9+OvwRw==}
     engines: {node: '>=8'}
 
+  suvidha@0.4.1:
+    resolution: {integrity: sha512-iGiklwG/4gwLt44qoW/CHW+1dcJ44ehw85l43J23GaF08GWYZXpYHqms70WxmC8te0VVzcUTOZeNOCfEhx4yWg==}
+    peerDependencies:
+      '@types/express': 4.x || 5.x
+      express: 4.x || 5.x
+      zod: ^3.23.8
+
   tailwind-merge@3.0.1:
     resolution: {integrity: sha512-AvzE8FmSoXC7nC+oU5GlQJbip2UO7tmOhOfQyOmPhrStOGXHU08j8mZEHZ4BmCqY5dWTCo4ClWkNyRNx1wpT0g==}
 
@@ -5213,6 +5223,12 @@ snapshots:
   supports-color@7.2.0:
     dependencies:
       has-flag: 4.0.0
+
+  suvidha@0.4.1(@types/express@5.0.0)(express@4.21.2)(zod@3.24.2):
+    dependencies:
+      '@types/express': 5.0.0
+      express: 4.21.2
+      zod: 3.24.2
 
   tailwind-merge@3.0.1: {}
 

@@ -6,23 +6,25 @@ import { Toaster } from "@components/ui/sonner";
 /* Pages */
 import { Test } from "@/components/Test";
 import { AuthTest } from "@pages/AuthTest";
-import  HomePage  from "@pages/HomePage";
-
+import HomePage from "@pages/HomePage";
+import { SidebarProvider } from "./components/ui/sidebar";
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-      </Routes>
-      <Routes>
-        <Route path="/test" element={<Test />} />
-      </Routes>
-      <Routes>
-        <Route path="/auth" element={<AuthTest />} />
-      </Routes>
-      <Toaster />
-    </QueryClientProvider>
+    <SidebarProvider>
+      <QueryClientProvider client={queryClient}>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+        </Routes>
+        <Routes>
+          <Route path="/test" element={<Test />} />
+        </Routes>
+        <Routes>
+          <Route path="/auth" element={<AuthTest />} />
+        </Routes>
+        <Toaster />
+      </QueryClientProvider>
+    </SidebarProvider>
   );
 }
 

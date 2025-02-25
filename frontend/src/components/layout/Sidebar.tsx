@@ -74,7 +74,7 @@ function SidebarItemFooter() {
           <Circle className="h-12 w-12" />
         )}
       </span>
-      {isPending && <Skeleton className="h-7 w-44 hidden lg:inline-block" />}
+      {isPending && <Skeleton className="h-7 w-48 hidden lg:inline-block" />}
       {!isPending && (
         <span className="text-3xl lg:flex hidden text-nowrap w-48 overflow-ellipsis  whitespace-nowrap ">
           {data?.user ? data.user.username : "login"}

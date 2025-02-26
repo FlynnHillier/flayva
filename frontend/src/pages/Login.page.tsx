@@ -1,38 +1,17 @@
-import { Button } from "@/components/ui/button";
 import { useLogout, useMe } from "@/hooks/auth.hooks";
 import { useGlobalErrorToast } from "@/hooks/error.hooks";
 import { User } from "@flayva-monorepo/shared";
 import { toast } from "sonner";
+import { LoginForm } from "@/components/login-form";
 
-function TestAuthenticated({ user }: { user: User }) {
-  const { showErrorToast } = useGlobalErrorToast();
-  const { isPending, mutate } = useLogout({
-    onError: () => showErrorToast("failed to log out!"),
-    onSuccess: () => {
-      toast.success("Logged out!");
-    },
-  });
 
+
+function Form() {
   return (
     <>
-      <p className="text-green-800"> Authenticated! - '{user.email}' </p>
-      <Button disabled={isPending} onClick={() => mutate(undefined)}>
-        Logout
-      </Button>
-    </>
-  );
-}
-
-function TestUnauthenticated() {
-  const handleGoogleLogin = () => {
-    // Redirect the user to the backend's Google OAuth endpoint
-    window.location.href = "http://localhost:3000/auth/google";
-  };
-
-  return (
-    <>
-      <p className="text-red-700">Not authenticated!</p>
-      <Button onClick={handleGoogleLogin}>Login with Google</Button>
+    <div className="w-screen flex-auto justify-center items-center">
+      <LoginForm className={"w-1/2 self-center"} />
+    </div>
     </>
   );
 }
@@ -42,7 +21,6 @@ export default function LoginPage() {
 
   if (isLoading) return "loading...";
   if (error) return `Error: ${error.message}`;
-  if (data?.authenticated && data.user) return <TestAuthenticated user={data.user} />;
 
-  return <TestUnauthenticated />;
+  return <Form />;
 }

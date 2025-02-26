@@ -42,12 +42,12 @@ function SidebarItem({
   Icon: React.ElementType<LucideProps>;
 }) {
   return (
-    <a href={url} className="flex items-center hover:scale-105 transition-transform duration-200">
+    <Link to={url} className="flex items-center hover:scale-105 transition-transform duration-200">
       <span className="flex shrink-0 items-center">
         <Icon className="h-7 w-7" />
       </span>
       <span className="text-3xl pl-5 lg:flex hidden">{text}</span>
-    </a>
+    </Link>
   );
 }
 
@@ -91,7 +91,7 @@ const AppSidebar = () => {
         <span className="lg:w-[46px] lg:h-[46px] w-8 h-8 shrink-0">
           <img src={logo} alt="logo" />
         </span>
-        <span className="text-5xl font-black font-stretch-extra-condensed lg:block hidden">
+        <span className="text-7xl font-black font-stretch-ultra-condensed lg:block hidden">
           {"FLAYVA"}
         </span>
       </div>

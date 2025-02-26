@@ -30,7 +30,7 @@ function TestUnauthenticated() {
   return (
     <>
     <div className="w-screen h-screen flex items-center justify-center">
-      <LoginForm className="w-1/2 mb-40"/>
+      <LoginForm/>
     </div>
     </>
   );

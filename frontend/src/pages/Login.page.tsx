@@ -1,3 +1,4 @@
+import { LoginForm } from "@/components/login-form";
 import { Button } from "@/components/ui/button";
 import { useLogout, useMe } from "@/hooks/auth.hooks";
 import { useGlobalErrorToast } from "@/hooks/error.hooks";
@@ -24,15 +25,13 @@ function TestAuthenticated({ user }: { user: User }) {
 }
 
 function TestUnauthenticated() {
-  const handleGoogleLogin = () => {
-    // Redirect the user to the backend's Google OAuth endpoint
-    window.location.href = "http://localhost:3000/auth/google";
-  };
+
 
   return (
     <>
-      <p className="text-red-700">Not authenticated!</p>
-      <Button onClick={handleGoogleLogin}>Login with Google</Button>
+    <div className="w-screen h-screen flex items-center justify-center">
+      <LoginForm className="w-1/2 mb-40"/>
+    </div>
     </>
   );
 }

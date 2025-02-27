@@ -5,10 +5,9 @@ export default function Recipe() {
 	return (
 		<>
 			<div className="flex flex-row w-full h-screen">
-        <RecipeMain />
-			<RecipeSidebar />
-      </div>
-			
+				<RecipeMain />
+				<RecipeSidebar />
+			</div>
 		</>
 	);
 }

@@ -66,6 +66,9 @@ function App() {
           <Route element={<UnauthenticatedRouter />}>
             <Route path="/login" element={<LoginPage />} />
           </Route>
+          <Route element={<UnauthenticatedRouter />}>
+            <Route path="/recipe" element={<Recipe />} />
+          </Route>
           <Route path="*" element={<div>404 - Not found</div>} />
         </Routes>
       </main>

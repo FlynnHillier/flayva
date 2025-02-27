@@ -1,12 +1,13 @@
-export default function RecipeSection(
-	{ heading }: { heading: string },
-	{ body }: { body: string }
-) {
+export default function RecipeSection(props:
+  {
+    heading: string;
+    body: string;
+  }) {
 	return (
 		<>
 			<div className="recipeSection">
-				<h2 className="">{heading}:</h2>
-				<p>{body}</p>
+				<h2 className="">{props.heading}:</h2>
+				<p>{props.body}</p>
 			</div>
 		</>
 	);

@@ -17,7 +17,7 @@
       "@middleware/*": ["src/server/middleware/*"],
       "@auth/*": ["src/auth/*"],
       "@constants/*": ["src/constants/*"],
-      "@flayva-monorepo/shared": ["../shared/src"]
+      "@flayva-monorepo/shared/*": ["../shared/src/*"]
       // "@config/*": ["./src/constants/config/*"]
     },
     "composite": true,
@@ -27,5 +27,10 @@
   },
 
   "include": ["src/**/*"],
+  "exclude": [
+    "../shared/dist", // Exclude the built output of the shared package
+    "../shared/src", // Exclude the source files of the shared package
+    "../shared/node_modules"
+  ],
   "references": [{ "path": "../shared" }]
 }

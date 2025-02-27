@@ -1,5 +1,5 @@
 import { request } from "@/lib/network";
-import { User } from "@flayva-monorepo/shared";
+import { User } from "@flayva-monorepo/shared/types";
 
 /**
  * Fetches the user's profile information from the server.

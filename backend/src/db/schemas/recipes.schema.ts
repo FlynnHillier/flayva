@@ -1,10 +1,4 @@
-import {
-  INGREDIENT_GROUPS,
-  INGREDIENT_SUBGROUPS,
-  INGREDIENT_UNIT,
-  TAG_CATEGORIES,
-  TAG_GROUPS,
-} from "@/constants/recipes.constants";
+import { RECIPES } from "@flayva-monorepo/shared/constants";
 import { users } from "@/db/schema";
 import { posts } from "@/db/schemas/posts.schema";
 import { integer, pgEnum, pgTable, primaryKey, timestamp, varchar } from "drizzle-orm/pg-core";
@@ -12,15 +6,15 @@ import { relations } from "drizzle-orm";
 
 // ## ENUMS ##
 
-export const tagCategoryEnum = pgEnum("category", TAG_CATEGORIES);
+export const tagCategoryEnum = pgEnum("category", RECIPES.TAG_CATEGORIES);
 
-export const tagGroupEnum = pgEnum("group", TAG_GROUPS);
+export const tagGroupEnum = pgEnum("group", RECIPES.TAG_GROUPS);
 
-export const ingredientUnitEnum = pgEnum("unit", INGREDIENT_UNIT);
+export const ingredientUnitEnum = pgEnum("unit", RECIPES.INGREDIENT_UNIT);
 
-export const ingredientGroupEnum = pgEnum("ingredient_group", INGREDIENT_GROUPS);
+export const ingredientGroupEnum = pgEnum("ingredient_group", RECIPES.INGREDIENT_GROUPS);
 
-export const ingredientSubgroupEnum = pgEnum("ingredient_subgroup", INGREDIENT_SUBGROUPS);
+export const ingredientSubgroupEnum = pgEnum("ingredient_subgroup", RECIPES.INGREDIENT_SUBGROUPS);
 
 // ## TABLES ##
 
@@ -29,9 +23,18 @@ export const recipes = pgTable("recipes", {
   master_post_id: varchar("master_post_id").references(() => posts.id, { onDelete: "set null" }),
   title: varchar("title").notNull(),
   description: varchar("description").notNull(),
-  instructions: varchar("instructions").notNull(),
   created_at: timestamp("created_at", { mode: "string" }).defaultNow(),
 });
+
+export const recipe_instruction_steps = pgTable(
+  "recipe_instruction_steps",
+  {
+    recipeId: varchar("recipe_id").references(() => recipes.id, { onDelete: "cascade" }),
+    stepNumber: integer("step_number").notNull(),
+    instruction: varchar("instruction").notNull(),
+  },
+  (table) => [primaryKey({ columns: [table.recipeId, table.stepNumber] })]
+);
 
 export const recipe_tags = pgTable(
   "recipe_tags",
@@ -94,6 +97,7 @@ export const relations_recipes = relations(recipes, ({ one, many }) => ({
   ratings: many(recipe_ratings),
   ingredients: many(recipe_ingredients),
   tagLinks: many(recipe_tags),
+  instructions: many(recipe_instruction_steps),
 }));
 
 // Define relations for the recipe_ratings table.
@@ -125,3 +129,11 @@ export const relations_tags = relations(tags, ({ many }) => ({
 export const relations_ingredient_items = relations(ingredient_items, ({ one, many }) => ({
   recipeIngredientLinks: many(recipe_ingredients),
 }));
+
+// Define relations for the recipe_instruction_steps table.
+export const relations_recipe_instruction_steps = relations(
+  recipe_instruction_steps,
+  ({ one }) => ({
+    recipe: one(recipes, { fields: [recipe_instruction_steps.recipeId], references: [recipes.id] }),
+  })
+);

@@ -1,5 +1,6 @@
 import RecipeSection from './RecipeSection';
 import RecipeIngredients from './RecipeIngredients';
+import Comments from './Comments';
 
 const ingredients = [
 	{
@@ -7,12 +8,12 @@ const ingredients = [
 		amount: 2,
 		unit: 'cups',
 	},
-  {
+	{
 		ingredient: 'Chicken',
 		amount: 2,
 		unit: 'Kg',
 	},
-  {
+	{
 		ingredient: 'Goon',
 		amount: 2,
 		unit: 'goon',
@@ -20,16 +21,24 @@ const ingredients = [
 ];
 
 const cookingTime = [
-  {
+	{
 		ingredient: 'Prep Time',
 		amount: 2,
 		unit: 'min',
 	},
-  {
+	{
 		ingredient: 'Cook time',
 		amount: 2,
 		unit: 'hr',
-	}
+	},
+];
+
+const comments = [
+  {
+    profilePic: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSwme89cM8YZvHcybGrZl_Obd9U9p5QabozJQ&s',
+    username: 'John Doe',
+    body: 'This recipe is delicious!',
+  }
 ]
 
 export default function RecipeSidebar() {
@@ -57,6 +66,7 @@ export default function RecipeSidebar() {
 					<h2 className="text-large text-2xl font-bold mb-2">Time:</h2>
 					<RecipeIngredients ingredients={cookingTime} />
 				</div>
+				<Comments comments={comments}/>
 			</div>
 		</>
 	);

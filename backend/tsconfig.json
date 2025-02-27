@@ -16,6 +16,7 @@
       "@routes/*": ["src/server/routes/*"],
       "@middleware/*": ["src/server/middleware/*"],
       "@auth/*": ["src/auth/*"],
+      "@constants/*": ["src/constants/*"],
       "@flayva-monorepo/shared": ["../shared/src"]
       // "@config/*": ["./src/constants/config/*"]
     },

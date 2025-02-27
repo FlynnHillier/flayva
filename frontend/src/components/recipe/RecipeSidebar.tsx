@@ -19,6 +19,19 @@ const ingredients = [
 	},
 ];
 
+const cookingTime = [
+  {
+		ingredient: 'Prep Time',
+		amount: 2,
+		unit: 'min',
+	},
+  {
+		ingredient: 'Cook time',
+		amount: 2,
+		unit: 'hr',
+	}
+]
+
 export default function RecipeSidebar() {
 	return (
 		<>
@@ -40,12 +53,10 @@ export default function RecipeSidebar() {
 						'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Natus aliquid voluptas libero numquam optio placeat aut, voluptate molestias hic nemo animi odit facilis esse distinctio, deleniti assumenda omnis explicabo aliquam.'
 					}
 				/>
-				<RecipeSection
-					heading={'Time'}
-					body={
-						'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Natus aliquid voluptas libero numquam optio placeat aut, voluptate molestias hic nemo animi odit facilis esse distinctio, deleniti assumenda omnis explicabo aliquam.'
-					}
-				/>
+				<div className="w-full p-6 flex flex-col">
+					<h2 className="text-large text-2xl font-bold mb-2">Time:</h2>
+					<RecipeIngredients ingredients={cookingTime} />
+				</div>
 			</div>
 		</>
 	);

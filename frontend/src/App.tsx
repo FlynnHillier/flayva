@@ -10,6 +10,7 @@ import FeedPage from "./pages/Feed.page";
 import LoginPage from "./pages/Login.page";
 import LogoutPage from "./pages/Logout.page";
 import CreatePostPage from "./pages/Create-post.page";
+import RecipePage from "./pages/Recipe.page";
 
 /**
  * Routes that should not show the sidebar
@@ -67,7 +68,7 @@ function App() {
             <Route path="/login" element={<LoginPage />} />
           </Route>
           <Route element={<UnauthenticatedRouter />}>
-            <Route path="/recipe" element={<Recipe />} />
+            <Route path="/recipe" element={<RecipePage />} />
           </Route>
           <Route path="*" element={<div>404 - Not found</div>} />
         </Routes>

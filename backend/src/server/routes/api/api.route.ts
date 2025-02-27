@@ -1,13 +1,8 @@
-import { Router, Request, Response } from "express";
-import testRoute from "@server/routes/api/test.api.route";
+import { Router } from "express";
+import socialRouter from "@/server/routes/api/social.route";
 
 const router: Router = Router();
 
-// A simple route to test the server
-router.get("/", (req: Request, res: Response) => {
-  res.send("Hello, Express with TypeScript!");
-});
-
-router.use("/test", testRoute);
+router.use("/s", socialRouter);
 
 export default router;

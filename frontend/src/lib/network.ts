@@ -19,7 +19,7 @@ export const request = async (config: AxiosRequestConfig) => {
   };
 
   const onSuccess = (response: AxiosResponse) => {
-    return response.data;
+    return response;
   };
 
   return client.request(config).then(onSuccess).catch(onError);

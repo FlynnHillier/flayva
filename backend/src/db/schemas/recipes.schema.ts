@@ -26,6 +26,16 @@ export const recipes = pgTable("recipes", {
   created_at: timestamp("created_at", { mode: "string" }).defaultNow(),
 });
 
+export const recipe_meta_infos = pgTable("recipe_meta_infos", {
+  estimatedCookTime: varchar("estimated_cook_time"),
+  estimatedPrepTime: varchar("estimated_prep_time"),
+  servings: integer("servings"),
+  recipeId: varchar("recipe_id")
+    .notNull()
+    .references(() => recipes.id, { onDelete: "cascade" })
+    .primaryKey(),
+});
+
 export const recipe_instruction_steps = pgTable(
   "recipe_instruction_steps",
   {
@@ -76,6 +86,7 @@ export const recipe_ingredients = pgTable(
       .references(() => ingredient_items.id, {
         onDelete: "cascade",
       }),
+    amount_whole: integer("amount_whole").notNull(),
     amount_fractional_numerator: integer("amount_fractional_numerator").notNull(),
     amount_fractional_denominator: integer("amount_fractional_denominator").notNull().default(1),
     unit: ingredientUnitEnum("unit").notNull(),
@@ -98,6 +109,14 @@ export const relations_recipes = relations(recipes, ({ one, many }) => ({
   ingredients: many(recipe_ingredients),
   tagLinks: many(recipe_tags),
   instructions: many(recipe_instruction_steps),
+  metaInfo: one(recipe_meta_infos, {
+    fields: [recipes.id],
+    references: [recipe_meta_infos.recipeId],
+  }),
+}));
+
+export const relations_recipes_meta_infos = relations(recipe_meta_infos, ({ one }) => ({
+  recipe: one(recipes, { fields: [recipe_meta_infos.recipeId], references: [recipes.id] }),
 }));
 
 // Define relations for the recipe_ratings table.

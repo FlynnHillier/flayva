@@ -6,9 +6,9 @@ import { User } from "@flayva-monorepo/shared/types";
  */
 export async function getMe() {
   await new Promise((resolve) => setTimeout(resolve, 1000));
-  const res = await request({ url: "/auth/me", method: "GET" });
+  const { data } = await request({ url: "/auth/me", method: "GET" });
 
-  return { authenticated: res.authenticated, user: res.user } as {
+  return { authenticated: data.authenticated, user: data.user } as {
     authenticated: boolean;
     user?: User;
   };
@@ -18,7 +18,7 @@ export async function getMe() {
  * Fetches the user's profile information from the server.
  */
 export async function logout() {
-  const res = await request({ url: "/auth/logout", method: "GET" });
+  const { data, status } = await request({ url: "/auth/logout", method: "GET" });
 
-  return { message: res.message, ok: res.staus >= 200 && res.status < 300 };
+  return { message: data.message, ok: status >= 200 && status < 300 };
 }

@@ -4,8 +4,8 @@ import { useMemo } from "react";
 import { useMe } from "./hooks/auth.hooks";
 
 /* Pages */
-import HomePage from "@/pages/Home.page";
-import AppSidebar from "@/components/layout/Sidebar";
+import HomePage from "./pages/Home.page";
+import AppSidebar from "./components/layout/Sidebar";
 import FeedPage from "./pages/Feed.page";
 import LoginPage from "./pages/Login.page";
 import LogoutPage from "./pages/Logout.page";

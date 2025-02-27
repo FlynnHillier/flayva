@@ -16,7 +16,7 @@ function TestAuthenticated({ user }: { user: User }) {
 
   return (
     <>
-      <p className="text-green-800"> Authenticated! - '{user.email}' </p>
+      <p className="text-green-800"> Authenticated! - '{user.username}' </p>
       <Button disabled={isPending} onClick={() => mutate(undefined)}>
         Logout
       </Button>
@@ -25,13 +25,11 @@ function TestAuthenticated({ user }: { user: User }) {
 }
 
 function TestUnauthenticated() {
-
-
   return (
     <>
-    <div className="w-screen h-screen flex items-center justify-center">
-      <LoginForm/>
-    </div>
+      <div className="w-screen h-screen flex items-center justify-center">
+        <LoginForm />
+      </div>
     </>
   );
 }
@@ -41,7 +39,8 @@ export default function LoginPage() {
 
   if (isLoading) return "loading...";
   if (error) return `Error: ${error.message}`;
-  if (data?.authenticated && data.user) return <TestAuthenticated user={data.user} />;
+  if (data?.authenticated && data.user)
+    return <TestAuthenticated user={data.user} />;
 
   return <TestUnauthenticated />;
 }

@@ -37,7 +37,17 @@ const comments = [
   {
     profilePic: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSwme89cM8YZvHcybGrZl_Obd9U9p5QabozJQ&s',
     username: 'John Doe',
-    body: 'This recipe is delicious!',
+    body: 'This recipe is delicious! fh fh dif d ididdihjfh dididiihf',
+  },
+	{
+    profilePic: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSwme89cM8YZvHcybGrZl_Obd9U9p5QabozJQ&s',
+    username: 'John Doe',
+    body: 'This recipe is delicious! fh fh dif d ididdihjfh dididiihf',
+  },
+	{
+    profilePic: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSwme89cM8YZvHcybGrZl_Obd9U9p5QabozJQ&s',
+    username: 'John Doe',
+    body: 'This recipe is delicious! fh fh dif d ididdihjfh dididiihf',
   }
 ]
 

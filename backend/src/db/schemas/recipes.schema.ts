@@ -10,7 +10,7 @@ export const tagCategoryEnum = pgEnum("category", RECIPES.TAG_CATEGORIES);
 
 export const tagGroupEnum = pgEnum("group", RECIPES.TAG_GROUPS);
 
-export const ingredientUnitEnum = pgEnum("unit", RECIPES.INGREDIENT_UNIT);
+export const ingredientUnitEnum = pgEnum("unit", RECIPES.INGREDIENT_UNITS);
 
 export const ingredientGroupEnum = pgEnum("ingredient_group", RECIPES.INGREDIENT_GROUPS);
 

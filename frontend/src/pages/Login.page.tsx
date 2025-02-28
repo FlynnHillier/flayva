@@ -1,4 +1,5 @@
 import { LoginForm } from "@/components/login-form";
+import Slideshow from "@/components/Slideshow";
 import { Button } from "@/components/ui/button";
 import { useLogout, useMe } from "@/hooks/auth.hooks";
 import { useGlobalErrorToast } from "@/hooks/error.hooks";
@@ -27,9 +28,9 @@ function TestAuthenticated({ user }: { user: User }) {
 function TestUnauthenticated() {
   return (
     <>
-      <div className="w-screen h-screen flex items-center justify-center">
-        <LoginForm />
-      </div>
+    <div className="w-screen h-screen flex items-center justify-center">
+      <LoginForm/>
+    </div>
     </>
   );
 }

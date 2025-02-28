@@ -10,26 +10,30 @@ const router: Router = Router();
  * Get a user's profile
  */
 router.get("/u/:userID", async (req: Request, res: Response) => {
-  const users = await db.select().from(usersTable).where(eq(usersTable.id, req.params.userID));
-  const user = users[0];
+  const users = await db
+    .select()
+    .from(usersTable)
+    .where(eq(usersTable.id, req.params.userID));
 
-  if (!user)
+  if (users.length === 0)
     res.status(404).send({
       exists: false,
       message: "Profile not found",
     });
+  else {
+    const user = users[0];
+    const structuredUser: User = {
+      bio: user.bio,
+      id: user.id,
+      username: user.username,
+      profile_picture_url: user.profile_picture_url ?? undefined,
+    };
 
-  const structuredUser: User = {
-    bio: user.bio,
-    id: user.id,
-    username: user.username,
-    profile_picture_url: user.profile_picture_url ?? undefined,
-  };
-
-  res.status(200).send({
-    exists: true,
-    user: structuredUser,
-  });
+    res.status(200).send({
+      exists: true,
+      user: structuredUser,
+    });
+  }
 });
 
 export default router;

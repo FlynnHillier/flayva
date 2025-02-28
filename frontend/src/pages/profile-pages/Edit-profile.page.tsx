@@ -31,7 +31,7 @@ import {
 } from "@/components/ui/file-upload";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-
+import { useMe } from "@/hooks/auth.hooks";
 const formSchema = z.object({
   username: z.string().min(1),
   biography: z.string(),
@@ -45,7 +45,7 @@ export default function EditProfile() {
     maxSize: 1024 * 1024 * 4,
     multiple: true,
   };
-
+  const { data } = useMe();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
@@ -67,7 +67,7 @@ export default function EditProfile() {
   return (
     <div>
       <div className="w-full p-4 bg-white">
-        <ProfileHeader />
+        <ProfileHeader objectId={data?.user?.id || ""} />
       </div>
       <Form {...form}>
         <form

@@ -1,4 +1,13 @@
-import { Circle, Heart, Home, LucideProps, Plus, Search, Text, LogIn } from "lucide-react";
+import {
+  Circle,
+  Heart,
+  Home,
+  LucideProps,
+  Plus,
+  Search,
+  Text,
+  LogIn,
+} from "lucide-react";
 import logo from "@assets/Logo.svg";
 import { useMe } from "@/hooks/auth.hooks";
 import { Skeleton } from "../ui/skeleton";
@@ -42,7 +51,10 @@ function SidebarItem({
   Icon: React.ElementType<LucideProps>;
 }) {
   return (
-    <Link to={url} className="flex items-center hover:scale-105 transition-transform duration-200">
+    <Link
+      to={url}
+      className="flex items-center hover:scale-105 transition-transform duration-200"
+    >
       <span className="flex shrink-0 items-center">
         <Icon className="h-7 w-7" />
       </span>
@@ -56,7 +68,7 @@ function SidebarItemFooter() {
 
   return (
     <Link
-      to={data?.user ? "/profile" : "/login"}
+      to={data?.user ? `/profile/${data?.user?.id}` : "/login"}
       className="flex items-center hover:scale-105 transition-transform duration-200 flex-row gap-2 "
     >
       <span className="flex shrink-0 items-center">
@@ -97,7 +109,12 @@ const AppSidebar = () => {
       </div>
       <div className="h-[40%] flex flex-col justify-between">
         {items.map((item) => (
-          <SidebarItem text={item.text} url={item.url} Icon={item.icon} key={item.url} />
+          <SidebarItem
+            text={item.text}
+            url={item.url}
+            Icon={item.icon}
+            key={item.url}
+          />
         ))}
       </div>
       <SidebarItemFooter />

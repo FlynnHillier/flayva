@@ -8,22 +8,31 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import { ProfileHeader } from "@/components/ProfileHeader";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+import { useState } from "react";
 
 import food1 from "@assets/test/food/food1.jpg";
 import food2 from "@assets/test/food/food2.jpeg";
 import food3 from "@assets/test/food/food3.jpg";
 import food4 from "@assets/test/food/food4.jpeg";
 
+import { useFetchUserById } from "@/hooks/social.hooks";
+
 const images = [food1, food2, food3, food4, food1, food2, food3, food4];
 
 const ProfilePage = () => {
-  const { data } = useMe();
+  const { objectid } = useParams();
+  const [profile, setProfile] = useState(null);
 
+  //fetch profile hook
+  //setProfile()
+
+  //const { data } = useMe();
+  //console.log(data);
   return (
     <div>
       <div className="w-full p-4 bg-white">
-        <ProfileHeader />
+        <ProfileHeader objectId={objectid || "default"} />
       </div>
       <div className=" flex justify-center p-4">
         <Card className="relative sm:w-147 md:w-165 lg:w-149 xl:w-210">

@@ -67,7 +67,7 @@ function App() {
             <Route path="/logout" element={<LogoutPage />} />
             <Route path="/feed" element={<FeedPage />} />
             <Route path="/profile/edit" element={<EditProfile />} />
-            <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/profile/:objectid" element={<ProfilePage />} />
           </Route>
           <Route element={<UnauthenticatedRouter />}>
             <Route path="/login" element={<LoginPage />} />

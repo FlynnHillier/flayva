@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useLogout, useMe } from "@/hooks/auth.hooks";
 import { useGlobalErrorToast } from "@/hooks/error.hooks";
 import { toast } from "sonner";
+import { User } from "@flayva-monorepo/shared/types";
 
 function TestAuthenticated({ user }: { user: User }) {
   const { showErrorToast } = useGlobalErrorToast();
@@ -28,6 +29,9 @@ function TestUnauthenticated() {
   return (
     <>
     <div className="w-screen h-screen flex items-center">
+      <span className="flex items-center absolute top-10 left-10 z-50">
+        <p className="text-background text-4xl font-stretch-ultra-condensed font-black">FLAYVA</p>
+      </span>
       <Slideshow className="w-[50%] h-full"/>
       <LoginForm className="flex w-[50%] h-full items-center justify-center"/>
     </div>

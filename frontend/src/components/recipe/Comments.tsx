@@ -1,23 +1,21 @@
-type Comment = {
-  profilePic: string;
-  username: string;
-  body: string;
-}
+import Comment from "./Comment";
 
 type CommentsProp = {
   comments: Comment[];
 }
 
+type Comment = {
+	profilePic: string;
+	username: string;
+	body: string;
+};
+
 export default function Comments(prop: CommentsProp) {
 	const commentsList = prop.comments.map((comment) => {
 		return (
-			<>
-				<li className="flex flex-row">
-					<div className="w-2/12"><img className="rounded-full" src={comment.profilePic} alt="" /></div>
-
-				</li>
-			</>
+			<Comment profilePic={comment.profilePic} username={comment.username} body={comment.body} />
 		);
 	});
+	
 	return <ul>{commentsList}</ul>;
 }

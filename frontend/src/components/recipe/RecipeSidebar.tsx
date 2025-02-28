@@ -52,7 +52,7 @@ export default function RecipeSidebar() {
 					}
 				/>
 				<div className="w-full p-6 flex flex-col">
-					<h2 className="text-large text-2xl font-bold mb-2">Ingredients:</h2>
+					<h2 className="text-2xl font-bold mb-2">Ingredients:</h2>
 					<RecipeIngredients ingredients={ingredients} />
 				</div>
 
@@ -63,10 +63,13 @@ export default function RecipeSidebar() {
 					}
 				/>
 				<div className="w-full p-6 flex flex-col">
-					<h2 className="text-large text-2xl font-bold mb-2">Time:</h2>
+					<h2 className="text-2xl font-bold mb-2">Time:</h2>
 					<RecipeIngredients ingredients={cookingTime} />
 				</div>
-				<Comments comments={comments}/>
+				<div className="w-full p-6 flex flex-col">
+					<h2 className="text-2xl font-bold mb-2">Comments:</h2>
+					<Comments comments={comments}/>
+				</div>
 			</div>
 		</>
 	);

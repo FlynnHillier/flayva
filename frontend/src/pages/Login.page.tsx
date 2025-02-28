@@ -27,9 +27,9 @@ function TestAuthenticated({ user }: { user: User }) {
 function TestUnauthenticated() {
   return (
     <>
-    <div className="w-screen h-screen flex items-center justify-center">
-      <Slideshow className="w-full h-full"/>
-      <LoginForm/>
+    <div className="w-screen h-screen flex items-center">
+      <Slideshow className="w-[50%] h-full"/>
+      <LoginForm className="flex w-[50%] h-full items-center justify-center"/>
     </div>
     </>
   );

@@ -9,7 +9,7 @@ export default function Comment(props: Comment) {
 		<>
 			<li className="w-full mt-2" >
 				<div className="w-full flex flex-row gap-3" id="main">
-					<div id="profilePic" className="w-2/12">
+					<div id="profilePic" className="w-9">
 						<img className="rounded-full" src={props.profilePic} alt="" />
 					</div>
 					<div className="flex flex-col w-10/12 gap-0" id="content">

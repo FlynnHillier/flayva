@@ -1,6 +1,7 @@
 import RecipeSection from './RecipeSection';
 import RecipeIngredients from './RecipeIngredients';
 import Comments from './Comments';
+import SimilarRecipes from './SimilarRecipes';
 
 const ingredients = [
 	{
@@ -48,7 +49,19 @@ const comments = [
     profilePic: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSwme89cM8YZvHcybGrZl_Obd9U9p5QabozJQ&s',
     username: 'John Doe',
     body: 'This recipe is delicious! fh fh dif d ididdihjfh dididiihf',
+  },
+	{
+    profilePic: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSwme89cM8YZvHcybGrZl_Obd9U9p5QabozJQ&s',
+    username: 'John Doe',
+    body: 'This recipe is delicious! fh fh dif d ididdihjfh dididiihf',
   }
+]
+
+const recommendedRecipes = [
+	{
+		image: 'https://images.immediate.co.uk/production/volatile/sites/30/2020/08/chorizo-mozarella-gnocchi-bake-cropped-9ab73a3.jpg?quality=90&resize=556,505',
+		url: 'https://example.com/'
+	}
 ]
 
 export default function RecipeSidebar() {
@@ -80,6 +93,7 @@ export default function RecipeSidebar() {
 					<h2 className="text-2xl font-bold mb-2">Comments:</h2>
 					<Comments comments={comments}/>
 				</div>
+				<SimilarRecipes />
 			</div>
 		</>
 	);

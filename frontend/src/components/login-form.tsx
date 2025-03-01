@@ -107,13 +107,8 @@ const MetaButton = () => {
 
 export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRef<"div">) {
   return (
-    <div className={cn(
-      "",
-      className
-    )}
-    {...props}
-    >
-      <div className="flex flex-col w-[450] h-fit bg-accent pb-3 rounded-xl border-1 border-accent">
+    <div className={cn("w-96 inline-block overflow-hidden", className)} {...props}>
+      <div className="flex flex-col w-full h-fit bg-accent pb-3 rounded-xl border-1 border-accent">
         <Card className="w-full h-full pt-12 justify-between border-1 border-accent rounded-xl">
           <CardHeader className="text-center">
             <CardTitle className="text-3xl text-center flex flex-col space-y-10">

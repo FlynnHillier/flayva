@@ -104,7 +104,7 @@ export default function RecipeSidebar() {
         <h2 className="text-2xl font-bold mb-2">Comments:</h2>
         <Comments comments={comments} />
       </div>
-      <SimilarRecipes recommendedRecipes={recommendedRecipes} />
+
     </div>
   );
 }

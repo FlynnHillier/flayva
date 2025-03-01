@@ -2,6 +2,8 @@ import RecipeSection from './RecipeSection';
 import RecipeIngredients from './RecipeIngredients';
 import Comments from './Comments';
 import SimilarRecipes from './SimilarRecipes';
+import RecipeBio  from './RecipeBio';
+
 
 const ingredients = [
   { ingredient: 'Flour', amount: 2, unit: 'cups' },
@@ -81,9 +83,17 @@ const recommendedRecipes = [
   },
 ];
 
+const recipeBio = {
+	profilePic:
+    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSwme89cM8YZvHcybGrZl_Obd9U9p5QabozJQ&s',
+  username: 'John Doe',
+  rating: 2.5,
+}
+
 export default function RecipeSidebar() {
   return (
     <div id="recipeSidebar" className="w-4/12 border-l-2 border-[#737373]">
+			<RecipeBio {...recipeBio} />
       <RecipeSection
         heading="Description"
         body="Lorem ipsum dolor, sit amet consectetur adipisicing elit. Natus aliquid voluptas libero numquam optio placeat aut, voluptate molestias hic nemo animi odit facilis esse distinctio, deleniti assumenda omnis explicabo aliquam."

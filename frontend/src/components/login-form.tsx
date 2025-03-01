@@ -107,36 +107,32 @@ const MetaButton = () => {
 
 export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRef<"div">) {
   return (
-    <div
-      className={cn(
-        "flex flex-col w-96 h-fit bg-accent pb-3 rounded-xl border-1 border-accent",
-        className
-      )}
-      {...props}
-    >
-      <Card className="w-full h-full pt-12 justify-between border-1 border-accent rounded-xl">
-        <CardHeader className="text-center">
-          <CardTitle className="text-3xl text-center flex flex-col space-y-10">
-            <img src={Logo} alt="Flayva Logo" className="h-20 w-auto" />
-            <span className="flex items-center justify-center text-nowrap">
-              Sign in to&nbsp;<p className="font-black font-stretch-ultra-condensed">FLAYVA</p>
-            </span>
-          </CardTitle>
-          <CardDescription className="text-muted-foreground text-base">
-            Welcome back! Please sign in to continue
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="flex flex-col gap-4">
-            <GoogleButton />
-            <AppleButton />
-            <MetaButton />
-          </div>
-        </CardContent>
-      </Card>
-      <div className="text-balance text-center text-xs text-muted-foreground [&_a]:underline [&_a]:underline-offset-4 [&_a]:hover:text-primary  mt-4">
-        By clicking continue, you agree to our <a href="#">Terms of Service</a> and{" "}
-        <a href="#">Privacy Policy</a>.
+    <div className={cn("w-96 inline-block overflow-hidden", className)} {...props}>
+      <div className="flex flex-col w-full h-fit bg-accent pb-3 rounded-xl border-1 border-accent">
+        <Card className="w-full h-full pt-12 justify-between border-1 border-accent rounded-xl">
+          <CardHeader className="text-center">
+            <CardTitle className="text-3xl text-center flex flex-col space-y-10">
+              <img src={Logo} alt="Flayva Logo" className="h-20 w-auto" />
+              <span className="flex items-center justify-center text-nowrap">
+                Sign in to&nbsp;<p className="font-black font-stretch-ultra-condensed">FLAYVA</p>
+              </span>
+            </CardTitle>
+            <CardDescription className="text-muted-foreground text-base">
+              Welcome back! Please sign in to continue
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="flex flex-col gap-4 mt-10">
+              <GoogleButton />
+              <AppleButton />
+              <MetaButton />
+            </div>
+          </CardContent>
+        </Card>
+        <div className=" mx-8 py-2 text-balance text-center text-xs text-muted-foreground [&_a]:underline [&_a]:underline-offset-4 [&_a]:hover:text-primary  mt-4">
+          By clicking continue, you agree to our <a href="#">Terms of Service</a> and{" "}
+          <a href="#">Privacy Policy</a>.
+        </div>
       </div>
     </div>
   );

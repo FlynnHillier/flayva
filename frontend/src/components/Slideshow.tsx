@@ -66,6 +66,8 @@ export default function Slideshow({className} : {className: string}) {
         }}
         setApi={setApi}
         >
+        <h1 className="absolute top-10 left-10 z-50 text-5xl text-background font-black font-stretch-ultra-condensed">FLAYVA</h1>
+        <div className="absolute  left-0 top-0 h-[50%] w-full bg-gradient-to-b from-black/50 to-black/0 z-10"></div>
         <CarouselContent className="ml-0 w-full h-full" onTouchStart={handleTouchStart} onTouchMove={handleTouchMove} onTouchEnd={handleTouchEnd}>
           {items.map((item) => (
              <SlideshowItem key={item.alt} Image={item.Image} quote={item.quote} alt={item.alt}/>

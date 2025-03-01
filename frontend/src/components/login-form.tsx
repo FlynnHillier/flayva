@@ -113,7 +113,7 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
     )}
     {...props}
     >
-      <div className="flex flex-col w-96 h-fit bg-accent pb-3 rounded-xl border-1 border-accent">
+      <div className="flex flex-col w-[450] h-fit bg-accent pb-3 rounded-xl border-1 border-accent">
         <Card className="w-full h-full pt-12 justify-between border-1 border-accent rounded-xl">
           <CardHeader className="text-center">
             <CardTitle className="text-3xl text-center flex flex-col space-y-10">
@@ -127,14 +127,14 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-4 mt-10">
               <GoogleButton />
               <AppleButton />
               <MetaButton />
             </div>
           </CardContent>
         </Card>
-        <div className="text-balance text-center text-xs text-muted-foreground [&_a]:underline [&_a]:underline-offset-4 [&_a]:hover:text-primary  mt-4">
+        <div className=" mx-8 py-2 text-balance text-center text-xs text-muted-foreground [&_a]:underline [&_a]:underline-offset-4 [&_a]:hover:text-primary  mt-4">
           By clicking continue, you agree to our <a href="#">Terms of Service</a> and{" "}
           <a href="#">Privacy Policy</a>.
         </div>

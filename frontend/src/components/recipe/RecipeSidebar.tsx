@@ -60,7 +60,11 @@ const comments = [
 const recommendedRecipes = [
 	{
 		image: 'https://images.immediate.co.uk/production/volatile/sites/30/2020/08/chorizo-mozarella-gnocchi-bake-cropped-9ab73a3.jpg?quality=90&resize=556,505',
-		url: 'https://example.com/'
+		url: 'https://example.com/',
+		image: 'https://images.immediate.co.uk/production/volatile/sites/30/2020/08/chorizo-mozarella-gnocchi-bake-cropped-9ab73a3.jpg?quality=90&resize=556,505',
+		url: 'https://example.com/',
+		image: 'https://images.immediate.co.uk/production/volatile/sites/30/2020/08/chorizo-mozarella-gnocchi-bake-cropped-9ab73a3.jpg?quality=90&resize=556,505',
+		url: 'https://example.com/',
 	}
 ]
 

@@ -18,7 +18,7 @@ import {
   INGREDIENT_UNITS,
   MIN_RECIPE_INGREDIENT_FRACTIONAL_DENOMINATOR,
   MAX_RECIPE_INGREDIENT_FRACTIONAL_DENOMINATOR,
-} from "shared/src/constants/recipes.constants";
+} from "../constants/recipes.constants";
 import { z } from "zod";
 
 // ## INSTRUCTIONS ##

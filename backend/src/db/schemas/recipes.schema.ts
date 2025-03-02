@@ -52,7 +52,7 @@ export const recipe_tags = pgTable(
     recipeID: varchar("recipe_id")
       .notNull()
       .references(() => posts.id, { onDelete: "cascade" }),
-    tagID: varchar("tag_id")
+    tagID: integer("tag_id")
       .notNull()
       .references(() => tags.id, { onDelete: "cascade" }),
   },
@@ -60,7 +60,7 @@ export const recipe_tags = pgTable(
 );
 
 export const tags = pgTable("tags", {
-  id: varchar("id").primaryKey(),
+  id: integer("id").primaryKey(),
   name: varchar("name").notNull(),
   category: tagCategoryEnum("category").notNull(),
   group: tagGroupEnum("group"),

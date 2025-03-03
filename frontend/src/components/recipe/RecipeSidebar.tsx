@@ -66,21 +66,6 @@ const recommendedRecipes = [
       'https://images.immediate.co.uk/production/volatile/sites/30/2020/08/chorizo-mozarella-gnocchi-bake-cropped-9ab73a3.jpg?quality=90&resize=556,505',
     url: 'https://example.com/recipe3',
   },
-	{
-    image:
-      'https://images.immediate.co.uk/production/volatile/sites/30/2020/08/chorizo-mozarella-gnocchi-bake-cropped-9ab73a3.jpg?quality=90&resize=556,505',
-    url: 'https://example.com/recipe3',
-  },
-	{
-    image:
-      'https://images.immediate.co.uk/production/volatile/sites/30/2020/08/chorizo-mozarella-gnocchi-bake-cropped-9ab73a3.jpg?quality=90&resize=556,505',
-    url: 'https://example.com/recipe3',
-  },
-	{
-    image:
-      'https://images.immediate.co.uk/production/volatile/sites/30/2020/08/chorizo-mozarella-gnocchi-bake-cropped-9ab73a3.jpg?quality=90&resize=556,505',
-    url: 'https://example.com/recipe3',
-  },
 ];
 
 const recipeBio = {
@@ -114,7 +99,7 @@ export default function RecipeSidebar() {
         <h2 className="text-2xl font-bold mb-2">Comments:</h2>
         <Comments comments={comments} />
       </div>
-
+    <SimilarRecipes recommendedRecipes={recommendedRecipes} />
     </div>
   );
 }

@@ -10,14 +10,14 @@ interface ImageGridProps {
 function ImageGrid({ images }: ImageGridProps) {
 	const imgGrid = images.map((recipe, index) => (
 		<div key={index} className="w-full aspect-square">
-			<img src={recipe.image} className="w-full h-full object-cover" />
+			<img src={recipe.image} className="w-full h-full object-cover rounded-lg" />
 		</div>
 	));
 
 	return (
 		// Using grid-flow-col and auto-cols to ensure a single row
 		// Each image cell maintains a width between 22% and 30% of the container
-		<div className="grid grid-flow-col auto-cols-[minmax(22%,30%)] gap-2">
+		<div className="grid grid-flow-col gap-2">
 			{imgGrid}
 		</div>
 	);

@@ -92,7 +92,7 @@ const recipeBio = {
 
 export default function RecipeSidebar() {
   return (
-    <div id="recipeSidebar" className="w-120 border-l-2 border-[#737373]">
+    <div id="recipeSidebar" className="w-120 min-h-screen border-l-2 border-[#737373] overflow-y-auto">
 			<RecipeBio {...recipeBio} />
       <RecipeSection
         heading="Description"

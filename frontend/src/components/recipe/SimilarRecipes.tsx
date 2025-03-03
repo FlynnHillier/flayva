@@ -9,23 +9,23 @@ interface ImageGridProps {
 
 function ImageGrid({ images }: ImageGridProps) {
 	const imgGrid = images.map((recipe, index) => (
-		<div key={index} className="w-full aspect-square">
-			<img src={recipe.image} className="w-full h-full object-cover rounded-lg" />
-		</div>
+		<a href={recipe.url}>
+			<div key={index} className="w-full aspect-square">
+				<img
+					src={recipe.image}
+					className="w-full h-full object-cover rounded-lg"
+				/>
+			</div>
+		</a>
 	));
 
-	return (
-		// Using grid-flow-col and auto-cols to ensure a single row
-		// Each image cell maintains a width between 22% and 30% of the container
-		<div className="grid grid-flow-col gap-2">
-			{imgGrid}
-		</div>
-	);
+	return <div className="grid grid-flow-col gap-2">{imgGrid}</div>;
 }
 
 interface SimilarRecipesProps {
 	recommendedRecipes: Recipe[];
 }
+
 export default function SimilarRecipes(props: SimilarRecipesProps) {
 	return (
 		<div className="sticky bottom-0 h-auto bg-white w-full p-3 flex flex-col">

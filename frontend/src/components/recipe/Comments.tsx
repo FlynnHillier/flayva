@@ -1,8 +1,8 @@
-import Comment from "./Comment";
+import Comment from './Comment';
 
 type CommentsProp = {
-  comments: Comment[];
-}
+	comments: Comment[];
+};
 
 type Comment = {
 	profilePic: string;
@@ -13,9 +13,13 @@ type Comment = {
 export default function Comments(prop: CommentsProp) {
 	const commentsList = prop.comments.map((comment) => {
 		return (
-			<Comment profilePic={comment.profilePic} username={comment.username} body={comment.body} />
+			<Comment
+				profilePic={comment.profilePic}
+				username={comment.username}
+				body={comment.body}
+			/>
 		);
 	});
-	
+
 	return <ul>{commentsList}</ul>;
 }

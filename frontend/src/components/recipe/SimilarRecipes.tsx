@@ -28,8 +28,8 @@ interface SimilarRecipesProps {
 }
 export default function SimilarRecipes(props: SimilarRecipesProps) {
 	return (
-		<div className="sticky bottom-0 h-auto min-h-40 bg-white w-full p-6 flex flex-col">
-			<h2 className="text-2xl font-bold mb-2">Similar Recipes:</h2>
+		<div className="sticky bottom-0 h-auto bg-white w-full p-3 flex flex-col">
+			<h2 className="text-2xl ml-2 font-bold mb-2">Similar Recipes:</h2>
 			<ImageGrid images={props.recommendedRecipes} />
 		</div>
 	);

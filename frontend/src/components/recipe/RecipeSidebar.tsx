@@ -1,5 +1,3 @@
-import RecipeSection from './RecipeSection';
-import RecipeIngredients from './RecipeIngredients';
 import Comments from './Comments';
 import SimilarRecipes from './SimilarRecipes';
 import RecipeBio from './RecipeBio';
@@ -73,6 +71,39 @@ const recipeBio = {
 	username: 'John Doe',
 	rating: 2.5,
 };
+
+function RecipeIngredients({
+	ingredients,
+}: {
+	ingredients: { ingredient: string; amount: number; unit: string };
+}) {
+	const ingredientsList = ingredients.map((ingredient) => {
+		return (
+			<>
+				<li className="flex flex-row">
+					<div className="w-9/12 text-left text-gray-500">
+						- {ingredient.ingredient}
+					</div>
+					<div className="w-3/12 text-gray-500">
+						{ingredient.amount} {ingredient.unit}
+					</div>
+				</li>
+			</>
+		);
+	});
+	return <ul>{ingredientsList}</ul>;
+}
+
+function RecipeSection({ heading, body }: { heading: string; body: string }) {
+	return (
+		<>
+			<div className="w-full p-6 flex flex-col">
+				<h2 className="text-large text-2xl font-bold">{heading}:</h2>
+				<p className="text-gray-500">{body}</p>
+			</div>
+		</>
+	);
+}
 
 export default function RecipeSidebar() {
 	return (

@@ -28,7 +28,11 @@ function Comment({
 	);
 }
 
-export default function Comments({ comments }) {
+export default function Comments({
+	comments,
+}: {
+	comments: { comment: { profilePic: string; username: string; body: string } };
+}) {
 	const commentsList = comments.map((comment) => {
 		return (
 			<Comment

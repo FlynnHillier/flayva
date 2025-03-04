@@ -1,13 +1,4 @@
-interface Recipe {
-	image: string;
-	url: string;
-}
-
-interface ImageGridProps {
-	images: Recipe[];
-}
-
-function ImageGrid({ images }: ImageGridProps) {
+function ImageGrid({ images }: { images: { image: string; url: string } }) {
 	const imgGrid = images.map((recipe, index) => (
 		<a href={recipe.url}>
 			<div key={index} className="w-full aspect-square">
@@ -22,15 +13,15 @@ function ImageGrid({ images }: ImageGridProps) {
 	return <div className="grid grid-flow-col gap-2">{imgGrid}</div>;
 }
 
-interface SimilarRecipesProps {
-	recommendedRecipes: Recipe[];
-}
-
-export default function SimilarRecipes(props: SimilarRecipesProps) {
+export default function SimilarRecipes({
+	recommendedRecipes,
+}: {
+	recommendedRecipes: { image: string; url: string };
+}) {
 	return (
 		<div className="sticky bottom-0 h-auto bg-white w-full p-3 flex flex-col">
 			<h2 className="text-2xl ml-2 font-bold mb-2">Similar Recipes:</h2>
-			<ImageGrid images={props.recommendedRecipes} />
+			<ImageGrid images={recommendedRecipes} />
 		</div>
 	);
 }

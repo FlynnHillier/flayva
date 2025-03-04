@@ -1,5 +1,4 @@
-import { FaStar, FaStarHalfAlt, FaRegStar } from 'react-icons/fa';
-
+import { Star, StarHalf } from 'lucide-react';
 
 export const StarRating: React.FC = ({
 	rating,
@@ -12,12 +11,9 @@ export const StarRating: React.FC = ({
 	return (
 		<div className={`flex items-center ${className}`}>
 			{Array.from({ length: fullStars }).map((_, index) => (
-				<FaStar key={`full-${index}`} />
+				<Star key={`full-${index}`} />
 			))}
-			{hasHalfStar && <FaStarHalfAlt key="half" />}
-			{Array.from({ length: emptyStars }).map((_, index) => (
-				<FaRegStar key={`empty-${index}`} />
-			))}
+			{hasHalfStar && <StarHalf key="half" />}
 		</div>
 	);
 };
@@ -42,7 +38,7 @@ export default function RecipeBio({
 				<div className="ml-4 text-md font-bold">{username}</div>
 			</div>
 			<div className="text-gray-500">
-				<StarRating rating={rating} className="text-yellow-500" />
+				<StarRating rating={rating} className="text-yellow-500 mt-5" />
 				<div className="text-sm font-medium relative ml-8">
 					{rating.toFixed(1)}
 				</div>

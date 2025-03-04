@@ -1,4 +1,12 @@
-function Comment({profilePic, username, body}: {profilePic: string, username: string, body: string}) {
+function Comment({
+	profilePic,
+	username,
+	body,
+}: {
+	profilePic: string;
+	username: string;
+	body: string;
+}) {
 	return (
 		<>
 			<li className="w-full mt-2">
@@ -20,7 +28,7 @@ function Comment({profilePic, username, body}: {profilePic: string, username: st
 	);
 }
 
-export default function Comments({comments}) {
+export default function Comments({ comments }) {
 	const commentsList = comments.map((comment) => {
 		return (
 			<Comment

@@ -1,5 +1,14 @@
-import RecipeMain from './RecipeMain';
 import RecipeSidebar from './RecipeSidebar';
+
+function RecipeMain() {
+	return (
+		<>
+			<div className="w-full" id="recipeMain">
+				<h1>RECIPE MAIN SECTION</h1>
+			</div>
+		</>
+	);
+}
 
 export default function Recipe() {
 	return (

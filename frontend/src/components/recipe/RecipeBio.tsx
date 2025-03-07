@@ -1,48 +1,46 @@
-import { Star, StarHalf } from 'lucide-react';
+import { cn } from "@/lib/utils";
+import { Star, StarHalf } from "lucide-react";
+import { useMemo } from "react";
+import { ClassNameValue } from "tailwind-merge";
 
-export const StarRating: React.FC = ({
-	rating,
-	className = 'text-yellow-500 w-16 h-16',
-}) => {
-	const fullStars = Math.floor(rating);
-	const hasHalfStar = rating - fullStars >= 0.5;
-	const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+function StarRating({ rating, className }: { rating: number; className: ClassNameValue }) {
+  const stars = useMemo<{ full: number; half: boolean }>(
+    () => ({
+      full: Math.floor(rating),
+      half: rating - Math.floor(rating) >= 0.5,
+    }),
+    [rating]
+  );
 
-	return (
-		<div className={`flex items-center ${className}`}>
-			{Array.from({ length: fullStars }).map((_, index) => (
-				<Star key={`full-${index}`} />
-			))}
-			{hasHalfStar && <StarHalf key="half" />}
-		</div>
-	);
-};
+  return (
+    <div className={cn("flex items-center text-yellow-500 w-16 h-16", className)}>
+      {Array.from({ length: stars.full }).map((_, index) => (
+        <Star key={`full-${index}`} />
+      ))}
+      {stars.half && <StarHalf key="half" />}
+    </div>
+  );
+}
 
-export default function RecipeBio({
-	profilePic,
-	username,
-	rating,
+export default function RecipeSidebarHeader({
+  profilePic,
+  username,
+  rating,
 }: {
-	profilePic: string;
-	username: string;
-	rating: number;
+  profilePic: string;
+  username: string;
+  rating: number;
 }) {
-	return (
-		<div className="flex items-center justify-between p-6">
-			<div className="flex items-center">
-				<img
-					className="w-12 h-12 rounded-full object-cover"
-					src={profilePic}
-					alt={username}
-				/>
-				<div className="ml-4 text-md font-bold">{username}</div>
-			</div>
-			<div className="text-gray-500">
-				<StarRating rating={rating} className="text-yellow-500 mt-5" />
-				<div className="text-sm font-medium relative ml-8">
-					{rating.toFixed(1)}
-				</div>
-			</div>
-		</div>
-	);
+  return (
+    <div className="flex items-center justify-between p-6">
+      <div className="flex items-center">
+        <img className="w-12 h-12 rounded-full object-cover" src={profilePic} alt={username} />
+        <div className="ml-4 text-md font-bold">{username}</div>
+      </div>
+      <div className="text-gray-500">
+        <StarRating rating={rating} className="mt-5" />
+        <div className="text-sm font-medium relative ml-8">{rating.toFixed(1)}</div>
+      </div>
+    </div>
+  );
 }

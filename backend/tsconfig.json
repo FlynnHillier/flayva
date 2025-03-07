@@ -15,7 +15,9 @@
       "@controllers/*": ["src/server/controllers/*"],
       "@routes/*": ["src/server/routes/*"],
       "@middleware/*": ["src/server/middleware/*"],
-      "@auth/*": ["src/auth/*"]
+      "@auth/*": ["src/auth/*"],
+      "@constants/*": ["src/constants/*"],
+      "@flayva-monorepo/shared/*": ["../shared/src/*"]
       // "@config/*": ["./src/constants/config/*"]
     },
     "composite": true,
@@ -24,6 +26,11 @@
     "sourceMap": true
   },
 
-  "include": ["src/**/*"]
-  // "references": [{ "path": "../shared" }]
+  "include": ["src/**/*"],
+  "exclude": [
+    "../shared/dist", // Exclude the built output of the shared package
+    "../shared/src", // Exclude the source files of the shared package
+    "../shared/node_modules"
+  ],
+  "references": [{ "path": "../shared" }]
 }

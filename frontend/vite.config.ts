@@ -16,6 +16,7 @@ export default defineConfig({
       "@pages": path.resolve(__dirname, "src/pages"),
       "@lib": path.resolve(__dirname, "src/lib"),
       "@assets": path.resolve(__dirname, "src/assets"),
+      "@apptypes": path.resolve(__dirname, "src/types"),
     },
   },
 });

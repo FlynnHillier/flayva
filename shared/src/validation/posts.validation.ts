@@ -59,23 +59,17 @@ const ingredient_amount = z.object({
 
 const ingredient_unit = z.enum(INGREDIENT_UNITS);
 
-const ingredient = z.object({
+export const ingredient = z.object({
   id: z.number().min(MIN_RECIPE_INGREDIENT_ID).max(MAX_RECIPE_INGREDIENT_ID),
   amount: ingredient_amount,
   unit: ingredient_unit,
 });
 
-const ingredients = z
-  .array(ingredient)
-  .min(MIN_RECIPE_INGREDIENT_COUNT)
-  .max(MAX_RECIPE_INGREDIENT_COUNT);
-
 // ## TAGS ##
-const tag = z.object({
+export const tag = z.object({
   tagId: z.number().min(MIN_RECIPE_TAG_ID).max(MAX_RECIPE_TAG_ID),
+  tagName: z.string(),
 });
-
-const tags = z.array(tag).min(MIN_RECIPE_TAG_COUNT).max(MAX_RECIPE_TAG_COUNT);
 
 // ## META INFO ##
 const metaInfo = z.object({
@@ -90,7 +84,13 @@ export const createRecipeSchema = z.object({
   title: z.string().min(MIN_RECIPE_TITLE_LENGTH).max(MAX_RECIPE_TITLE_LENGTH),
   description: z.string().min(MIN_RECIPE_DESCRIPTION_LENGTH).max(MAX_RECIPE_DESCRIPTION_LENGTH),
   instructions: instructions,
-  ingredients: ingredients,
-  tags: tags,
+  ingredients: z
+    .array(ingredient)
+    .min(MIN_RECIPE_INGREDIENT_COUNT)
+    .max(MAX_RECIPE_INGREDIENT_COUNT),
+  tags: z
+    .array(tag.pick({ tagId: true }))
+    .min(MIN_RECIPE_TAG_COUNT)
+    .max(MAX_RECIPE_TAG_COUNT),
   metaInfo: metaInfo,
 });

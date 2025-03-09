@@ -81,7 +81,7 @@ export const recipe_ingredients = pgTable(
     recipe_id: varchar("recipe_id")
       .notNull()
       .references(() => recipes.id, { onDelete: "cascade" }),
-    ingredient_id: varchar("ingredient_id")
+    ingredient_id: integer("ingredient_id")
       .notNull()
       .references(() => ingredient_items.id, {
         onDelete: "cascade",
@@ -95,7 +95,7 @@ export const recipe_ingredients = pgTable(
 );
 
 export const ingredient_items = pgTable("ingredients_items", {
-  id: varchar("id").primaryKey(),
+  id: integer("id").primaryKey(),
   name: varchar("name").notNull(),
   group: ingredientGroupEnum("group").notNull(),
   subgroup: ingredientSubgroupEnum("subgroup").notNull(),

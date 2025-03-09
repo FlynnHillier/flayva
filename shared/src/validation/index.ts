@@ -1,1 +1,1 @@
-export * from "./posts.validation";
+export * from "./recipe.validation";

@@ -59,7 +59,7 @@ export const ProfileHeader = ({
         <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4">
           <h1 className="text-2xl font-bold flex-1">{data?.user?.username}</h1>
           <div className="flex gap-2">
-            {data?.user?.id === userData?.user?.id && editingProfile && (
+            {data?.user?.id === userData?.user?.id && !editingProfile && (
               <Button
                 onClick={onEditToggle}
                 variant="outline"

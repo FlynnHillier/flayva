@@ -20,40 +20,48 @@ const images = [food1, food2, food3, food4, food1, food2, food3, food4];
 
 const ProfilePage = () => {
   const { objectid } = useParams();
-  const [editingProfile, setEditingProfile] = useState(true);
+  const [editingProfile, setEditingProfile] = useState(false);
 
   const handleEditToggle = () => {
     setEditingProfile((prev) => !prev);
   };
-  return (
-    <div>
-      {editingProfile ? (
-        <div className="w-full p-4 bg-white">
-          <ProfileHeader
-            objectId={objectid || "default"}
-            onEditToggle={handleEditToggle}
-            editingProfile={editingProfile}
-          />
-        </div>
-      ) : null}
 
-      <div className=" flex justify-center p-4">
-        {editingProfile ? (
-          <Card className="relative xl:w-330">
-            <CardContent>
-              <div className="p-4 grid grid-cols-[repeat(auto-fit,minmax(150px,1fr))] gap-2">
-                {images.map((src, index) => (
-                  <Link to="/profile/detail">
-                    <img key={index} src={src} alt={`Food ${index + 1}`} />
-                  </Link>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        ) : (
-          <EditProfile handleClose={handleEditToggle} />
-        )}
+  return (
+    <div className="relative">
+      <div className="w-full p-4 bg-white">
+        <ProfileHeader
+          objectId={objectid || "default"}
+          onEditToggle={handleEditToggle}
+          editingProfile={editingProfile}
+        />
       </div>
+
+      <div
+        className={`flex justify-center p-4 ${editingProfile ? "blur-sm" : ""}`}
+      >
+        <div className="w-full max-w-screen-2xl">
+          <div className="grid grid-cols-[repeat(auto-fit,minmax(min(240px,100%),1fr))] gap-2">
+            {images.map((src, index) => (
+              <Link key={index} to="/profile/detail" className="block w-full">
+                <img
+                  key={index}
+                  src={src}
+                  alt={`Food ${index + 1}`}
+                  className="w-full h-auto aspect-square object-cover"
+                />
+              </Link>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {editingProfile && (
+        <div className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50">
+          <div className="flex items-center justify-center h-full">
+            <EditProfile handleClose={handleEditToggle} />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

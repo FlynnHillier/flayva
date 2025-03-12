@@ -6,7 +6,15 @@ import { Avatar, AvatarImage, AvatarFallback } from "@components/ui/avatar";
 import { Button } from "@components/ui/button";
 import { useFetchUserById } from "@/hooks/social.hooks";
 
-export const ProfileHeader = ({ objectId }: { objectId: string }) => {
+export const ProfileHeader = ({
+  objectId,
+  onEditToggle,
+  editingProfile,
+}: {
+  objectId: string;
+  onEditToggle: () => void;
+  editingProfile: boolean;
+}) => {
   const { data, isLoading, isError } = useFetchUserById(objectId);
   const { data: userData } = useMe();
   const [isCopied, setIsCopied] = useState(false);
@@ -51,12 +59,14 @@ export const ProfileHeader = ({ objectId }: { objectId: string }) => {
         <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4">
           <h1 className="text-2xl font-bold flex-1">{data?.user?.username}</h1>
           <div className="flex gap-2">
-            {data?.user?.id === userData?.user?.id && (
-              <Link to="/profile/edit">
-                <Button variant="outline" className="flex-1 sm:flex-auto ">
-                  Edit Profile
-                </Button>
-              </Link>
+            {data?.user?.id === userData?.user?.id && editingProfile && (
+              <Button
+                onClick={onEditToggle}
+                variant="outline"
+                className="flex-1 sm:flex-auto "
+              >
+                Edit Profile
+              </Button>
             )}
             <Button
               variant="outline"

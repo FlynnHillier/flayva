@@ -10,8 +10,7 @@ import FeedPage from "./pages/Feed.page";
 import LoginPage from "./pages/Login.page";
 import LogoutPage from "./pages/Logout.page";
 import CreatePostPage from "./pages/Create-post.page";
-import EditProfile from "./pages/profile-pages/Edit-profile.page";
-import ProfilePage from "./pages/profile-pages/Profile.page";
+import ProfilePage from "./pages/Profile.page";
 /**
  * Routes that should not show the sidebar
  */
@@ -66,7 +65,6 @@ function App() {
             <Route path="/post" element={<CreatePostPage />} />
             <Route path="/logout" element={<LogoutPage />} />
             <Route path="/feed" element={<FeedPage />} />
-            <Route path="/profile/edit" element={<EditProfile />} />
             <Route path="/profile/:objectid" element={<ProfilePage />} />
           </Route>
           <Route element={<UnauthenticatedRouter />}>

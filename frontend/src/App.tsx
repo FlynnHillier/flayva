@@ -5,13 +5,15 @@ import { useMe } from "./hooks/auth.hooks";
 import { NuqsAdapter } from "nuqs/adapters/react-router/v7";
 
 /* Pages */
-import HomePage from "@/pages/Home.page";
-import AppSidebar from "@/components/layout/Sidebar";
+import HomePage from "./pages/Home.page";
+import AppSidebar from "./components/layout/Sidebar";
 import FeedPage from "./pages/Feed.page";
 import LoginPage from "./pages/Login.page";
 import LogoutPage from "./pages/Logout.page";
 import CreatePostPage from "./pages/Create-post.page";
+import RecipePage from "./pages/Recipe.page";
 import ProfilePage from "./pages/Profile.page";
+
 /**
  * Routes that should not show the sidebar
  */

@@ -31,7 +31,7 @@
       "@queries/*": ["src/queries/*"],
       "@hooks/*": ["src/hooks/*"],
       "@pages/*": ["src/pages/*"],
-      "@flayva-monorepo/shared": ["../shared/src"],
+      "@flayva-monorepo/shared/*": ["../shared/src/*"],
       "@lib/*": ["src/lib/*"],
       "@assets/*": ["src/assets/*"]
     }

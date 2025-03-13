@@ -1,15 +1,5 @@
-import { useMe } from "@/hooks/auth.hooks";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-  CardFooter,
-} from "@/components/ui/card";
 import { ProfileHeader } from "@/components/ProfileHeader";
-import { Link, useLocation, useParams } from "react-router-dom";
-import { useState } from "react";
+import { Link, useParams } from "react-router-dom";
 import { useQueryState } from "nuqs";
 import food1 from "@assets/test/food/food1.jpg";
 import food2 from "@assets/test/food/food2.jpeg";

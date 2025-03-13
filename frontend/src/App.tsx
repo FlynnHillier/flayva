@@ -55,10 +55,6 @@ function App() {
     () => !HIDE_SIDEBAR_ROUTES.includes(pathname),
     [pathname]
   );
-  const shouldShowSidebar = useMemo(
-    () => !HIDE_SIDEBAR_ROUTES.includes(pathname),
-    [pathname]
-  );
 
   return (
     <NuqsAdapter>

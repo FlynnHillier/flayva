@@ -1,5 +1,5 @@
-import { LoginForm } from "@/Components/login-form";
-import { Button } from "@/Components/ui/button";
+import { LoginForm } from "@/components/login-form";
+import { Button } from "@/components/ui/button";
 import { useLogout, useMe } from "@/hooks/auth.hooks";
 import { useGlobalErrorToast } from "@/hooks/error.hooks";
 import { User } from "@flayva-monorepo/shared";

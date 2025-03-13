@@ -1,5 +1,5 @@
-import { LoginForm } from "@/components/login-form";
-import { Button } from "@/components/ui/button";
+import { LoginForm } from "@/Components/login-form";
+import { Button } from "@/Components/ui/button";
 import { useLogout, useMe } from "@/hooks/auth.hooks";
 import { useGlobalErrorToast } from "@/hooks/error.hooks";
 import { User } from "@flayva-monorepo/shared";
@@ -16,7 +16,7 @@ function TestAuthenticated({ user }: { user: User }) {
 
   return (
     <>
-      <p className="text-green-800"> Authenticated! - '{user.username}' </p>
+      <p className="text-green-800"> Authenticated! </p>
       <Button disabled={isPending} onClick={() => mutate(undefined)}>
         Logout
       </Button>

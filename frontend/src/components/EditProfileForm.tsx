@@ -42,7 +42,6 @@ export default function EditProfile({
 }: {
   handleClose: () => void;
 }) {
-  handleClose();
   const [files, setFiles] = useState<File[] | null>(null);
   const dropZoneConfig = {
     maxFiles: 5,

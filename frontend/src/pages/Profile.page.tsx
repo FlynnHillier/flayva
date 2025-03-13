@@ -10,7 +10,7 @@ import {
 import { ProfileHeader } from "@/components/ProfileHeader";
 import { Link, useLocation, useParams } from "react-router-dom";
 import { useState } from "react";
-
+import { useQueryState } from "nuqs";
 import food1 from "@assets/test/food/food1.jpg";
 import food2 from "@assets/test/food/food2.jpeg";
 import food3 from "@assets/test/food/food3.jpg";
@@ -20,25 +20,24 @@ const images = [food1, food2, food3, food4, food1, food2, food3, food4];
 
 const ProfilePage = () => {
   const { objectid } = useParams();
-  const [editingProfile, setEditingProfile] = useState(false);
 
-  const handleEditToggle = () => {
-    setEditingProfile((prev) => !prev);
-  };
+  const [isEditing, setEditQuery] = useQueryState("edit", {
+    parse: (value) => value === "true",
+    defaultValue: false,
+    shallow: false,
+  });
 
   return (
     <div className="relative">
       <div className="w-full p-4 bg-white">
         <ProfileHeader
           objectId={objectid || "default"}
-          onEditToggle={handleEditToggle}
-          editingProfile={editingProfile}
+          onEditToggle={() => setEditQuery(true)}
+          editingProfile={isEditing}
         />
       </div>
 
-      <div
-        className={`flex justify-center p-4 ${editingProfile ? "blur-sm" : ""}`}
-      >
+      <div className={`flex justify-center p-4 ${isEditing ? "blur-sm" : ""}`}>
         <div className="w-full max-w-screen-2xl">
           <div className="grid grid-cols-[repeat(auto-fit,minmax(min(240px,100%),1fr))] gap-2">
             {images.map((src, index) => (
@@ -55,10 +54,10 @@ const ProfilePage = () => {
         </div>
       </div>
 
-      {editingProfile && (
+      {isEditing && (
         <div className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50">
           <div className="flex items-center justify-center h-full">
-            <EditProfile handleClose={handleEditToggle} />
+            <EditProfile handleClose={() => setEditQuery(null)} />
           </div>
         </div>
       )}

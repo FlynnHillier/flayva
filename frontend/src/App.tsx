@@ -4,12 +4,14 @@ import { useMemo } from "react";
 import { useMe } from "./hooks/auth.hooks";
 
 /* Pages */
-import HomePage from "@/pages/Home.page";
-import AppSidebar from "@/components/layout/Sidebar";
-import FeedPage from "./pages/Feed.page";
-import LoginPage from "./pages/Login.page";
-import LogoutPage from "./pages/Logout.page";
-import CreatePostPage from "./pages/Create-post.page";
+import HomePage from "@/Pages/Home.page";
+import AppSidebar from "@/Components/layout/Sidebar";
+import FeedPage from "./Pages/Feed.page";
+import LoginPage from "./Pages/Login.page";
+import LogoutPage from "./Pages/Logout.page";
+import CreatePostPage from "./Pages/Create-post.page";
+import EditProfile from "./Pages/EditProfile";
+import ProfilePage from "./Pages/ProfilePage";
 
 /**
  * Routes that should not show the sidebar
@@ -50,7 +52,10 @@ function UnauthenticatedRouter() {
 function App() {
   const { pathname } = useLocation();
 
-  const shouldShowSidebar = useMemo(() => !HIDE_SIDEBAR_ROUTES.includes(pathname), [pathname]);
+  const shouldShowSidebar = useMemo(
+    () => !HIDE_SIDEBAR_ROUTES.includes(pathname),
+    [pathname]
+  );
 
   return (
     <div className="w-screen h-screen flex flex-row flex-nowrap justify-start">
@@ -62,6 +67,8 @@ function App() {
             <Route path="/post" element={<CreatePostPage />} />
             <Route path="/logout" element={<LogoutPage />} />
             <Route path="/feed" element={<FeedPage />} />
+            <Route path="/profile/edit" element={<EditProfile />} />
+            <Route path="/profile" element={<ProfilePage />} />
           </Route>
           <Route element={<UnauthenticatedRouter />}>
             <Route path="/login" element={<LoginPage />} />

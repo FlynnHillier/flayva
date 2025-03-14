@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Button } from "@/components/ui/button";
-import { useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   Form,
   FormControl,
@@ -22,29 +22,39 @@ import {
 } from "@/components/ui/file-upload";
 import { Textarea } from "@/components/ui/textarea";
 import { DropzoneOptions } from "react-dropzone";
+import { useTestFileUpload } from "@/hooks/_test.hooks";
+import { devFileUploadSchema } from "@flayva-monorepo/shared/validation";
 
-const formSchema = z.object({
-  text: z.string().nonempty(),
-  files: z.array(zfd.file().refine((f) => f.size < 1024 * 1024 * 4)).min(1),
-});
+const dropZoneConfig: DropzoneOptions = {
+  maxFiles: 5,
+  maxSize: 1024 * 1024 * 4,
+  multiple: true,
+  accept: {
+    "image/jpeg": [],
+    "image/png": [],
+  },
+};
 
 export default function TestImageForm() {
-  const dropZoneConfig: DropzoneOptions = {
-    maxFiles: 5,
-    maxSize: 1024 * 1024 * 4,
-    multiple: true,
-    accept: {
-      "image/jpeg": [],
-      "image/png": [],
-    },
-  };
-
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const [isDisabled, setIsDisabled] = useState<boolean>(false);
+  const form = useForm<z.infer<typeof devFileUploadSchema>>({
+    resolver: zodResolver(devFileUploadSchema),
   });
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
+  const { mutate, data, isPending, error } = useTestFileUpload();
+
+  useEffect(() => {
+    setIsDisabled(isPending);
+  }, [isPending]);
+
+  useEffect(() => {
+    console.log(data, error);
+  }, [data, error]);
+
+  const onSubmit = (values: z.infer<typeof devFileUploadSchema>) => {
     console.log(values);
+
+    mutate(values);
   };
 
   const handleFileChange = useCallback(
@@ -61,6 +71,7 @@ export default function TestImageForm() {
           <Card>
             <CardContent>
               <FormField
+                disabled={isDisabled}
                 control={form.control}
                 name="text"
                 render={({ field }) => (
@@ -73,6 +84,7 @@ export default function TestImageForm() {
                 )}
               />
               <FormField
+                disabled={isDisabled}
                 control={form.control}
                 name="files"
                 render={({ field }) => (
@@ -116,7 +128,9 @@ export default function TestImageForm() {
                   </FormItem>
                 )}
               />
-              <Button type="submit">Submit</Button>
+              <Button type="submit" disabled={isDisabled}>
+                Submit
+              </Button>
             </CardContent>
           </Card>
         </form>

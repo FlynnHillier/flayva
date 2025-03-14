@@ -66,11 +66,11 @@ function App() {
             <Route path="/feed" element={<FeedPage />} />
             <Route path="/profile/edit" element={<EditProfile />} />
             <Route path="/profile" element={<ProfilePage />} />
-            <Route path="/dev" element={<DevPage />} />
           </Route>
           <Route element={<UnauthenticatedRouter />}>
             <Route path="/login" element={<LoginPage />} />
           </Route>
+          <Route path="/dev" element={<DevPage />} />
           <Route path="*" element={<div>404 - Not found</div>} />
         </Routes>
       </main>

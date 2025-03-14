@@ -1,4 +1,4 @@
-import { RECIPES } from "@flayva-monorepo/shared/constants";
+import { RECIPE } from "@flayva-monorepo/shared/constants";
 import { users } from "@/db/schema";
 import { posts } from "@/db/schemas/posts.schema";
 import { integer, pgEnum, pgTable, primaryKey, timestamp, varchar } from "drizzle-orm/pg-core";
@@ -6,15 +6,15 @@ import { relations } from "drizzle-orm";
 
 // ## ENUMS ##
 
-export const tagCategoryEnum = pgEnum("category", RECIPES.TAG_CATEGORIES);
+export const tagCategoryEnum = pgEnum("category", RECIPE.TAG_CATEGORIES);
 
-export const tagGroupEnum = pgEnum("group", RECIPES.TAG_GROUPS);
+export const tagGroupEnum = pgEnum("group", RECIPE.TAG_GROUPS);
 
-export const ingredientUnitEnum = pgEnum("unit", RECIPES.INGREDIENT_UNITS);
+export const ingredientUnitEnum = pgEnum("unit", RECIPE.INGREDIENT_UNITS);
 
-export const ingredientGroupEnum = pgEnum("ingredient_group", RECIPES.INGREDIENT_GROUPS);
+export const ingredientGroupEnum = pgEnum("ingredient_group", RECIPE.INGREDIENT_GROUPS);
 
-export const ingredientSubgroupEnum = pgEnum("ingredient_subgroup", RECIPES.INGREDIENT_SUBGROUPS);
+export const ingredientSubgroupEnum = pgEnum("ingredient_subgroup", RECIPE.INGREDIENT_SUBGROUPS);
 
 // ## TABLES ##
 

@@ -23,7 +23,10 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { DropzoneOptions } from "react-dropzone";
 import { useTestFileUpload } from "@/hooks/_test.hooks";
-import { devFileUploadSchema } from "@flayva-monorepo/shared/validation";
+import { TEST } from "@flayva-monorepo/shared/validation";
+import { toast } from "sonner";
+
+const { devFileUploadSchema } = TEST;
 
 const dropZoneConfig: DropzoneOptions = {
   maxFiles: 5,
@@ -41,7 +44,11 @@ export default function TestImageForm() {
     resolver: zodResolver(devFileUploadSchema),
   });
 
-  const { mutate, data, isPending, error } = useTestFileUpload();
+  const { mutate, data, isPending, error } = useTestFileUpload({
+    onError(error, variables, context) {
+      toast.error("Something went wrong!");
+    },
+  });
 
   useEffect(() => {
     setIsDisabled(isPending);

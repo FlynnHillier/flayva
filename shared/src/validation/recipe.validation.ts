@@ -1,38 +1,39 @@
+import { zfd } from "zod-form-data";
 import {
-  MAX_RECIPE_DESCRIPTION_LENGTH,
-  MAX_RECIPE_INSTRUCTION_STEP_LENGTH,
-  MAX_RECIPE_INSTRUCTION_STEP_COUNT,
-  MAX_RECIPE_TITLE_LENGTH,
-  MIN_RECIPE_DESCRIPTION_LENGTH,
-  MIN_RECIPE_INSTRUCTION_STEP_LENGTH,
-  MIN_RECIPE_INSTRUCTION_STEP_COUNT,
-  MIN_RECIPE_TITLE_LENGTH,
-  MIN_RECIPE_INGREDIENT_ID,
-  MAX_RECIPE_INGREDIENT_ID,
-  MIN_RECIPE_INGREDIENT_COUNT,
-  MAX_RECIPE_INGREDIENT_COUNT,
-  MIN_RECIPE_TAG_ID,
-  MAX_RECIPE_TAG_ID,
-  MAX_RECIPE_TAG_COUNT,
-  MIN_RECIPE_TAG_COUNT,
+  RECIPE_DESCRIPTION_LENGTH_MAX,
+  RECIPE_INSTRUCTION_MAX_STEP_LENGTH,
+  RECIPE_INSTRUCTION_MAX_STEP_COUNT,
+  RECIPE_TITLE_LENGTH_MAX,
+  RECIPE_DESCRIPTION_LENGTH_MIN,
+  RECIPE_INSTRUCTION_MIN_STEP_LENGTH,
+  RECIPE_INSTRUCTION_MIN_STEP_COUNT,
+  RECIPE_TITLE_LENGTH_MIN,
+  RECIPE_INGREDIENT_MIN_ID,
+  RECIPE_INGREDIENT_MAX_ID,
+  RECIPE_INGREDIENT_MIN_COUNT,
+  RECIPE_INGREDIENT_MAX_COUNT,
+  RECIPE_TAG_ID_MIN,
+  RECIPE_TAG_ID_MAX,
+  RECIPE_TAG_COUNT_MAX,
+  RECIPE_TAG_COUNT_MIN,
   INGREDIENT_UNITS,
-  MIN_RECIPE_INGREDIENT_FRACTIONAL_DENOMINATOR,
-  MAX_RECIPE_INGREDIENT_FRACTIONAL_DENOMINATOR,
+  RECIPE_INGREDIENT_FRACTIONAL_DENOMINATOR_MIN,
+  RECIPE_INGREDIENT_FRACTIONAL_DENOMINATOR_MAX,
 } from "../constants/recipes.constants";
 import { z } from "zod";
 
 // ## INSTRUCTIONS ##
-const instruction = z.object({
+export const instruction = z.object({
   instruction: z
     .string()
-    .min(MIN_RECIPE_INSTRUCTION_STEP_LENGTH)
-    .max(MAX_RECIPE_INSTRUCTION_STEP_LENGTH),
+    .min(RECIPE_INSTRUCTION_MIN_STEP_LENGTH)
+    .max(RECIPE_INSTRUCTION_MAX_STEP_LENGTH),
 });
 
-const instructions = z
+export const instructions = z
   .array(instruction)
-  .min(MIN_RECIPE_INSTRUCTION_STEP_COUNT)
-  .max(MAX_RECIPE_INSTRUCTION_STEP_COUNT);
+  .min(RECIPE_INSTRUCTION_MIN_STEP_COUNT)
+  .max(RECIPE_INSTRUCTION_MAX_STEP_COUNT);
 
 // ## INGREDIENTS ##
 const ingredient_fractional_amount = z
@@ -41,8 +42,8 @@ const ingredient_fractional_amount = z
     denominator: z
       .number()
       .int()
-      .min(MIN_RECIPE_INGREDIENT_FRACTIONAL_DENOMINATOR)
-      .max(MAX_RECIPE_INGREDIENT_FRACTIONAL_DENOMINATOR),
+      .min(RECIPE_INGREDIENT_FRACTIONAL_DENOMINATOR_MIN)
+      .max(RECIPE_INGREDIENT_FRACTIONAL_DENOMINATOR_MAX),
   })
   .refine(
     ({ denominator, numerator }) => numerator < denominator, // Ensure numerator is less than denominator
@@ -60,19 +61,26 @@ const ingredient_amount = z.object({
 const ingredient_unit = z.enum(INGREDIENT_UNITS);
 
 export const ingredient = z.object({
-  id: z.number().min(MIN_RECIPE_INGREDIENT_ID).max(MAX_RECIPE_INGREDIENT_ID),
+  id: z.number().min(RECIPE_INGREDIENT_MIN_ID).max(RECIPE_INGREDIENT_MAX_ID),
   amount: ingredient_amount,
   unit: ingredient_unit,
 });
 
+export const ingredients = z
+  .array(ingredient)
+  .min(RECIPE_INGREDIENT_MIN_COUNT)
+  .max(RECIPE_INGREDIENT_MAX_COUNT);
+
 // ## TAGS ##
 export const tag = z.object({
-  tagId: z.number().min(MIN_RECIPE_TAG_ID).max(MAX_RECIPE_TAG_ID),
+  tagId: z.number().min(RECIPE_TAG_ID_MIN).max(RECIPE_TAG_ID_MAX),
   tagName: z.string(),
 });
 
+export const tags = z.array(tag).min(RECIPE_TAG_COUNT_MIN).max(RECIPE_TAG_COUNT_MAX);
+
 // ## META INFO ##
-const metaInfo = z.object({
+export const metaInfo = z.object({
   prepTime: z.number().nullable(),
   cookTime: z.number().nullable(),
   servings: z.number().nullable(),
@@ -80,17 +88,17 @@ const metaInfo = z.object({
 
 // ## RECIPE ##
 
-export const createRecipeSchema = z.object({
-  title: z.string().min(MIN_RECIPE_TITLE_LENGTH).max(MAX_RECIPE_TITLE_LENGTH),
-  description: z.string().min(MIN_RECIPE_DESCRIPTION_LENGTH).max(MAX_RECIPE_DESCRIPTION_LENGTH),
+export const title = z.string().min(RECIPE_TITLE_LENGTH_MIN).max(RECIPE_TITLE_LENGTH_MAX);
+export const description = z
+  .string()
+  .min(RECIPE_DESCRIPTION_LENGTH_MIN)
+  .max(RECIPE_DESCRIPTION_LENGTH_MAX);
+
+export const recipe = z.object({
+  title: title,
+  description: description,
   instructions: instructions,
-  ingredients: z
-    .array(ingredient)
-    .min(MIN_RECIPE_INGREDIENT_COUNT)
-    .max(MAX_RECIPE_INGREDIENT_COUNT),
-  tags: z
-    .array(tag.pick({ tagId: true }))
-    .min(MIN_RECIPE_TAG_COUNT)
-    .max(MAX_RECIPE_TAG_COUNT),
+  ingredients: ingredients,
+  tags: tags,
   metaInfo: metaInfo,
 });

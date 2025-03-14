@@ -1,1 +1,2 @@
-export * as RECIPES from "./recipes.constants";
+export * as RECIPE from "./recipes.constants";
+export * as POST from "./post.constants";

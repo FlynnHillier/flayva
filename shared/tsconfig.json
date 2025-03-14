@@ -10,9 +10,9 @@
     "declarationMap": true,
     "sourceMap": true,
     "paths": {
-      "@types/*": ["src/types/*"],
-      "@constants/*": ["src/constants/*"],
-      "@validation/*": ["src/validation/*"]
+      // "@types/*": ["src/types/*"],
+      // "@constants/*": ["src/constants/*"],
+      // "@validation/*": ["src/validation/*"]
     }
   },
   "include": ["src/**/*"],

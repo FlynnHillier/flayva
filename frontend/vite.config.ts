@@ -17,6 +17,7 @@ export default defineConfig({
       "@lib": path.resolve(__dirname, "src/lib"),
       "@assets": path.resolve(__dirname, "src/assets"),
       "@apptypes": path.resolve(__dirname, "src/types"),
+      shared: path.resolve(__dirname, "../shared"), //TODO: is this ok?
     },
   },
 });

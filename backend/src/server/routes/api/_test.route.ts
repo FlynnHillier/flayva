@@ -1,5 +1,5 @@
 import { Router, Request, Response } from "express";
-import { devFileUploadSchema } from "@flayva-monorepo/shared/validation";
+import { TEST } from "@flayva-monorepo/shared/validation";
 import { validateRequestBodyWithFiles } from "@/server/middleware/validation.middleware";
 import { uploadthing } from "@/lib/uploadthing";
 
@@ -9,7 +9,7 @@ const router: Router = Router();
 
 router.post(
   "/fileupload",
-  ...validateRequestBodyWithFiles(devFileUploadSchema, [{ name: "files", maxCount: 2 }]),
+  ...validateRequestBodyWithFiles(TEST.devFileUploadSchema, [{ name: "files", maxCount: 2 }]),
   async (req: Request, res: Response) => {
     console.log(req.body);
 

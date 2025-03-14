@@ -153,32 +153,32 @@ export const INGREDIENT_UNITS = [
 // ## RECIPE CONFIG ##
 
 // # INSTRUCTIONS #
-export const MIN_RECIPE_INSTRUCTION_STEP_COUNT = 1;
-export const MAX_RECIPE_INSTRUCTION_STEP_COUNT = 50;
+export const RECIPE_INSTRUCTION_MIN_STEP_COUNT = 1;
+export const RECIPE_INSTRUCTION_MAX_STEP_COUNT = 50;
 
-export const MIN_RECIPE_INSTRUCTION_STEP_LENGTH = 10;
-export const MAX_RECIPE_INSTRUCTION_STEP_LENGTH = 500;
+export const RECIPE_INSTRUCTION_MIN_STEP_LENGTH = 10;
+export const RECIPE_INSTRUCTION_MAX_STEP_LENGTH = 500;
 
 // # INGREDIENTS #
-export const MIN_RECIPE_INGREDIENT_COUNT = 1;
-export const MAX_RECIPE_INGREDIENT_COUNT = 50;
+export const RECIPE_INGREDIENT_MIN_COUNT = 1;
+export const RECIPE_INGREDIENT_MAX_COUNT = 50;
 
-export const MIN_RECIPE_INGREDIENT_ID = 1;
-export const MAX_RECIPE_INGREDIENT_ID = 100000; //TODO: change this to the actual number of ingredients
+export const RECIPE_INGREDIENT_MIN_ID = 1;
+export const RECIPE_INGREDIENT_MAX_ID = 100000; //TODO: change this to the actual number of ingredients
 
-export const MIN_RECIPE_INGREDIENT_FRACTIONAL_DENOMINATOR = 2;
-export const MAX_RECIPE_INGREDIENT_FRACTIONAL_DENOMINATOR = 8;
+export const RECIPE_INGREDIENT_FRACTIONAL_DENOMINATOR_MIN = 2;
+export const RECIPE_INGREDIENT_FRACTIONAL_DENOMINATOR_MAX = 8;
 
 // # TAGS #
-export const MIN_RECIPE_TAG_COUNT = 0;
-export const MAX_RECIPE_TAG_COUNT = 10;
+export const RECIPE_TAG_COUNT_MIN = 0;
+export const RECIPE_TAG_COUNT_MAX = 10;
 
-export const MIN_RECIPE_TAG_ID = 1;
-export const MAX_RECIPE_TAG_ID = 100000; //TODO: change this to the actual number of tags
+export const RECIPE_TAG_ID_MIN = 1;
+export const RECIPE_TAG_ID_MAX = 100000; //TODO: change this to the actual number of tags
 
 // # TITLE #
-export const MIN_RECIPE_TITLE_LENGTH = 5;
-export const MAX_RECIPE_TITLE_LENGTH = 60;
+export const RECIPE_TITLE_LENGTH_MIN = 5;
+export const RECIPE_TITLE_LENGTH_MAX = 60;
 
-export const MIN_RECIPE_DESCRIPTION_LENGTH = 180;
-export const MAX_RECIPE_DESCRIPTION_LENGTH = 10;
+export const RECIPE_DESCRIPTION_LENGTH_MIN = 180;
+export const RECIPE_DESCRIPTION_LENGTH_MAX = 10;

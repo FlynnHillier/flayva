@@ -13,6 +13,7 @@ import CreatePostPage from "./pages/Create-post.page";
 import EditProfile from "./pages/profile-pages/Edit-profile.page";
 import ProfilePage from "./pages/profile-pages/Profile.page";
 import DevPage from "./pages/Dev.page";
+import { Toaster } from "sonner";
 /**
  * Routes that should not show the sidebar
  */
@@ -57,7 +58,7 @@ function App() {
   return (
     <div className="w-screen h-screen flex flex-row flex-nowrap justify-start">
       {shouldShowSidebar && <AppSidebar />}
-      <main className="grow h-screen flex flex-col flex-nowrap overflow-x-hidden overflow-y-auto">
+      <main className="grow h-screen flex flex-col flex-nowrap overflow-x-hidden overflow-y-auto relative">
         <Routes>
           <Route index element={<HomePage />} />
           <Route element={<AuthenticatedRouter />}>
@@ -73,6 +74,7 @@ function App() {
           <Route path="/dev" element={<DevPage />} />
           <Route path="*" element={<div>404 - Not found</div>} />
         </Routes>
+        <Toaster position="top-right" closeButton={false} />
       </main>
     </div>
   );

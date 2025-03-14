@@ -5,10 +5,44 @@ import { multerupload } from "@/lib/multer";
 
 import { NextFunction, Response, Request, RequestHandler } from "express";
 import { devErrorMessage } from "@/lib/utils";
+import { MulterError } from "multer";
 
 type MulterFileConfig<S extends string> = { name: S; maxCount?: number };
 
-//TODO: add better error messages for when MulterErrors are thrown
+/**
+ * A wrapper around multer's file reading middleware that handles errors
+ *
+ * @param files configuration for the files to be read from the request
+ * @returns
+ */
+export function readRequestFiles(files: MulterFileConfig<string>[]): RequestHandler {
+  return (req: Request, res: Response, next: NextFunction) => {
+    multerupload.fields(files)(req, res, (err) => {
+      if (!(err instanceof MulterError)) {
+        next(err);
+        return;
+      }
+
+      // TODO: handle other MulterErrors
+      switch (err.code) {
+        case "LIMIT_FILE_SIZE":
+          res.status(400).send({ message: `'${err.field}' file is too large`, field: err.field });
+          break;
+        case "LIMIT_UNEXPECTED_FILE":
+          res
+            .status(400)
+            .send({ message: `'${err.field}' received unexpected file`, field: err.field });
+          break;
+        case "LIMIT_FILE_COUNT":
+          res
+            .status(400)
+            .send({ message: `'${err.field}' received too many files`, field: err.field });
+          break;
+        default:
+      }
+    });
+  };
+}
 
 /**
  * attach files read by multer to the request body
@@ -18,7 +52,7 @@ type MulterFileConfig<S extends string> = { name: S; maxCount?: number };
  */
 export function attachFilesToRequestBody(files: MulterFileConfig<string>[]) {
   return [
-    multerupload.fields(files),
+    readRequestFiles(files),
     (req: Request, res: Response, next: NextFunction) => {
       const files: Record<string, Express.Multer.File[]> = (req as any).files;
 

@@ -70,10 +70,12 @@ function App() {
               <Route path="/logout" element={<LogoutPage />} />
               <Route path="/feed" element={<FeedPage />} />
               <Route path="/profile/:objectid" element={<ProfilePage />} />
+              <Route path="/recipe/:objectid" element={<RecipePage />} />
             </Route>
             <Route element={<UnauthenticatedRouter />}>
               <Route path="/login" element={<LoginPage />} />
             </Route>
+
             <Route path="*" element={<div>404 - Not found</div>} />
           </Routes>
         </main>

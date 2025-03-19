@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import { Pen } from "lucide-react";
 import {
   Form,
   FormControl,
@@ -68,11 +69,52 @@ export default function EditProfile({
   }
 
   return (
-    <div className="relative xl:w-330">
+    <div className="relative xl:w-270">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <Card>
             <CardContent>
+              <FormField
+                control={form.control}
+                name="profile_picture"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <FileUploader
+                        value={files}
+                        onValueChange={setFiles}
+                        dropzoneOptions={dropZoneConfig}
+                        className="relative bg-background"
+                      >
+                        <img
+                          className="block w-24 h-24 rounded-full object-cover"
+                          src={data?.user?.profile_picture_url}
+                        ></img>
+                        <FileInput id="fileInput">
+                          <div className="relative bg-background">
+                            <Pen
+                              size={30}
+                              className="absolute left-19 bottom-4"
+                            />
+                          </div>
+                        </FileInput>
+                        <FileUploaderContent>
+                          {files &&
+                            files.length > 0 &&
+                            files.map((file, i) => (
+                              <FileUploaderItem key={i} index={i}>
+                                <span>{file.name}</span>
+                              </FileUploaderItem>
+                            ))}
+                        </FileUploaderContent>
+                      </FileUploader>
+                    </FormControl>
+                    <FormDescription className="pb-5">
+                      Select a new profile picture.
+                    </FormDescription>
+                  </FormItem>
+                )}
+              />
               <FormField
                 control={form.control}
                 name="username"
@@ -108,56 +150,8 @@ export default function EditProfile({
                   </FormItem>
                 )}
               />
-              <FormField
-                control={form.control}
-                name="profile_picture"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Select File</FormLabel>
-                    <FormControl>
-                      <FileUploader
-                        value={files}
-                        onValueChange={setFiles}
-                        dropzoneOptions={dropZoneConfig}
-                        className="relative bg-background rounded-lg p-2"
-                      >
-                        <FileInput
-                          id="fileInput"
-                          className="outline-dashed outline-1 outline-slate-500"
-                        >
-                          <div className="flex items-center justify-center flex-col p-8 w-full ">
-                            <CloudUpload className="text-gray-500 w-10 h-10" />
-                            <p className="mb-1 text-sm text-gray-500 dark:text-gray-400">
-                              <span className="font-semibold">
-                                Click to upload
-                              </span>
-                              &nbsp; or drag and drop
-                            </p>
-                            <p className="text-xs text-gray-500 dark:text-gray-400">
-                              SVG, PNG, JPG or GIF
-                            </p>
-                          </div>
-                        </FileInput>
-                        <FileUploaderContent>
-                          {files &&
-                            files.length > 0 &&
-                            files.map((file, i) => (
-                              <FileUploaderItem key={i} index={i}>
-                                <Paperclip className="h-4 w-4 stroke-current" />
-                                <span>{file.name}</span>
-                              </FileUploaderItem>
-                            ))}
-                        </FileUploaderContent>
-                      </FileUploader>
-                    </FormControl>
-                    <FormDescription>
-                      Select a new profile picture.
-                    </FormDescription>
-                  </FormItem>
-                )}
-              />
 
-              <div className="flex justify-between">
+              <div className="flex space-x-2 md:space-x-4">
                 <Button type="button" onClick={handleClose}>
                   Cancel
                 </Button>

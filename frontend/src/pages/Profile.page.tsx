@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils";
 const images = [food1, food2, food3, food4, food1, food2, food3, food4];
 
 const ProfilePage = () => {
-  const { objectid } = useParams();
+  const { userid } = useParams();
 
   const [isEditing, setEditQuery] = useQueryState("edit", {
     parse: (value) => value === "true",
@@ -22,7 +22,7 @@ const ProfilePage = () => {
     <div className="relative">
       <div className="w-full p-4 bg-white">
         <ProfileHeader
-          objectId={objectid || "default"}
+          userid={userid || "default"}
           onEditToggle={() => setEditQuery(true)}
           editingProfile={isEditing}
         />
@@ -32,7 +32,7 @@ const ProfilePage = () => {
         <div className="w-full max-w-screen-2xl">
           <div className="grid grid-cols-[repeat(auto-fit,minmax(min(240px,100%),1fr))] gap-2">
             {images.map((src, index) => (
-              <Link key={index} to="/recipe" className="block w-full">
+              <Link key={index} to="/recipe/123" className="block w-full">
                 <img
                   key={index}
                   src={src}

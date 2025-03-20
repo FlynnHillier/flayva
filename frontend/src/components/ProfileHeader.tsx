@@ -6,18 +6,18 @@ import { Button } from "@components/ui/button";
 import { useFetchUserById } from "@/hooks/social.hooks";
 
 export const ProfileHeader = ({
-  objectId,
+  userid,
   onEditToggle,
   editingProfile,
 }: {
-  objectId: string;
+  userid: string;
   onEditToggle: () => void;
   editingProfile: boolean;
 }) => {
-  const { data, isLoading, isError } = useFetchUserById(objectId);
+  const { data, isLoading, isError } = useFetchUserById(userid);
   const { data: userData } = useMe();
   const [isCopied, setIsCopied] = useState(false);
-  const link = `http://localhost:5173/profile/:${objectId}}`;
+  const link = `http://localhost:5173/profile/:${userid}}`;
 
   const handleShareProfile = async () => {
     try {

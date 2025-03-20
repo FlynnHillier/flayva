@@ -41,13 +41,13 @@ function useSwipe(api: CarouselApi | null) {
   return { handleTouchStart, handleTouchMove, handleTouchEnd, isManual };
 }
 
-function SlideshowItem({
+export function SlideshowItem({
   Image,
   caption: quote,
   alt,
 }: {
   Image: string;
-  caption: string;
+  caption?: string;
   alt: string;
 }) {
   return (
@@ -56,7 +56,7 @@ function SlideshowItem({
         <img src={Image} alt={alt} className="h-full w-full object-cover" />
         <div className="absolute  left-0 bottom-0 h-[50%] w-full bg-gradient-to-t from-black to-black/0 z-10"></div>
         <h1 className="absolute lg:text-2xl text-xl pr-10 text-white left-10 bottom-20 z-20">
-          &quot;{quote}&quot;
+          {quote && quote.length > 0 ? '"' + quote + '"' : null}
         </h1>
       </div>
     </CarouselItem>

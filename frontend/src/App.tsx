@@ -13,6 +13,7 @@ import LogoutPage from "./pages/Logout.page";
 import CreatePostPage from "./pages/Create-post.page";
 import RecipePage from "./pages/Recipe.page";
 import ProfilePage from "./pages/Profile.page";
+import CommentsPage from "./pages/Comments.page";
 
 /**
  * Routes that should not show the sidebar
@@ -62,15 +63,16 @@ function App() {
     <NuqsAdapter>
       <div className="w-screen h-screen flex flex-row flex-nowrap justify-start">
         {shouldShowSidebar && <AppSidebar />}
-        <main className="grow bg-amber-200 h-screen flex flex-col flex-nowrap overflow-x-hidden overflow-y-auto">
+        <main className="grow bg-white h-screen flex flex-col flex-nowrap overflow-x-hidden overflow-y-auto">
           <Routes>
             <Route index element={<HomePage />} />
             <Route element={<AuthenticatedRouter />}>
               <Route path="/post" element={<CreatePostPage />} />
               <Route path="/logout" element={<LogoutPage />} />
               <Route path="/feed" element={<FeedPage />} />
-              <Route path="/profile/:objectid" element={<ProfilePage />} />
-              <Route path="/recipe/:objectid" element={<RecipePage />} />
+              <Route path="/profile/:userid" element={<ProfilePage />} />
+              <Route path="/recipe/:recipeid" element={<RecipePage />} />
+              <Route path="/recipe/:recipeid/comments" element={<CommentsPage/>} />
             </Route>
             <Route element={<UnauthenticatedRouter />}>
               <Route path="/login" element={<LoginPage />} />

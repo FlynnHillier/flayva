@@ -50,6 +50,8 @@ export default function EditProfile({
     multiple: true,
   };
   const { data } = useMe();
+  console.log(data?.user);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
@@ -122,7 +124,7 @@ export default function EditProfile({
                   <FormItem>
                     <FormLabel>Username</FormLabel>
                     <FormControl>
-                      <Input placeholder="Your Username" type="" {...field} />
+                      <Input placeholder={data?.user?.username} type="" {...field} />
                     </FormControl>
                     <FormDescription className="pb-5">
                       This is your public display name.
@@ -139,7 +141,7 @@ export default function EditProfile({
                     <FormLabel>Bio</FormLabel>
                     <FormControl>
                       <Textarea
-                        placeholder="Your Bio"
+                        placeholder={data?.user?.bio}
                         className="resize-none"
                         {...field}
                       />

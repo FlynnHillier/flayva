@@ -34,8 +34,6 @@ export const images = z.array(image).min(POST_IMAGE_MIN_COUNT).max(POST_IMAGE_MA
 
 // ## FORMS
 export const createNewPostSchema = zfd.formData({
-  title: title,
-  description: description,
   recipe: RECIPE.recipe,
   images: images,
 });

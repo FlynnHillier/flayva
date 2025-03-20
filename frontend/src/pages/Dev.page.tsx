@@ -1,4 +1,3 @@
-import TestImageForm from "@/components/_dev/TestImageForm";
 import { TagsInput } from "@/components/recipe/create/recipe-tags-input";
 import { RecipeTag } from "@apptypes/recipe.types";
 import { useState } from "react";
@@ -14,7 +13,6 @@ export default function DevPage() {
         anything else.
       </p>
       <TagsInput tags={tags} onTagsChange={setTags} />
-      <TestImageForm />
     </div>
   );
 }

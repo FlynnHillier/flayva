@@ -54,8 +54,8 @@ const ingredient_fractional_amount = z
   );
 
 const ingredient_amount = z.object({
-  whole: z.number().int().min(0),
-  fractional: ingredient_fractional_amount,
+  whole: z.number().int().min(0).default(0),
+  fractional: ingredient_fractional_amount.optional(),
 });
 
 const ingredient_unit = z.enum(INGREDIENT_UNITS);
@@ -100,5 +100,5 @@ export const recipe = z.object({
   instructions: instructions,
   ingredients: ingredients,
   tags: tags,
-  metaInfo: metaInfo,
+  metaInfo: metaInfo.optional(),
 });

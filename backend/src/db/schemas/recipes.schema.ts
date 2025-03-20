@@ -3,6 +3,7 @@ import { users } from "@/db/schema";
 import { posts } from "@/db/schemas/posts.schema";
 import { integer, pgEnum, pgTable, primaryKey, timestamp, varchar } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
+import { nanoid } from "nanoid";
 
 // ## ENUMS ##
 
@@ -19,7 +20,9 @@ export const ingredientSubgroupEnum = pgEnum("ingredient_subgroup", RECIPE.INGRE
 // ## TABLES ##
 
 export const recipes = pgTable("recipes", {
-  id: varchar("id").primaryKey(),
+  id: varchar("id")
+    .primaryKey()
+    .$defaultFn(() => nanoid(RECIPE.RECIPE_ID_LENGTH)),
   master_post_id: varchar("master_post_id").references(() => posts.id, { onDelete: "set null" }),
   title: varchar("title").notNull(),
   description: varchar("description").notNull(),
@@ -51,7 +54,7 @@ export const recipe_tags = pgTable(
   {
     recipeID: varchar("recipe_id")
       .notNull()
-      .references(() => posts.id, { onDelete: "cascade" }),
+      .references(() => recipes.id, { onDelete: "cascade" }),
     tagID: integer("tag_id")
       .notNull()
       .references(() => tags.id, { onDelete: "cascade" }),
@@ -87,7 +90,7 @@ export const recipe_ingredients = pgTable(
         onDelete: "cascade",
       }),
     amount_whole: integer("amount_whole").notNull(),
-    amount_fractional_numerator: integer("amount_fractional_numerator").notNull(),
+    amount_fractional_numerator: integer("amount_fractional_numerator").notNull().default(1),
     amount_fractional_denominator: integer("amount_fractional_denominator").notNull().default(1),
     unit: ingredientUnitEnum("unit").notNull(),
   },

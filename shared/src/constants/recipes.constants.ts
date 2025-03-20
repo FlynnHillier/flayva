@@ -170,7 +170,7 @@ export const RECIPE_INGREDIENT_FRACTIONAL_DENOMINATOR_MIN = 2;
 export const RECIPE_INGREDIENT_FRACTIONAL_DENOMINATOR_MAX = 8;
 
 // # TAGS #
-export const RECIPE_TAG_COUNT_MIN = 0;
+export const RECIPE_TAG_COUNT_MIN = 1;
 export const RECIPE_TAG_COUNT_MAX = 10;
 
 export const RECIPE_TAG_ID_MIN = 1;
@@ -180,5 +180,8 @@ export const RECIPE_TAG_ID_MAX = 100000; //TODO: change this to the actual numbe
 export const RECIPE_TITLE_LENGTH_MIN = 5;
 export const RECIPE_TITLE_LENGTH_MAX = 60;
 
-export const RECIPE_DESCRIPTION_LENGTH_MIN = 180;
-export const RECIPE_DESCRIPTION_LENGTH_MAX = 10;
+export const RECIPE_DESCRIPTION_LENGTH_MIN = 10;
+export const RECIPE_DESCRIPTION_LENGTH_MAX = 180;
+
+// # META INFO #
+export const RECIPE_ID_LENGTH = 7;

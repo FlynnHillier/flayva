@@ -316,6 +316,8 @@ export function TagsInput({
           moveSuggestionPrev();
           break;
         case "Enter":
+          e.preventDefault();
+          e.stopPropagation();
           selectActiveSuggestion();
           break;
       }

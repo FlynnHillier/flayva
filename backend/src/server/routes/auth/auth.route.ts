@@ -1,8 +1,6 @@
 import { Router, Request, Response } from "express";
 import google from "@server/routes/auth/google.route";
 import { ensureUnauthenticated, ensureAuthenticated } from "@/server/middleware/auth.middleware";
-import { suvidha } from "@/server/suvidha";
-import { Http } from "suvidha";
 
 const router: Router = Router();
 

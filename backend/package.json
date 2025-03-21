@@ -16,6 +16,7 @@
   "author": "flynnhillier",
   "license": "ISC",
   "devDependencies": {
+    "@types/connect-pg-simple": "^7.0.3",
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
     "@types/express-serve-static-core": "^5.0.6",
@@ -34,6 +35,7 @@
     "@flayva-monorepo/shared": "workspace:*",
     "@types/dotenv": "^8.2.3",
     "@types/express-session": "^1.18.1",
+    "connect-pg-simple": "^10.0.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "drizzle-orm": "^0.39.3",

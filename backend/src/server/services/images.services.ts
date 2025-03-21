@@ -21,7 +21,7 @@ export const uploadPostImages = async (images: File[]) => {
 
   const uploadResults = await uploadthing.uploadFiles(processedImageFiles);
 
-  const isSuccessfulUpload = (result: UploadFileResult) => result.error || !result.data;
+  const isSuccessfulUpload = ({ data, error }: UploadFileResult) => data && !error;
 
   const successfulUploads = uploadResults
     .filter(isSuccessfulUpload)

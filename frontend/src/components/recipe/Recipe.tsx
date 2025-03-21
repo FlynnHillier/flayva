@@ -45,11 +45,11 @@ function RecipeMain({ posts } : {posts : Recipe[]}) {
   return (
     <div 
   ref={containerRef}
-  className="w-full h-screen relative overflow-y-scroll snap-y snap-mandatory scroll-smooth">
+  className="w-full h-screen relative overflow-y-scroll snap-y snap-mandatory scroll-smooth [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
   {posts?.map((post, index) => (
     <div 
       key={post.title}
-      className="w-full h-screen snap-start relative pt-10"
+      className="w-full h-screen snap-start relative pt-13"
     >
       <div className="w-full h-[calc(100%-6rem)] flex items-center justify-center">
         <div className="relative w-10/12 aspect-square mx-auto max-w-4xl">

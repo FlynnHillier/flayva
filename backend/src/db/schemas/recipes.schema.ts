@@ -1,29 +1,42 @@
-import { RECIPES } from "@flayva-monorepo/shared/constants";
+import { RECIPE } from "@flayva-monorepo/shared/constants";
 import { users } from "@/db/schema";
 import { posts } from "@/db/schemas/posts.schema";
 import { integer, pgEnum, pgTable, primaryKey, timestamp, varchar } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
+import { nanoid } from "nanoid";
 
 // ## ENUMS ##
 
-export const tagCategoryEnum = pgEnum("category", RECIPES.TAG_CATEGORIES);
+export const tagCategoryEnum = pgEnum("category", RECIPE.TAG_CATEGORIES);
 
-export const tagGroupEnum = pgEnum("group", RECIPES.TAG_GROUPS);
+export const tagGroupEnum = pgEnum("group", RECIPE.TAG_GROUPS);
 
-export const ingredientUnitEnum = pgEnum("unit", RECIPES.INGREDIENT_UNIT);
+export const ingredientUnitEnum = pgEnum("unit", RECIPE.INGREDIENT_UNITS);
 
-export const ingredientGroupEnum = pgEnum("ingredient_group", RECIPES.INGREDIENT_GROUPS);
+export const ingredientGroupEnum = pgEnum("ingredient_group", RECIPE.INGREDIENT_GROUPS);
 
-export const ingredientSubgroupEnum = pgEnum("ingredient_subgroup", RECIPES.INGREDIENT_SUBGROUPS);
+export const ingredientSubgroupEnum = pgEnum("ingredient_subgroup", RECIPE.INGREDIENT_SUBGROUPS);
 
 // ## TABLES ##
 
 export const recipes = pgTable("recipes", {
-  id: varchar("id").primaryKey(),
+  id: varchar("id")
+    .primaryKey()
+    .$defaultFn(() => nanoid(RECIPE.RECIPE_ID_LENGTH)),
   master_post_id: varchar("master_post_id").references(() => posts.id, { onDelete: "set null" }),
   title: varchar("title").notNull(),
   description: varchar("description").notNull(),
   created_at: timestamp("created_at", { mode: "string" }).defaultNow(),
+});
+
+export const recipe_meta_infos = pgTable("recipe_meta_infos", {
+  estimatedCookTime: varchar("estimated_cook_time"),
+  estimatedPrepTime: varchar("estimated_prep_time"),
+  servings: integer("servings"),
+  recipeId: varchar("recipe_id")
+    .notNull()
+    .references(() => recipes.id, { onDelete: "cascade" })
+    .primaryKey(),
 });
 
 export const recipe_instruction_steps = pgTable(
@@ -41,8 +54,8 @@ export const recipe_tags = pgTable(
   {
     recipeID: varchar("recipe_id")
       .notNull()
-      .references(() => posts.id, { onDelete: "cascade" }),
-    tagID: varchar("tag_id")
+      .references(() => recipes.id, { onDelete: "cascade" }),
+    tagID: integer("tag_id")
       .notNull()
       .references(() => tags.id, { onDelete: "cascade" }),
   },
@@ -50,7 +63,7 @@ export const recipe_tags = pgTable(
 );
 
 export const tags = pgTable("tags", {
-  id: varchar("id").primaryKey(),
+  id: integer("id").primaryKey(),
   name: varchar("name").notNull(),
   category: tagCategoryEnum("category").notNull(),
   group: tagGroupEnum("group"),
@@ -71,12 +84,13 @@ export const recipe_ingredients = pgTable(
     recipe_id: varchar("recipe_id")
       .notNull()
       .references(() => recipes.id, { onDelete: "cascade" }),
-    ingredient_id: varchar("ingredient_id")
+    ingredient_id: integer("ingredient_id")
       .notNull()
       .references(() => ingredient_items.id, {
         onDelete: "cascade",
       }),
-    amount_fractional_numerator: integer("amount_fractional_numerator").notNull(),
+    amount_whole: integer("amount_whole").notNull(),
+    amount_fractional_numerator: integer("amount_fractional_numerator").notNull().default(1),
     amount_fractional_denominator: integer("amount_fractional_denominator").notNull().default(1),
     unit: ingredientUnitEnum("unit").notNull(),
   },
@@ -84,7 +98,7 @@ export const recipe_ingredients = pgTable(
 );
 
 export const ingredient_items = pgTable("ingredients_items", {
-  id: varchar("id").primaryKey(),
+  id: integer("id").primaryKey(),
   name: varchar("name").notNull(),
   group: ingredientGroupEnum("group").notNull(),
   subgroup: ingredientSubgroupEnum("subgroup").notNull(),
@@ -98,6 +112,14 @@ export const relations_recipes = relations(recipes, ({ one, many }) => ({
   ingredients: many(recipe_ingredients),
   tagLinks: many(recipe_tags),
   instructions: many(recipe_instruction_steps),
+  metaInfo: one(recipe_meta_infos, {
+    fields: [recipes.id],
+    references: [recipe_meta_infos.recipeId],
+  }),
+}));
+
+export const relations_recipes_meta_infos = relations(recipe_meta_infos, ({ one }) => ({
+  recipe: one(recipes, { fields: [recipe_meta_infos.recipeId], references: [recipes.id] }),
 }));
 
 // Define relations for the recipe_ratings table.

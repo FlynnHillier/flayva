@@ -1,10 +1,24 @@
 import { Router } from "express";
-import { createRecipeSchema } from "@flayva-monorepo/shared/validation";
-import { validateRequestBody } from "zod-express-middleware";
-/*const router: Router = Router();
+import { POST as POST_VALIDATION } from "@flayva-monorepo/shared/validation";
+import { validateMultiPartFormData } from "@/server/middleware/validation.middleware";
+import { POST_IMAGE_MAX_COUNT } from "@flayva-monorepo/shared/constants/post.constants";
+import { ensureAuthenticated } from "@/server/middleware/auth.middleware";
 
-router.post("/create", validateRequestBody(createRecipeSchema), (req, res) => {
-  res.send(req.body);
-});
+import postControllers from "@/server/controllers/post.controllers";
 
-export default router;*/
+const router: Router = Router();
+
+/**
+ * Create a new post
+ */
+router.post(
+  "/create",
+  ensureAuthenticated,
+  validateMultiPartFormData(POST_VALIDATION.createNewPostSchema, {
+    files: [{ key: "images", maxCount: POST_IMAGE_MAX_COUNT }],
+    json: ["recipe"],
+  }),
+  postControllers.createPost
+);
+
+export default router;

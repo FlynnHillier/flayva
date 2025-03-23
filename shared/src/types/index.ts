@@ -1,3 +1,3 @@
 export * from "./test";
 export * from "./auth";
-export * from "./recipe";
+export * from "./recipe.types";

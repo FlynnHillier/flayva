@@ -4,6 +4,8 @@ import cors from "cors";
 import session from "express-session";
 import { env } from "@/env";
 import passport from "@auth/passport";
+import pg from "pg";
+import connectPgSimple from "connect-pg-simple";
 
 const app: Application = express();
 
@@ -18,8 +20,20 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Authentication middleware
+const pgPool = new pg.Pool({
+  user: env.DB_USER,
+  host: env.DB_HOST,
+  port: env.DB_PORT,
+  password: env.DB_PASSWORD,
+});
+const pgSessionStore = connectPgSimple(session);
+
 app.use(
   session({
+    store: new pgSessionStore({
+      pool: pgPool,
+      pruneSessionInterval: 60 * 20,
+    }),
     secret: env.SESSION_SECRET ?? "defaultSecret",
     resave: false,
     saveUninitialized: false,

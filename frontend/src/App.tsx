@@ -13,6 +13,8 @@ import LogoutPage from "./pages/Logout.page";
 import CreatePostPage from "./pages/Create-post.page";
 import RecipePage from "./pages/Recipe.page";
 import ProfilePage from "./pages/Profile.page";
+import DevPage from "./pages/Dev.page";
+import { Toaster } from "sonner";
 import CommentsPage from "./pages/Comments.page";
 
 /**
@@ -63,7 +65,7 @@ function App() {
     <NuqsAdapter>
       <div className="w-screen h-screen flex flex-row flex-nowrap justify-start">
         {shouldShowSidebar && <AppSidebar />}
-        <main className="grow bg-white h-screen flex flex-col flex-nowrap overflow-x-hidden overflow-y-auto">
+        <main className="grow h-screen flex flex-col flex-nowrap overflow-x-hidden overflow-y-auto relative">
           <Routes>
             <Route index element={<HomePage />} />
             <Route element={<AuthenticatedRouter />}>
@@ -77,9 +79,10 @@ function App() {
             <Route element={<UnauthenticatedRouter />}>
               <Route path="/login" element={<LoginPage />} />
             </Route>
-
+            <Route path="/dev" element={<DevPage />} />
             <Route path="*" element={<div>404 - Not found</div>} />
           </Routes>
+          <Toaster position="top-right" closeButton={false} />
         </main>
       </div>
     </NuqsAdapter>

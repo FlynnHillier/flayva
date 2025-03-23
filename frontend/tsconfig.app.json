@@ -33,7 +33,8 @@
       "@pages/*": ["src/pages/*"],
       "@flayva-monorepo/shared/*": ["../shared/src/*"],
       "@lib/*": ["src/lib/*"],
-      "@assets/*": ["src/assets/*"]
+      "@assets/*": ["src/assets/*"],
+      "@apptypes/*": ["src/types/*"]
     }
   },
   "include": ["src"]

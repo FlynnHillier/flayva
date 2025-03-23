@@ -1,20 +1,8 @@
 import { request } from "@/lib/network";
-import { Recipe } from "@flayva-monorepo/shared/types";
+import { RecipeTag } from "@apptypes/recipe.types";
 
-/**
- * Fetches the user's profile information from the server.
- */
-export async function fetchRecipeById(
-  id: string
-): Promise<{ recipe?: Recipe }> {
-  const { status, data } = await request({
-    url: `/api/p/u/${id}`,
-    method: "GET",
-  });
+export const querySuggestedSimilarTags = async (tagQuery: string) => {
+  const { data } = await request({ url: `/api/d/r/tags/q/${tagQuery}`, method: "GET" });
 
-  if (status === 404 || !data.exists || !data.user) {
-    return { recipe: undefined };
-  }
-
-  return { recipe: data.recipe as Recipe };
-}
+  return data.tags as RecipeTag[];
+};

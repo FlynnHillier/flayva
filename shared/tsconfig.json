@@ -1,6 +1,8 @@
 {
   "extends": "../tsconfig.base.json",
   "compilerOptions": {
+    "module": "ESNext",
+    "target": "ES2020",
     "rootDir": "./src",
     "outDir": "./dist",
     "composite": true,
@@ -8,9 +10,9 @@
     "declarationMap": true,
     "sourceMap": true,
     "paths": {
-      "@types/*": ["src/types/*"],
-      "@constants/*": ["src/constants/*"],
-      "@validation/*": ["src/validation/*"]
+      // "@types/*": ["src/types/*"],
+      // "@constants/*": ["src/constants/*"],
+      // "@validation/*": ["src/validation/*"]
     }
   },
   "include": ["src/**/*"],

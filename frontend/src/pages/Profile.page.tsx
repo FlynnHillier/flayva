@@ -7,8 +7,8 @@ import food3 from "@assets/test/food/food3.jpg";
 import food4 from "@assets/test/food/food4.jpeg";
 import EditProfile from "@/components/EditProfileForm";
 import { cn } from "@/lib/utils";
-const images = [food1, food2, food3, food4, food1, food2, food3, food4];
 
+const images = [food1, food2, food3, food4, food1, food2, food3, food4];
 const ProfilePage = () => {
   const { userid } = useParams();
 

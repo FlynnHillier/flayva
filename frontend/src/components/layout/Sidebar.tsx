@@ -16,7 +16,7 @@ import { Link } from "react-router-dom";
 const items = [
   {
     text: "Home",
-    url: "#",
+    url: "/feed",
     icon: Home,
   },
   {

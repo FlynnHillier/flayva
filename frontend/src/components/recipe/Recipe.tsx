@@ -1,25 +1,27 @@
 import RecipeSidebar from "./RecipeSidebar";
 import { useMe } from "@/hooks/auth.hooks";
 import { MessageCircle, Heart, Send, ArrowDown, ArrowUp } from "lucide-react";
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import {
   Carousel,
   CarouselContent,
-  CarouselItem,
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel"
 import { Badge } from "@components/ui/badge"
 import { SlideshowItem } from "@components/Slideshow"
-
+import { useContext } from "react";
+import { PostContext } from "@/contexts/posts.context";
 interface Recipe {
   title: string;
   photos: string[];
   tags: string[];
 }
 
-function RecipeMain({ posts } : {posts : Recipe[]}) {
+function RecipeMain() {
+  const { posts } = useContext(PostContext);
+
   const { data } = useMe();
   const { recipeid } = useParams();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -111,12 +113,11 @@ function RecipeMain({ posts } : {posts : Recipe[]}) {
 
 
 
-export default function Recipe({ posts } : { posts : Recipe[] }) {
-  console.log(posts);
+export default function Recipe() {
   return (
     <>
       <div className="flex flex-row w-full h-screen">
-        <RecipeMain posts={posts}/>
+        <RecipeMain />
         <RecipeSidebar />
       </div>
     </>

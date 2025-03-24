@@ -2,7 +2,7 @@ import { db } from "@/db";
 import { users as usersTable } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { Router, Request, Response } from "express";
-import { User } from "@flayva-monorepo/shared";
+import { User } from "@flayva-monorepo/shared/types";
 
 const router: Router = Router();
 

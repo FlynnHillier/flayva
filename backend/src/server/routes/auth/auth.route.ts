@@ -34,17 +34,17 @@ router.get("/logout", ensureAuthenticated, (req: Request, res: Response) => {
   req.logout((err) => {
     if (err) {
       // TODO: log error
-      return res.status(500).send({ message: "Failed to log out" });
+      res.status(500).send({ message: "Failed to log out" });
     }
 
     req.session.destroy((sessionErr) => {
       if (sessionErr) {
         // TODO: log error
-        return res.status(500).send({ message: "Failed to log out" });
+        res.status(500).send({ message: "Failed to log out" });
       }
 
       res.clearCookie("connect.sid");
-      return res.status(204); // TODO: perhaps redirect to login page or home page
+      res.status(204).send(); // TODO: perhaps redirect to login page or home page
     });
   });
 });

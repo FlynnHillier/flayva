@@ -21,7 +21,14 @@ export const getPostById: RequestHandler = async (req: Request, res: Response) =
   });
 };
 
+export const getFeed: RequestHandler = async (req: Request, res: Response) => {
+  const feed = await postServices.getFeed();
+
+  res.status(200).send(feed);
+};
+
 export default {
   createPost,
   getPostById,
+  getFeed,
 };

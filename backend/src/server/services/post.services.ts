@@ -24,6 +24,11 @@ export const createNewPost = async (
   return { postId, recipeId };
 };
 
+/**
+ * Get a post by its ID
+ * @param postId - The ID of the post to get
+ * @returns The post with the given ID
+ */
 export const getPostById = async (postId: string) => {
   //TODO: process db response
 
@@ -32,7 +37,18 @@ export const getPostById = async (postId: string) => {
   return post;
 };
 
+/**
+ * Get a feed of posts
+ *
+ */
+export const getFeed = async () => {
+  const posts = await postRepo.getRecentPosts(5);
+
+  return posts;
+};
+
 export default {
   createNewPost,
   getPostById,
+  getFeed,
 };

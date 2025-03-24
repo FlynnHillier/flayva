@@ -208,7 +208,22 @@ export const getPostById = async (
   return posts[0];
 };
 
+/**
+ * Get the most recent posts
+ * @param limit - The number of posts to fetch
+ *
+ */
+export const getRecentPosts = async (limit: number) => {
+  const posts = await getPosts({
+    limit,
+    orderBy: (posts, { desc }) => desc(posts.created_at),
+  });
+
+  return posts;
+};
+
 export default {
   saveNewPost,
   getPostById,
+  getRecentPosts,
 };

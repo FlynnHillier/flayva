@@ -25,4 +25,9 @@ router.post(
  */
 router.get("/get/id/:id", postControllers.getPostById);
 
+/**
+ * Get a feed of posts
+ */
+router.get("/get/feed", postControllers.getFeed);
+
 export default router;

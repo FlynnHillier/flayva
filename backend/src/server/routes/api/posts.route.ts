@@ -5,7 +5,6 @@ import { POST_IMAGE_MAX_COUNT } from "@flayva-monorepo/shared/constants/post.con
 import { ensureAuthenticated } from "@/server/middleware/auth.middleware";
 
 import postControllers from "@/server/controllers/post.controllers";
-
 const router: Router = Router();
 
 /**
@@ -20,5 +19,10 @@ router.post(
   }),
   postControllers.createPost
 );
+
+/**
+ * Get a post by its ID
+ */
+router.get("/get/id/:id", postControllers.getPostById);
 
 export default router;

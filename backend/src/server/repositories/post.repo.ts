@@ -11,6 +11,7 @@ import {
 import { createNewPostSchema } from "@flayva-monorepo/shared/validation/post.validation";
 import { z } from "zod";
 import { UploadedFileData } from "uploadthing/types";
+import { DbFindManyParams, DbQueryColumns, DbQueryWhere, DbQueryWith } from "@/types/db.types";
 
 /**
  * Save a new post to the database
@@ -26,19 +27,19 @@ export const saveNewPost = (
   }: { imageUploads: UploadedFileData[]; recipe: z.infer<typeof createNewPostSchema>["recipe"] }
 ) =>
   db.transaction(async (tx) => {
-    const [post] = await tx
-      .insert(posts)
-      .values({
-        ownerID: ownerId,
-      })
-      .returning();
-
     const [recipe] = await tx
       .insert(recipes)
       .values({
-        master_post_id: post.id,
         title: recipeData.title,
         description: recipeData.description,
+      })
+      .returning();
+
+    const [post] = await tx
+      .insert(posts)
+      .values({
+        ownerId: ownerId,
+        recipeId: recipe.id,
       })
       .returning();
 
@@ -105,6 +106,109 @@ export const saveNewPost = (
     };
   });
 
+/**
+ * Get posts from the database
+ *
+ * @param options query options to dictate which posts to fetch
+ */
+export const getPosts = (options: Omit<DbFindManyParams<"posts">, "with" | "columns">) =>
+  db.query.posts
+    .findMany({
+      columns: {
+        recipeId: true,
+        created_at: true,
+      },
+      with: {
+        owner: {
+          columns: {
+            updatedAt: false,
+            createdAt: false,
+          },
+        },
+        images: {
+          columns: {
+            key: true,
+          },
+        },
+        recipe: {
+          with: {
+            tagLinks: {
+              with: {
+                tag: {
+                  columns: {
+                    category: true,
+                    group: true,
+                    id: true,
+                    name: true,
+                  },
+                },
+              },
+            },
+            instructions: {
+              columns: {
+                instruction: true,
+                stepNumber: true,
+              },
+            },
+            ingredients: {
+              columns: {
+                amount_fractional_denominator: true,
+                amount_fractional_numerator: true,
+                amount_whole: true,
+                unit: true,
+              },
+              with: {
+                ingredientItem: {
+                  columns: {
+                    group: true,
+                    id: true,
+                    name: true,
+                    subgroup: true,
+                  },
+                },
+              },
+            },
+            metaInfo: {
+              columns: {
+                estimatedCookTime: true,
+                estimatedPrepTime: true,
+                servings: true,
+              },
+            },
+          },
+        },
+      },
+      ...options,
+    })
+    .execute();
+
+/**
+ * Get a post by its ID
+ * @param postId - The ID of the post to fetch
+ * @param options - query options to dictate which posts to fetch
+ */
+export const getPostsById = (
+  postId: string,
+  options: Omit<Parameters<typeof getPosts>[0], "where"> = {}
+) => getPosts({ ...options, where: (posts, { eq }) => eq(posts.id, postId) });
+
+/**
+ * Get a post by its ID
+ * @param postId - The ID of the post to fetch
+ * @param options - query options to dictate which posts to fetch
+ */
+export const getPostById = async (
+  postId: string,
+  options: Omit<Parameters<typeof getPostsById>[1], "limit"> = {}
+) => {
+  const posts = await getPostsById(postId, { limit: 1, ...options });
+
+  if (posts.length === 0) return null;
+
+  return posts[0];
+};
+
 export default {
   saveNewPost,
+  getPostById,
 };

@@ -11,12 +11,13 @@ export const posts = pgTable("posts", {
   id: varchar("id")
     .primaryKey()
     .$defaultFn(() => nanoid(POST.POST_ID_LENGTH)),
-  title: varchar("title"),
-  description: varchar("description"),
-  ownerID: varchar("owner_id")
+  ownerId: varchar("owner_id")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
   created_at: timestamp("created_at", { mode: "string" }).defaultNow(),
+  recipeId: varchar("recipe_id")
+    .notNull()
+    .references(() => recipes.id, { onDelete: "cascade" }),
 });
 
 export const post_likes = pgTable(
@@ -28,6 +29,7 @@ export const post_likes = pgTable(
     userID: varchar("user_id")
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
+    liked_at: timestamp("liked_at", { mode: "string" }).defaultNow(),
   },
   (table) => [primaryKey({ columns: [table.postID, table.userID] })]
 );
@@ -55,8 +57,8 @@ export const post_images = pgTable("post_images", {
 // ## RELATIONS ##
 
 export const relations_posts = relations(posts, ({ one, many }) => ({
-  owner: one(users, { fields: [posts.ownerID], references: [users.id] }),
-  recipes: many(recipes),
+  owner: one(users, { fields: [posts.ownerId], references: [users.id] }),
+  recipe: one(recipes, { fields: [posts.recipeId], references: [recipes.id] }),
   likes: many(post_likes),
   comments: many(post_comments),
   images: many(post_images),

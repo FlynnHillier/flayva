@@ -1,4 +1,4 @@
-import { saveNewPost } from "@/server/repositories/posts.repo";
+import postRepo from "@/server/repositories/post.repo";
 import { uploadPostImages } from "@/server/services/images.services";
 import { createNewPostSchema } from "@flayva-monorepo/shared/validation/post.validation";
 import { z } from "zod";
@@ -16,7 +16,7 @@ export const createNewPost = async (
   // TODO: handle upload image failures
   const { successes: imageUploads } = await uploadPostImages(newPostData.images);
 
-  const { postId, recipeId } = await saveNewPost(ownerId, {
+  const { postId, recipeId } = await postRepo.saveNewPost(ownerId, {
     imageUploads: imageUploads,
     recipe: newPostData.recipe,
   });
@@ -24,6 +24,15 @@ export const createNewPost = async (
   return { postId, recipeId };
 };
 
+export const getPostById = async (postId: string) => {
+  //TODO: process db response
+
+  const post = await postRepo.getPostById(postId);
+
+  return post;
+};
+
 export default {
   createNewPost,
+  getPostById,
 };

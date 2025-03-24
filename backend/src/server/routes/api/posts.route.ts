@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createRecipeSchema } from "@flayva-monorepo/shared/validation";
+import * as createRecipeSchema from "@flayva-monorepo/shared/validation";
 import { validateRequestBody } from "zod-express-middleware";
 const router: Router = Router();
 

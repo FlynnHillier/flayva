@@ -4,16 +4,19 @@ import { useMemo } from "react";
 import { useMe } from "./hooks/auth.hooks";
 
 /* Pages */
-import HomePage from "@/pages/Home.page";
-import AppSidebar from "@/components/layout/Sidebar";
+import HomePage from "./pages/Home.page";
+import AppSidebar from "./components/layout/Sidebar";
 import FeedPage from "./pages/Feed.page";
 import LoginPage from "./pages/Login.page";
 import LogoutPage from "./pages/Logout.page";
 import CreatePostPage from "./pages/Create-post.page";
+import RecipePage from "./pages/Recipe.page";
 import EditProfile from "./pages/profile-pages/Edit-profile.page";
 import ProfilePage from "./pages/profile-pages/Profile.page";
 import DevPage from "./pages/Dev.page";
 import { Toaster } from "sonner";
+
+
 /**
  * Routes that should not show the sidebar
  */
@@ -72,6 +75,9 @@ function App() {
             <Route path="/login" element={<LoginPage />} />
           </Route>
           <Route path="/dev" element={<DevPage />} />
+          <Route element={<UnauthenticatedRouter />}>
+            <Route path="/recipe" element={<RecipePage />} />
+          </Route>
           <Route path="*" element={<div>404 - Not found</div>} />
         </Routes>
         <Toaster position="top-right" closeButton={false} />

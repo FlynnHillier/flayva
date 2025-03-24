@@ -12,6 +12,11 @@ import { createNewPostSchema } from "@flayva-monorepo/shared/validation/post.val
 import { z } from "zod";
 import { UploadedFileData } from "uploadthing/types";
 import { DbFindManyParams, DbQueryColumns, DbQueryWhere, DbQueryWith } from "@/types/db.types";
+import { eq } from "drizzle-orm";
+
+/**
+ * MANAGING POSTS
+ */
 
 /**
  * Save a new post to the database
@@ -105,6 +110,23 @@ export const saveNewPost = (
       recipeId: recipe.id,
     };
   });
+
+/**
+ * delete an existing post from the database
+ * @param postId - The ID of the post to delete
+ * @returns true if the post was deleted, false if it was not found
+ */
+export const deleteExistingPost = async (postId: string) => {
+  //TODO: currently recipes are not deleted when a post is deleted - revisit this when we decide if we are implementing forking or not
+
+  const [deleted] = await db.delete(posts).where(eq(posts.id, postId)).returning().execute();
+
+  return !!deleted;
+};
+
+/**
+ * GETTING POSTS
+ */
 
 /**
  * Get posts from the database
@@ -222,8 +244,13 @@ export const getRecentPosts = async (limit: number) => {
   return posts;
 };
 
+/**
+ * Default export including all functions from this file
+ */
+
 export default {
   saveNewPost,
   getPostById,
   getRecentPosts,
+  deleteExistingPost,
 };

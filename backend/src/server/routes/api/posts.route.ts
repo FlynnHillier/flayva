@@ -5,6 +5,8 @@ import { POST_IMAGE_MAX_COUNT } from "@flayva-monorepo/shared/constants/post.con
 import { ensureAuthenticated } from "@/server/middleware/auth.middleware";
 
 import postControllers from "@/server/controllers/post.controllers";
+import { validateRequestBody } from "zod-express-middleware";
+import { isRequestPostOwner } from "@/server/middleware/post.middleware";
 const router: Router = Router();
 
 /**
@@ -18,6 +20,17 @@ router.post(
     json: ["recipe"],
   }),
   postControllers.createPost
+);
+
+/**
+ * Delete an existing post
+ */
+router.delete(
+  "/delete",
+  ensureAuthenticated,
+  validateRequestBody(POST_VALIDATION.deleteExistingPostSchema),
+  isRequestPostOwner((req) => req.body.postId),
+  postControllers.deletePost
 );
 
 /**

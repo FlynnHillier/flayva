@@ -11,6 +11,25 @@ export const createPost: RequestHandler = async (req: Request, res: Response) =>
   res.status(201).send({ postId, recipeId });
 };
 
+export const deletePost: RequestHandler = async (req: Request, res: Response) => {
+  const postId = req.body.postId;
+
+  const { deleted } = await postServices.deletePost(postId);
+
+  if (!deleted) {
+    res.status(404).send({
+      deleted: false,
+      message: `Post '${postId}' not found`,
+    });
+    return;
+  }
+
+  res.status(200).send({
+    deleted: true,
+    message: `Post '${postId}' deleted`,
+  });
+};
+
 export const getPostById: RequestHandler = async (req: Request, res: Response) => {
   const postId = req.params.id;
 
@@ -28,6 +47,7 @@ export const getFeed: RequestHandler = async (req: Request, res: Response) => {
 };
 
 export default {
+  deletePost,
   createPost,
   getPostById,
   getFeed,

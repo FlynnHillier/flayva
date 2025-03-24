@@ -24,6 +24,14 @@ export const createNewPost = async (
   return { postId, recipeId };
 };
 
+export const deletePost = async (postId: string) => {
+  const isDeleted = await postRepo.deleteExistingPost(postId);
+
+  return {
+    deleted: isDeleted,
+  };
+};
+
 /**
  * Get a post by its ID
  * @param postId - The ID of the post to get
@@ -51,4 +59,5 @@ export default {
   createNewPost,
   getPostById,
   getFeed,
+  deletePost,
 };

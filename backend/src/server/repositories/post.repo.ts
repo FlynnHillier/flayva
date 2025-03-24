@@ -137,6 +137,7 @@ export const getPosts = (options: Omit<DbFindManyParams<"posts">, "with" | "colu
   db.query.posts
     .findMany({
       columns: {
+        id: true,
         recipeId: true,
         created_at: true,
       },

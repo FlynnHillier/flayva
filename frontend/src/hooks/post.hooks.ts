@@ -6,3 +6,17 @@ export const useCreateNewPost = createConfigurableMutation(
   ["posts", "create"],
   {}
 );
+
+export const useDeleteExistingPost = (postId: string) =>
+  createConfigurableMutation(
+    async () => await api.post.deleteExistingPost(postId),
+    ["posts", "delete", postId],
+    {}
+  );
+
+export const useGetPostById = (postId: string) =>
+  createConfigurableMutation(
+    async () => await api.post.getPostById(postId),
+    ["posts", "get", postId],
+    {}
+  );

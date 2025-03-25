@@ -13,7 +13,7 @@ passport.serializeUser((user, done) => {
 });
 
 // Deserialize the user information from the session.
-passport.deserializeUser(async (id: number, done) => {
+passport.deserializeUser(async (id: string, done) => {
   try {
     // Fetch user from your database using their ID
     const foundUsers = await db.select().from(users).where(eq(users.id, id));

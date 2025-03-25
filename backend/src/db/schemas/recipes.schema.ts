@@ -1,4 +1,4 @@
-import { RECIPE } from "@flayva-monorepo/shared/constants";
+import { RECIPES } from "@flayva-monorepo/shared/constants";
 import { users } from "@/db/schema";
 import { posts } from "@/db/schemas/posts.schema";
 import { integer, pgEnum, pgTable, primaryKey, timestamp, varchar } from "drizzle-orm/pg-core";

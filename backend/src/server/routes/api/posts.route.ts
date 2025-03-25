@@ -1,10 +1,5 @@
 import { Router } from "express";
-import { POST as POST_VALIDATION } from "@flayva-monorepo/shared/validation";
-import { validateMultiPartFormData } from "@/server/middleware/validation.middleware";
-import { POST_IMAGE_MAX_COUNT } from "@flayva-monorepo/shared/constants/post.constants";
-import { ensureAuthenticated } from "@/server/middleware/auth.middleware";
-
-import postControllers from "@/server/controllers/post.controllers";
+import { createRecipeSchema } from "@flayva-monorepo/shared/validation";
 import { validateRequestBody } from "zod-express-middleware";
 import { isRequestPostOwner } from "@/server/middleware/post.middleware";
 const router: Router = Router();

@@ -27,5 +27,8 @@
       "import": "./dist/types/index.js",
       "types": "./dist/types/index.d.ts"
     }
+  },
+  "devDependencies": {
+    "typescript": "~5.7.2"
   }
 }

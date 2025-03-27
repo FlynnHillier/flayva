@@ -16,6 +16,11 @@ In order to update your PostgreSQL tables to reflect the structure defined withi
 1. run the command `pnpm run db:push`
 1. This should trigger drizzle-kit to begin a migration on your database and create or update the tables as required.
 
+### Data insertion
+
+1. Follow the steps present in the `data` folder's `readme.md` file.
+2. Run `pnpm run db:setup`
+
 ## Auth
 
 ### Google

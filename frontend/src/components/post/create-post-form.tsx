@@ -155,7 +155,8 @@ export default function CreateNewPostForm() {
   const [editingIngredient, setEditingIngredient] =
     useState<IngredientEntry | null>(null);
   const [ingredientsList, setIngredientsList] = useState<IngredientEntry[]>([]);
-  const [ingredientsFinal, setIngredientsFinal] = useState<
+  const [ingredientError, setIngredientError] = useState<string | null>(null);
+  const [finalIngredientsList, setFinalIngredientsList] = useState<
     {
       ingredientID?: number;
       amount_whole?: number;
@@ -164,7 +165,6 @@ export default function CreateNewPostForm() {
       unit?: string;
     }[]
   >([]);
-  const [ingredientError, setIngredientError] = useState<string | null>(null);
 
   useEffect(() => {
     const lastEntry = ingredientsList.at(-1);
@@ -176,13 +176,12 @@ export default function CreateNewPostForm() {
         amount_fractional_denominator: lastEntry?.amount_fractional_denominator,
         unit: lastEntry?.unit,
       };
-      setIngredientsFinal((prev) => [...prev, newIngredient]);
-      console.log(ingredientsFinal);
+      setFinalIngredientsList((prev) => [...prev, newIngredient]);
+      console.log(finalIngredientsList);
     }
   }, [ingredientsList]);
 
   const deleteIngredientFromList = (id: number) => {
-    console.log("ran");
     setIngredientsList((prev) =>
       prev.filter((ingredientEntry) => ingredientEntry.ingredient_id !== id)
     );

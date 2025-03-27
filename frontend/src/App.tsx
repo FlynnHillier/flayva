@@ -12,10 +12,10 @@ import LogoutPage from "./pages/Logout.page";
 import CreatePostPage from "./pages/Create-post.page";
 import RecipePage from "./pages/Recipe.page";
 import EditProfile from "./pages/profile-pages/Edit-profile.page";
-import ProfilePage from "./pages/profile-pages/Profile.page";
+import ViewProfilePage from "./pages/profile-pages/Profile.page";
 import DevPage from "./pages/Dev.page";
 import { Toaster } from "sonner";
-
+import ProfileLayout from "@/pages/profile-pages/profile.layout";
 
 /**
  * Routes that should not show the sidebar
@@ -68,8 +68,13 @@ function App() {
             <Route path="/post" element={<CreatePostPage />} />
             <Route path="/logout" element={<LogoutPage />} />
             <Route path="/feed" element={<FeedPage />} />
-            <Route path="/profile/edit" element={<EditProfile />} />
-            <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/profile" element={<ProfileLayout />}>
+              <Route path="/profile/:id" element={<ViewProfilePage />} />
+            </Route>
+            {
+              //TODO: change the location of profile edit
+            }
+            <Route path="/p/edit" element={<EditProfile />} />
           </Route>
           <Route element={<UnauthenticatedRouter />}>
             <Route path="/login" element={<LoginPage />} />

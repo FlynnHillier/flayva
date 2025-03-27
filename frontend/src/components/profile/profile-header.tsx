@@ -29,7 +29,7 @@ function Bio() {
   return profile ? (
     <p className="text-sm text-gray-600">{profile.user.bio}</p>
   ) : (
-    <Skeleton className="w-20 h-6" />
+    <Skeleton className="w-56 h-6" />
   );
 }
 
@@ -39,33 +39,29 @@ function Username() {
   return profile ? (
     <h1 className="text-2xl font-bold">{profile.user.username}</h1>
   ) : (
-    <Skeleton className="w-20 h-6" />
+    <Skeleton className="w-48 h-8" />
   );
 }
 
 const SocialMetrics = ({ className }: { className?: ClassNameValue }) => {
   const { profile } = useProfile();
 
-  const MetricView = ({ value }: { value?: number }): ReactNode => {
-    if (value === undefined) return <Skeleton className="w-8 h-6 " />;
+  const MetricView = ({ value, name }: { value?: number; name: string }): ReactNode => {
+    if (value === undefined) return <Skeleton className="w-8 h-10 " />;
 
-    return <span> {value}</span>;
+    return (
+      <div className="text-center flex flex-col gap-0.5 items-center flex-nowrap">
+        <span className="text-gray-600"> posts</span>
+        {value}
+      </div>
+    );
   };
 
   return (
     <div className={cn("flex flex-row gap-4 ", className)}>
-      <div className="text-center flex flex-col gap-0.5 items-center flex-nowrap">
-        <span className="text-gray-600"> posts</span>
-        <MetricView value={profile?.socialMetrics.posts} />
-      </div>
-      <div className="text-center flex flex-col gap-0.5 items-center">
-        <span className="text-gray-600"> followers</span>
-        <MetricView value={profile?.socialMetrics.followers} />
-      </div>
-      <div className="text-center flex flex-col gap-0.5 items-center">
-        <span className="text-gray-600"> following</span>
-        <MetricView value={profile?.socialMetrics.following} />
-      </div>
+      <MetricView value={profile?.socialMetrics.posts} name="posts" />
+      <MetricView value={profile?.socialMetrics.followers} name="followers" />
+      <MetricView value={profile?.socialMetrics.following} name="following" />
     </div>
   );
 };
@@ -135,12 +131,6 @@ const ProfileButtons = () => {
 };
 
 export const ProfileHeader = () => {
-  const { profile } = useProfile();
-
-  if (!profile) {
-    return <div>Profile not present</div>;
-  }
-
   return (
     <div className="flex flex-col md:flex-row items-center md:items-start gap-6 max-w-7xl mx-auto p-4 w-full">
       <div className="shrink-0 ">
@@ -151,7 +141,7 @@ export const ProfileHeader = () => {
           <Username />
           <ProfileButtons />
         </div>
-        <SocialMetrics />
+        <SocialMetrics className="mt-2" />
         <div className="mt-4 space-y-2 flex justify-center md:justify-start">
           <Bio />
         </div>

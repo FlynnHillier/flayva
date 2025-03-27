@@ -44,7 +44,6 @@ const IngredientSelector = ({
   const [numerator, setNumerator] = useState<number | null>(null);
   const [denominator, setDenominator] = useState<number | null>(null);
 
-  // Initialize form when editing
   useEffect(() => {
     if (editingIngredient) {
       setSelectedIngredient(
@@ -77,7 +76,6 @@ const IngredientSelector = ({
       unit: selectedUnit,
     };
 
-    // Validate duplicate only for new items
     if (!isEditing) {
       const exists = ingredientsList.some(
         (entry) => entry.ingredient_id === ingredient.id
@@ -124,14 +122,13 @@ const IngredientSelector = ({
                 {ingredient.name}
               </SelectItem>
             ))}
-            {/* Show current ingredient when editing */}
             {editingIngredient && (
               <SelectItem
                 value={JSON.stringify({
                   id: editingIngredient.ingredient_id,
                   name: editingIngredient.name,
                 })}
-                className="hidden" // Hide from dropdown but maintain selection
+                className="hidden"
                 disabled
               >
                 {editingIngredient.name}

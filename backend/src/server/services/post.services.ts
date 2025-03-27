@@ -1,3 +1,4 @@
+import { POST_PREVIEW_INFINITE_SCROLL_BATCH_SIZE } from "@/constants/posts.constants";
 import postRepo from "@/server/repositories/post.repo";
 import { uploadPostImages } from "@/server/services/images.services";
 import { createNewPostSchema } from "@flayva-monorepo/shared/validation/post.validation";
@@ -46,6 +47,30 @@ export const getPostById = async (postId: string) => {
 };
 
 /**
+ * Get a list of post previews by the owner ID with infinite scroll
+ * @param ownerId - The ID of the owner
+ * @param cursor - The cursor for pagination
+ * @return A list of post previews and the next cursor for pagination
+ */
+export const infiniteScrollProfilePostPreviews = async (ownerId: string, cursor: number) => {
+  const results = await postRepo.getPostPreviewsByOwnerId(ownerId, {
+    limit: POST_PREVIEW_INFINITE_SCROLL_BATCH_SIZE,
+    offset: cursor,
+    orderBy: ({ created_at }, { desc }) => desc(created_at),
+  });
+
+  return {
+    previews: results,
+    nextCursor:
+      results.length < POST_PREVIEW_INFINITE_SCROLL_BATCH_SIZE
+        ? null
+        : cursor + POST_PREVIEW_INFINITE_SCROLL_BATCH_SIZE,
+  };
+};
+
+export const getPostsByOwnerId = (ownerId: string) => postRepo.getPostsByOwnerId(ownerId);
+
+/**
  * Get a feed of posts
  *
  */
@@ -60,4 +85,5 @@ export default {
   getPostById,
   getFeed,
   deletePost,
+  infiniteScrollProfilePostPreviews,
 };

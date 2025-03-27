@@ -1,1 +1,1 @@
-export { type Post } from "@backendtypes/post.types";
+export { type Post, type PostPreview } from "@backendtypes/post.types";

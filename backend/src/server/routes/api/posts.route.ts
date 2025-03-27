@@ -43,4 +43,11 @@ router.get("/get/id/:id", postControllers.getPostById);
  */
 router.get("/get/feed", postControllers.getFeed);
 
+/**
+ * Get post previews by owner ID with infinte scrolling
+ *
+ * @param ownerId - The ID of the owner to get post previews for
+ */
+router.get("/owner/inf/:ownerId", postControllers.infiniteScrollProfilePostPreviews);
+
 export default router;

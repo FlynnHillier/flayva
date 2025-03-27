@@ -1,5 +1,6 @@
+import { UnexpectedResponseFormatError } from "@/api/errors/api-errors";
 import { request } from "@/lib/network";
-import { Post } from "@flayva-monorepo/shared/types";
+import { Post, PostPreview } from "@flayva-monorepo/shared/types";
 import { createNewPostSchema } from "@flayva-monorepo/shared/validation/post.validation";
 import { z } from "zod";
 
@@ -45,4 +46,44 @@ export async function getPostById(postId: string) {
   });
 
   return { post: data } as { post: Post | null };
+}
+
+export async function searchPost(searchQuery: string) {
+  const { data } = await request({
+    url: "/api/p/search",
+    method: "GET",
+    params: { searchQuery },
+  });
+
+  return { posts: data } as { posts: Post[] };
+}
+
+export async function getPostPreviewsByOwnerId(ownerId: string) {
+  const { data } = await request({
+    url: `/api/p/owner/${ownerId}`,
+    method: "GET",
+  });
+
+  return { previews: data } as { previews: PostPreview[] };
+}
+
+export async function getInfiniteScrollPostPreviewsByOwnerId(ownerId: string, cursor: number) {
+  const { data } = await request({
+    url: `/api/p/owner/inf/${ownerId}`,
+    method: "GET",
+    params: { cursor },
+  });
+
+  const { previews, nextCursor } = data;
+
+  if (previews === undefined || nextCursor === undefined)
+    throw new UnexpectedResponseFormatError(
+      "getInfiniteScrollPostPreviewsByOwnerId",
+      "previews or nextCursor is missing in the response"
+    );
+
+  return { previews, nextCursor } as {
+    previews: PostPreview[];
+    nextCursor: number | null;
+  };
 }

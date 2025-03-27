@@ -1,7 +1,7 @@
 import { api } from "@/api/api";
 import { createConfigurableMutation } from "@/hooks/util/configurableMutation";
 import { queries } from "@/queries";
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 
 /**
  * Creates a new post
@@ -31,3 +31,17 @@ export const useDeleteExistingPost = (postId: string) =>
  * @returns The post with the given Id
  */
 export const useGetPostById = (postId: string) => useQuery(queries.post.getPostById(postId));
+
+/**
+ * infinite scroll for post previews by the owner Id
+ *
+ * @param ownerId - The Id of the owner of the posts
+ */
+// TODO: perhaps add this to query-key-store
+export const useInfiniteScrollProfilePostPreviews = (ownerId: string) =>
+  useInfiniteQuery({
+    queryKey: ["posts-preview", "profile", ownerId],
+    queryFn: ({ pageParam }) => api.post.getInfiniteScrollPostPreviewsByOwnerId(ownerId, pageParam),
+    initialPageParam: 0,
+    getNextPageParam: ({ nextCursor }) => nextCursor,
+  });

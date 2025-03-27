@@ -11,7 +11,7 @@ import {
 import { createNewPostSchema } from "@flayva-monorepo/shared/validation/post.validation";
 import { z } from "zod";
 import { UploadedFileData } from "uploadthing/types";
-import { DbFindManyParams, DbQueryColumns, DbQueryWhere, DbQueryWith } from "@/types/db.types";
+import { DbFindManyParams } from "@/types/db.types";
 import { eq } from "drizzle-orm";
 
 /**
@@ -123,6 +123,57 @@ export const deleteExistingPost = async (postId: string) => {
 
   return !!deleted;
 };
+
+/**
+ * POST PREVIEWS
+ */
+
+/**
+ * Get post previews from the database
+ *
+ * @param options query options to dictate which posts to fetch
+ * @returns post previews
+ */
+export const getPostPreviews = (options: Omit<DbFindManyParams<"posts">, "with" | "columns">) =>
+  db.query.posts.findMany({
+    columns: {
+      id: true,
+      recipeId: true,
+      created_at: true,
+    },
+    with: {
+      images: {
+        columns: {
+          key: true,
+        },
+      },
+      recipe: {
+        columns: {
+          id: true,
+          title: true,
+          description: true,
+        },
+      },
+      owner: {
+        columns: {
+          id: true,
+          username: true,
+          profile_picture_url: true,
+        },
+      },
+    },
+    ...options,
+  });
+
+/**
+ * Get post previews by owner ID
+ * @param ownerId - The ID of the user who owns the posts
+ * @param options - query options to dictate which posts to fetch
+ */
+export const getPostPreviewsByOwnerId = (
+  ownerId: string,
+  options: Omit<Parameters<typeof getPostPreviews>[0], "where">
+) => getPostPreviews({ where: (posts, { eq }) => eq(posts.ownerId, ownerId), ...options });
 
 /**
  * GETTING POSTS
@@ -246,6 +297,16 @@ export const getRecentPosts = async (limit: number) => {
 };
 
 /**
+ * Get posts by owner ID
+ * @param ownerId - The ID of the user who owns the posts
+ * @param options - query options to dictate which posts to fetch
+ */
+export const getPostsByOwnerId = (
+  ownerId: string,
+  options: Omit<Parameters<typeof getPosts>[0], "where"> = {}
+) => getPosts({ where: (posts, { eq }) => eq(posts.ownerId, ownerId), ...options });
+
+/**
  * Default export including all functions from this file
  */
 
@@ -254,4 +315,6 @@ export default {
   getPostById,
   getRecentPosts,
   deleteExistingPost,
+  getPostsByOwnerId,
+  getPostPreviewsByOwnerId,
 };

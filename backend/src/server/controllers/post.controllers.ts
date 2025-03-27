@@ -46,9 +46,25 @@ export const getFeed: RequestHandler = async (req: Request, res: Response) => {
   res.status(200).send(feed);
 };
 
+export const infiniteScrollProfilePostPreviews: RequestHandler = async (
+  req: Request,
+  res: Response
+) => {
+  const { ownerId } = req.params;
+  const cursor = req.query.cursor ? Number(req.query.cursor) : 0;
+
+  const result = await postServices.infiniteScrollProfilePostPreviews(ownerId, cursor);
+
+  res.status(200).send({
+    previews: result.previews,
+    nextCursor: result.nextCursor,
+  });
+};
+
 export default {
   deletePost,
   createPost,
   getPostById,
   getFeed,
+  infiniteScrollProfilePostPreviews,
 };

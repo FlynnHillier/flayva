@@ -30,6 +30,7 @@ import { Input } from "../ui/input";
 import { TagsInput } from "../recipe/create/recipe-tags-input";
 import IngredientSelector from "./ingredients-selector";
 import { useCreateNewPost } from "@/hooks/post.hooks";
+import { IngredientEntry } from "./ingredient-entry-schema";
 
 const { createNewPostSchema } = POST_VALIDATOR;
 
@@ -150,16 +151,6 @@ export default function CreateNewPostForm() {
       group: "Protien",
     },
   ];
-
-  type IngredientEntry = {
-    ingredient_id: number;
-    name: string;
-    amount_whole: number;
-    amount_fractional_numerator: number;
-    amount_fractional_denominator: number;
-    quantity: number;
-    unit: string;
-  };
 
   const [editingIngredient, setEditingIngredient] =
     useState<IngredientEntry | null>(null);

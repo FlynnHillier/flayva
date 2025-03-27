@@ -8,16 +8,7 @@ import {
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { NumberSelector } from "./fraction-builder";
-
-type IngredientEntry = {
-  ingredient_id: number;
-  name: string;
-  amount_whole: number;
-  amount_fractional_numerator: number;
-  amount_fractional_denominator: number;
-  quantity: number;
-  unit: string;
-};
+import { IngredientEntry } from "./ingredient-entry-schema";
 
 const ingredientUnits = [
   "kg",
@@ -83,7 +74,6 @@ const IngredientSelector = ({
       amount_whole: wholeNumber ?? 0,
       amount_fractional_numerator: numerator ?? 0,
       amount_fractional_denominator: denominator ?? 0,
-      quantity: 1,
       unit: selectedUnit,
     };
 

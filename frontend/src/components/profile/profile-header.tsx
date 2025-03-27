@@ -142,7 +142,7 @@ export const ProfileHeader = () => {
   }
 
   return (
-    <div className="flex flex-col md:flex-row items-center md:items-start gap-6 max-w-7xl mx-auto">
+    <div className="flex flex-col md:flex-row items-center md:items-start gap-6 max-w-7xl mx-auto p-4 w-full">
       <div className="shrink-0 ">
         <ProfilePicture />
       </div>

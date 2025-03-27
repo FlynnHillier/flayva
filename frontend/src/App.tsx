@@ -61,7 +61,7 @@ function App() {
   return (
     <div className="w-screen h-screen flex flex-row flex-nowrap justify-start">
       {shouldShowSidebar && <AppSidebar />}
-      <main className="grow h-screen flex flex-col flex-nowrap overflow-x-hidden overflow-y-auto relative">
+      <main className="grow h-screen flex flex-col flex-nowrap overflow-x-hidden overflow-y-auto relative items-center">
         <Routes>
           <Route index element={<HomePage />} />
           <Route element={<AuthenticatedRouter />}>

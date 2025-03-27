@@ -82,7 +82,7 @@ const ShareProfileButton = () => {
   };
 
   return (
-    <Button variant="outline" onClick={handleShareProfile}>
+    <Button variant="outline" onClick={handleShareProfile} className="cursor-pointer">
       {isShareLinkCopied ? <CopyCheck className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
       <span className="ml-1">Share </span>
     </Button>
@@ -114,7 +114,7 @@ const ProfileButtons = () => {
         // Only show edit profile button if the profile is the current user's profile
         profile.user.id === me?.user?.id && (
           <Link to="/profile/edit">
-            <Button variant="outline">
+            <Button variant="outline" className="hover:cursor-pointer">
               <UserPen className="w-4 h-4" />
               <span className="ml-1">Edit</span>
             </Button>

@@ -15,15 +15,17 @@ const PostPreviewElement = ({ preview }: { preview: PostPreview }) => {
   return (
     <Link
       to="/p/test-123"
-      className="rounded-sm overflow-hidden aspect-square w-full border-1 relative"
+      className="rounded-sm overflow-hidden aspect-square w-full border-1 relative flex justify-center items-center"
     >
       <span className="absolute bottom-2 left-2 text-white text-md font-bold bg-black/50 bg-opacity-50 py-1 px-1.5 z-20 rounded-sm max-w-4/5 truncate">
         {preview.recipe.title}
       </span>
-
-      <div className="absolute inset-0 bg-black opacity-0 hover:opacity-20 z-10" />
+      <div className="absolute inset-0 bg-black opacity-0 hover:opacity-20 z-10 transition-opacity ease-in-out " />
       {imagePreviewUrl && (
-        <img src={uploadThingFileUrlFromKey(imagePreviewUrl)} className="object-cover" />
+        <img
+          src={uploadThingFileUrlFromKey(imagePreviewUrl)}
+          className="object-cover shrink-0 min-w-full min-h-full"
+        />
       )}
     </Link>
   );

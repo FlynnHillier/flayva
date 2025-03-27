@@ -1,12 +1,12 @@
 import socialRepo from "@/server/repositories/social.repo";
-import { User } from "@flayva-monorepo/shared/types";
+import { User, SocialMetrics, ProfilePreview } from "@flayva-monorepo/shared/types";
 
 /**
  * Get a user by their ID
  * @param userId - the ID of the user
  * @returns the user object or null if the user does not exist
  */
-export const getUserById = async (userId: string) => {
+export const getUserById = async (userId: string): Promise<User | null> => {
   const user = await socialRepo.getUserById(userId);
 
   if (!user) return null;
@@ -21,6 +21,35 @@ export const getUserById = async (userId: string) => {
   return formattedUser;
 };
 
+export const getProfilePreview = async (userId: string): Promise<ProfilePreview | null> => {
+  const user = await getUserById(userId);
+
+  if (!user) return null;
+
+  const socialMetrics = await getUserProfileSocialStats(userId);
+
+  if (!socialMetrics) return null;
+
+  return {
+    user: user,
+    socialMetrics: socialMetrics,
+  };
+};
+
+export const getUserProfileSocialStats = async (userId: string): Promise<SocialMetrics | null> => {
+  const result = await socialRepo.getUserProfileSocialStats(userId);
+
+  if (!result) return null;
+
+  return {
+    followers: result.followersCount,
+    following: result.followingCount,
+    posts: result.postsCount,
+  };
+};
+
 export default {
+  getProfilePreview,
   getUserById,
+  getUserProfileSocialStats,
 };

@@ -6,6 +6,8 @@ const router: Router = Router();
 /**
  * Get a user's profile
  */
-router.get("/u/:userID", socialControllers.getUserById);
+router.get("/u/:userId", socialControllers.getUserById);
+
+router.get("/profile/preview/:userId", socialControllers.getProfilePreview);
 
 export default router;

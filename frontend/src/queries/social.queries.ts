@@ -7,4 +7,8 @@ export const social = createQueryKeys("social", {
     queryFn: () => api.social.fetchUserById(userId),
     queryKey: ["social", "userId", userId],
   }),
+  fetchProfilePreview: (userId: string) => ({
+    queryFn: () => api.social.fetchUserProfilePreview(userId),
+    queryKey: ["social", "profilePreview", userId],
+  }),
 });

@@ -8,6 +8,6 @@ const router: Router = Router();
 /**
  * search for recipe tags
  */
-router.get("/r/tags/q/:search", recipeControllers.searchSimilarValidRecipeTag);
+router.get("/r/tags/q/:searchTerm", recipeControllers.searchSimilarValidRecipeTag);
 
 export default router;

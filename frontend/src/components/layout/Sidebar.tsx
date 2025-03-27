@@ -56,7 +56,7 @@ function SidebarItemFooter() {
 
   return (
     <Link
-      to={data?.user ? "/profile" : "/login"}
+      to={data?.user ? `/profile/${data.user.id}` : "/login"}
       className="flex items-center hover:scale-105 transition-transform duration-200 flex-row gap-2 "
     >
       <span className="flex shrink-0 items-center">

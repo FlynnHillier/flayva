@@ -64,7 +64,7 @@ export function NumberSelector({
           disabled={!selectedIngredient}
           className="min-w-[120px] font-normal"
         >
-          {displayValue || "Select a value"}
+          {displayValue || "Select A Value"}
         </Button>
       </DropdownMenuTrigger>
 
@@ -76,7 +76,7 @@ export function NumberSelector({
             min="0"
             value={wholeNumber?.toString() || ""}
             onChange={handleWholeNumberChange}
-            placeholder="Enter whole number"
+            placeholder="Enter Whole Number"
           />
         </div>
 

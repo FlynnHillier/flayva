@@ -37,12 +37,6 @@ export const getUserProfileSocialStats = async (userId: string) => {
   return socialStats;
 };
 
-export const getProfilePreview = async (userId: string) => {
-  const user = await getUserById(userId);
-
-  if (!user) return null;
-};
-
 export const createFollower = async (followerId: string, followedId: string) =>
   db
     .insert(followers)
@@ -71,7 +65,6 @@ export const isFollowing = async (followerId: string, followedId: string) => {
 
 export default {
   getUserById,
-  getProfilePreview,
   getUserProfileSocialStats,
   createFollower,
   deleteFollower,

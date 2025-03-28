@@ -81,6 +81,13 @@ export const tag = z.object({
   group: z.enum(TAG_GROUPS).nullable(),
 });
 
+export const tagReference = tag.pick({ tagId: true, tagName: true });
+
+export const tagReferences = z
+  .array(tagReference)
+  .min(RECIPE_TAG_COUNT_MIN)
+  .max(RECIPE_TAG_COUNT_MAX);
+
 export const tags = z.array(tag).min(RECIPE_TAG_COUNT_MIN).max(RECIPE_TAG_COUNT_MAX);
 
 // ## META INFO ##
@@ -103,6 +110,6 @@ export const recipe = z.object({
   description: description,
   instructions: instructions,
   ingredients: ingredients,
-  tags: tags,
+  tags: tagReferences,
   metaInfo: metaInfo.optional(),
 });

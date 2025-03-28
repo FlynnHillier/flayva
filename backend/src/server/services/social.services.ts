@@ -48,8 +48,47 @@ export const getUserProfileSocialStats = async (userId: string): Promise<SocialM
   };
 };
 
+/**
+ *  SECTION: FOLLOWING
+ *
+ */
+
+export const followUser = async (requesterId: string, targetId: string) => {
+  if (requesterId === targetId) return { success: false, message: "Cannot follow yourself" };
+
+  const [result] = await socialRepo.createFollower(requesterId, targetId);
+
+  if (!result)
+    return {
+      success: false,
+    };
+
+  return {
+    success: true,
+  };
+};
+
+export const unfollowUser = async (requesterId: string, targetId: string) => {
+  const result = await socialRepo.deleteFollower(requesterId, targetId);
+
+  return {
+    success: !!result,
+  };
+};
+
+export const isFollowingUser = async (requesterId: string, targetId: string) => {
+  const result = await socialRepo.isFollowing(requesterId, targetId);
+
+  return {
+    isFollowing: result,
+  };
+};
+
 export default {
   getProfilePreview,
   getUserById,
   getUserProfileSocialStats,
+  followUser,
+  unfollowUser,
+  isFollowingUser,
 };

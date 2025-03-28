@@ -1,11 +1,5 @@
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
 
-export class NetworkResourceNotFoundError extends Error {
-  constructor(message: string = "Resource not found") {
-    super(message);
-  }
-}
-
 /**
  * Axios client to make requests to the server
  */
@@ -21,12 +15,6 @@ const client = axios.create({
  */
 export const request = async (config: AxiosRequestConfig) => {
   const onError = (error: AxiosError) => {
-    if (error.status === 404) {
-      const { message } = error.response?.data as { message?: string };
-
-      return Promise.reject(new NetworkResourceNotFoundError(message));
-    }
-
     return Promise.reject(error);
   };
 

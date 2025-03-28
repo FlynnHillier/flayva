@@ -3,9 +3,14 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useProfile } from "@/contexts/profile.context";
 import { useMe } from "@/hooks/auth.hooks";
+import {
+  useFetchOwnFollowingUserStatus,
+  useFollowUser,
+  useUnfollowUser,
+} from "@/hooks/social.hooks";
 import { cn } from "@/lib/utils";
-import { Copy, CopyCheck, UserPen, UserPlus } from "lucide-react";
-import { ReactNode, useState } from "react";
+import { Copy, CopyCheck, UserMinus, UserPen, UserPlus } from "lucide-react";
+import { ComponentProps, ReactNode, useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
 import { ClassNameValue } from "tailwind-merge";
@@ -51,7 +56,7 @@ const SocialMetrics = ({ className }: { className?: ClassNameValue }) => {
 
     return (
       <div className="text-center flex flex-col gap-0.5 items-center flex-nowrap">
-        <span className="text-gray-600"> posts</span>
+        <span className="text-gray-600"> {name}</span>
         {value}
       </div>
     );
@@ -89,16 +94,85 @@ const ShareProfileButton = () => {
   );
 };
 
-const FollowProfileButton = () => {
+const FollowButton = ({ className, disabled, onClick, ...props }: ComponentProps<"button">) => {
   const { profile } = useProfile();
 
   if (!profile) return null;
 
+  const { mutate: followUser, isPending } = useFollowUser({
+    onError: () => {
+      toast.error("Failed to follow user");
+    },
+  });
+
+  const handleButtonClick = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement>) => {
+      followUser({ userId: profile.user.id });
+      onClick && onClick(e);
+    },
+    [profile.user.id, onClick]
+  );
+
   return (
-    <Button variant={"outline"}>
+    <Button
+      variant={"outline"}
+      disabled={isPending || disabled}
+      onClick={handleButtonClick}
+      className={cn("cursor-pointer", className)}
+      {...props}
+    >
       <UserPlus className="w-4 h-4" />
       <span className="ml-1">Follow</span>
     </Button>
+  );
+};
+
+const UnfollowButton = ({ className, disabled, onClick, ...props }: ComponentProps<"button">) => {
+  const { profile } = useProfile();
+
+  if (!profile) return null;
+
+  const { mutate: unfollowUser, isPending } = useUnfollowUser({
+    onError: () => {
+      toast.error("Failed to unfollow user");
+    },
+  });
+
+  const handleButtonClick = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement>) => {
+      unfollowUser({ userId: profile.user.id });
+      onClick && onClick(e);
+    },
+    [profile.user.id, onClick]
+  );
+
+  return (
+    <Button
+      variant={"outline"}
+      disabled={isPending || disabled}
+      onClick={handleButtonClick}
+      className={cn("cursor-pointer", className)}
+      {...props}
+    >
+      <UserMinus className="w-4 h-4" />
+      <span className="ml-1">Unfollow</span>
+    </Button>
+  );
+};
+
+const FollowToggleButton = () => {
+  const { profile } = useProfile();
+
+  if (!profile) return null;
+
+  const { data, error, isPending } = useFetchOwnFollowingUserStatus(profile.user.id);
+
+  // TODO: possible handle erorr?
+
+  return data && data.isFollowing ? (
+    <UnfollowButton disabled={isPending} />
+  ) : (
+    <FollowButton disabled={isPending} />
   );
 };
 
@@ -123,7 +197,7 @@ const ProfileButtons = () => {
       }
       {
         // Only show follow button if the profile is not the current user's profile
-        !me?.user && me?.user?.id !== profile.user.id && <FollowProfileButton />
+        me?.user && me?.user?.id !== profile.user.id && <FollowToggleButton />
       }
       <ShareProfileButton />
     </div>

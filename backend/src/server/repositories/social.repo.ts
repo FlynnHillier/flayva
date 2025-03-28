@@ -1,7 +1,7 @@
 import { db } from "@/db";
 import { posts, users } from "@/db/schema";
 import { followers } from "@/db/schemas/social.schema";
-import { eq, or } from "drizzle-orm";
+import { and, eq, or } from "drizzle-orm";
 
 /**
  * Get a user object from the database by their ID
@@ -43,8 +43,37 @@ export const getProfilePreview = async (userId: string) => {
   if (!user) return null;
 };
 
+export const createFollower = async (followerId: string, followedId: string) =>
+  db
+    .insert(followers)
+    .values({
+      followerId,
+      followedId,
+    })
+    .onConflictDoNothing()
+    .returning();
+
+export const deleteFollower = async (followerId: string, followedId: string) => {
+  const [result] = await db
+    .delete(followers)
+    .where(and(eq(followers.followedId, followedId), eq(followers.followerId, followerId)))
+    .returning();
+
+  return result as typeof result | null;
+};
+export const isFollowing = async (followerId: string, followedId: string) => {
+  const follower = await db.query.followers.findFirst({
+    where: (f, { eq, and }) => and(eq(f.followerId, followerId), eq(f.followedId, followedId)),
+  });
+
+  return !!follower;
+};
+
 export default {
   getUserById,
   getProfilePreview,
   getUserProfileSocialStats,
+  createFollower,
+  deleteFollower,
+  isFollowing,
 };

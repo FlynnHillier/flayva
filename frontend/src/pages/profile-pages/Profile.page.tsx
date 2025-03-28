@@ -3,14 +3,14 @@ import { Navigate, useParams } from "react-router-dom";
 
 import { useEffect } from "react";
 import { useProfile } from "@/contexts/profile.context";
-import { NetworkResourceNotFoundError } from "@/lib/network";
 import { ProfileContent } from "@/components/profile/profile-content";
+import { AxiosError } from "axios";
 
 const ViewProfilePage = () => {
   const { id } = useParams();
   const { fetchProfile, error } = useProfile();
 
-  if (error instanceof NetworkResourceNotFoundError) {
+  if (error instanceof AxiosError && error.response?.status === 404) {
     return <Navigate to="/profile/not-found" />;
   }
 

@@ -11,4 +11,8 @@ export const social = createQueryKeys("social", {
     queryFn: () => api.social.fetchUserProfilePreview(userId),
     queryKey: ["social", "profilePreview", userId],
   }),
+  fetchOwnFollowingUserStatus: (userId: string) => ({
+    queryKey: ["social", "isfollowing", userId],
+    queryFn: () => api.social.getOwnFollowingUserStatus(userId),
+  }),
 });

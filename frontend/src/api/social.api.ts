@@ -15,6 +15,12 @@ export async function fetchUserById(userID: string): Promise<{ user?: User }> {
   return { user: data.user as User };
 }
 
+/**
+ * Fetches the profile preview of a user by their ID.
+ *
+ * @param userId - The ID of the user to fetch the profile preview for.
+ * @returns A promise that resolves to an object containing the profile preview.
+ */
 export async function fetchUserProfilePreview(
   userId: string
 ): Promise<{ profile: ProfilePreview }> {
@@ -28,4 +34,51 @@ export async function fetchUserProfilePreview(
   }
 
   return { profile: data.profile as ProfilePreview };
+}
+
+/**
+ * Follows a user by sending a request to the server.
+ * @param userId - The ID of the user to follow.
+ * @returns A promise that resolves to an object indicating success.
+ */
+export async function followUser(userId: string) {
+  const { data } = await request({
+    url: `/api/s/follow`,
+    method: "POST",
+    data: { targetUserId: userId },
+  });
+
+  return { success: true };
+}
+
+/**
+ * Unfollows a user by sending a request to the server.
+ * @param userId - The ID of the user to unfollow.
+ * @returns A promise that resolves to an object indicating success.
+ */
+export async function unfollowUser(userId: string) {
+  const { data } = await request({
+    url: `/api/s/unfollow`,
+    method: "POST",
+    data: { targetUserId: userId },
+  });
+
+  return { success: true };
+}
+
+/**
+ * Fetches the follow status of the current user for a given user ID.
+ * @param userId - The ID of the user to check the follow status for.
+ */
+export async function getOwnFollowingUserStatus(userId: string) {
+  const { data } = await request({
+    url: `/api/s/isfollowing/${userId}`,
+    method: "GET",
+  });
+
+  if (data.isFollowing === undefined) {
+    throw new UnexpectedResponseFormatError("getFollowStatus", data);
+  }
+
+  return { isFollowing: data.isFollowing } as { isFollowing: boolean };
 }

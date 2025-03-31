@@ -65,8 +65,9 @@ function SuggestionTag({
     <button
       key={suggestion.tagId}
       onClick={onClick}
-      className={cn("block w-full p-2 text-left", {
-        "font-semibold bg-gray-200": isActive,
+      className={cn("block w-full p-2 text-left transition-all", {
+        "hover:shadow-lg hover:bg-gray-100": !isActive, 
+        "font-semibold bg-gray-200": isActive, 
       })}
     >
       {suggestion.tagName}
@@ -156,6 +157,10 @@ export function TagsInput({
     },
     [tags]
   );
+
+  const clearTags = () => {
+    onTagsChange([]); 
+  };
 
   // ## Manage Suggestions ##
 
@@ -343,7 +348,7 @@ export function TagsInput({
         // ref={ref}
         dir={dir}
         className={cn(
-          "flex items-center flex-wrap gap-1 p-1 rounded-lg bg-background overflow-hidden   ring-1 ring-muted  ",
+          "flex items-center flex-wrap gap-1 p-1 rounded-lg bg-background overflow-hidden   ring-1 ring-muted w-[380px] ml-2 mt-2",
           {
             "focus-within:ring-ring": activeSelectedTagIndex === -1,
           },
@@ -376,10 +381,11 @@ export function TagsInput({
             activeSelectedTagIndex !== -1 && "caret-transparent"
           )}
         />
+        
       </div>
       <div
         className={cn(
-          "absolute mt-0.5 z-10 w-full bg-background shadow-lg rounded-b-sm overflow-hidden",
+          "absolute mt-0.5 z-10 min-w-fit bg-background shadow-lg rounded-b-sm overflow-hidden w-[380px] ml-2",
           {
             hidden: !suggestions || suggestions.length === 0,
           }
@@ -393,7 +399,16 @@ export function TagsInput({
             key={suggestion.tagId}
           />
         ))}
+        
       </div>
+      <button
+            onClick={clearTags}
+            className="ml-2 mt-2 p-2 text-xs text-red-500 bg-transparent hover:border rounded hover:bg-red-500 hover:text-white"
+            aria-label="Clear all tags"
+            style={{ display: tags.length > 0 ? 'inline-block' : 'none' }}
+          >
+            Clear Tags
+          </button>
     </>
   );
 }

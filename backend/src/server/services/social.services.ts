@@ -1,5 +1,13 @@
+import { uploadThingFileUrl } from "@/lib/uploadthing";
 import socialRepo from "@/server/repositories/social.repo";
-import { User, SocialMetrics, ProfilePreview } from "@flayva-monorepo/shared/types";
+import imagesServices from "@/server/services/images.services";
+import { type User } from "@flayva-monorepo/shared/types/auth";
+import { SocialMetrics, ProfilePreview } from "@flayva-monorepo/shared/types/social.types";
+import {
+  avatar,
+  updateProfileFormSchema,
+} from "@flayva-monorepo/shared/validation/social.validation";
+import { z } from "zod";
 
 /**
  * Get a user by their ID
@@ -84,6 +92,91 @@ export const isFollowingUser = async (requesterId: string, targetId: string) => 
   };
 };
 
+/**
+ * !SECTION: PROFILE MANAGEMENT
+ */
+export const updateProfile = async (
+  userId: string,
+  data: z.infer<typeof updateProfileFormSchema>
+) => {
+  const { username, bio, avatar } = data;
+
+  const result = await socialRepo.updateUser(userId, {
+    bio,
+    username,
+  });
+
+  if (avatar) await editProfileAvatar(userId, avatar);
+
+  if (!result) return null;
+
+  return {
+    user: {
+      bio: result.bio,
+      id: result.id,
+      username: result.username,
+      profile_picture_url: result.profile_picture_url ?? undefined,
+    },
+  } as { user: User } satisfies {
+    user: User;
+  };
+};
+
+export const editProfileAvatar = async (userId: string, image: File) => {
+  const { success: isValidFile, error: validationError } = avatar.safeParse(image);
+
+  if (!isValidFile) {
+    //TODO: logging
+    throw new Error(`Invalid avatar image format, ${validationError.message}`);
+  }
+
+  // Upload the image to the cloud
+  const { data: uploadData, error: uploadError } = await imagesServices.uploadAvatarImage(
+    userId,
+    image
+  );
+
+  if (uploadError) {
+    // TODO: logging
+    throw new Error(`Failed to upload image to cloud, ${uploadError.message}`);
+  }
+
+  const { key: uploadedFileKey } = uploadData;
+
+  // Delete the old image from the cloud
+  const oldImageKey = await socialRepo.getUserAvatarCloudFileKey(userId);
+
+  if (oldImageKey === undefined) {
+    // TODO: logging
+    throw new Error("Failed to get old image key from the cloud");
+  }
+
+  if (oldImageKey !== null) {
+    // There is an old image, delete it from the cloud
+    const { success: isDeleted } = await imagesServices.deleteFile(oldImageKey);
+
+    if (!isDeleted) {
+      // TODO: logging
+      throw new Error("Failed to delete old avatar image from the cloud");
+    }
+  }
+
+  // Update the user profile with the new image URL
+  const databaseUpdateResult = await socialRepo.updateUser(userId, {
+    profile_picture_url: uploadThingFileUrl(uploadedFileKey), //TODO: perhaps this should be a file key instead of a URL in future?
+  });
+
+  if (!databaseUpdateResult) {
+    // TODO: logging
+    // Also, there exists a stale image in the cloud now!
+    throw new Error("Failed to update user profile with the new image URL");
+  }
+
+  return {
+    key: uploadedFileKey,
+  };
+};
+
 export default {
   getProfilePreview,
   getUserById,
@@ -91,4 +184,5 @@ export default {
   followUser,
   unfollowUser,
   isFollowingUser,
+  updateProfile,
 };

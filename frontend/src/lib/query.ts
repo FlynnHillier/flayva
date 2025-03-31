@@ -2,6 +2,15 @@ import { QueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 
 /**
+ * A custom error class for queries that should not be retried
+ */
+export class NoRetryQueryError extends Error {
+  constructor(message: string) {
+    super(message);
+  }
+}
+
+/**
  * The maximum number of retries for a query
  */
 const QUERY_RETRY_LIMIT = 2;
@@ -18,7 +27,11 @@ const shouldRetryOnAxiosError = (error: AxiosError): boolean =>
  *
  */
 const retry = (failureCount: number, error: Error) => {
-  if (error instanceof AxiosError && !shouldRetryOnAxiosError(error)) return false;
+  if (
+    error instanceof NoRetryQueryError ||
+    (error instanceof AxiosError && !shouldRetryOnAxiosError(error))
+  )
+    return false;
 
   return failureCount < QUERY_RETRY_LIMIT;
 };

@@ -96,5 +96,10 @@ export const useFetchOwnFollowingUserStatus = (userId: string) =>
 export const useUpdateProfile = createConfigurableMutation(
   api.social.updateProfile,
   ["social", "updateProfile"],
-  {}
+  {
+    onSuccess(data) {
+      queryClient.invalidateQueries(queries.social.fetchProfilePreview(data.user.id));
+      queryClient.invalidateQueries(queries.auth.me());
+    },
+  }
 );

@@ -194,11 +194,22 @@ export const EditProfileForm = ({
       console.error(error);
       toast.error("Failed to update profile");
     },
+    onSuccess: ({ user: { username, bio } }) => {
+      toast.success("Profile updated successfully");
+      form.reset({
+        avatar: undefined,
+        username: username,
+        bio: bio,
+      });
+    },
   });
 
   const handleSubmit = useCallback(
-    form.handleSubmit((data) => mutate(data)),
-    [form.handleSubmit, mutate]
+    form.handleSubmit((data) => {
+      // data for some reason will not include the username field
+      mutate(form.getValues());
+    }),
+    [form.handleSubmit, mutate, form]
   );
 
   const isDisabled = useMemo(() => isPending, [isPending]);

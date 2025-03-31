@@ -24,7 +24,7 @@ const InstructionListComponent = ({
           <div>
             <InstructionItem
               instruction={instruction}
-              key={instruction.id}
+              key={instruction.instruction}
               deleteInstructionFromList={deleteInstructionFromList}
               setEditingInstruction={setEditingInstruction}
             ></InstructionItem>

@@ -2,7 +2,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Button } from "@/components/ui/button";
-import { Trash2, Pen } from "lucide-react";
+import { Trash2, Pen, GripVertical } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import {
   Form,
@@ -198,13 +198,17 @@ export default function CreateNewPostForm() {
   );
 
   const [instruction, setInstruction] = useState<string>("");
-  const addInstructionToList = (newInstruction: instructionSchema) => {
-    if (isEditingInstruction) {
+  const addInstructionToList = (
+    newInstruction: instructionSchema,
+    editing: boolean
+  ) => {
+    if (editing) {
+      console.log("in the right place", newInstruction);
       setInstructionList((prev) =>
         prev.map((instruction) =>
-          instruction.id === instructionToBeEdited
+          instruction.id === newInstruction.id
             ? {
-                id: instructionToBeEdited,
+                id: newInstruction.id,
                 instruction: newInstruction.instruction,
               }
             : instruction
@@ -227,10 +231,15 @@ export default function CreateNewPostForm() {
   };
   const [instructionToBeEdited, setInstructionToBeEdited] = useState(0);
   const [isEditingInstruction, setIsEditingInstruction] = useState(false);
-  const setEditingInstruction = (instruction: instructionSchema) => {
-    setInstruction(instruction.instruction);
-    setInstructionToBeEdited(instruction.id);
-    setIsEditingInstruction(true);
+  const setEditingInstruction = async (instruction: instructionSchema) => {
+    await setIsEditingInstruction(true);
+    addInstructionToList(
+      {
+        id: instruction.id,
+        instruction: instruction.instruction,
+      },
+      true
+    );
   };
 
   const getInstructionPos = (id: number) => {
@@ -239,21 +248,12 @@ export default function CreateNewPostForm() {
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
-
     if (!over || active.id === over.id) return;
-
+    const originalPos = getInstructionPos(Number(active.id));
+    const newPos = getInstructionPos(Number(over.id));
     setInstructionList((instructionList) => {
-      const originalPos = getInstructionPos(Number(active.id));
-      const newPos = getInstructionPos(Number(over.id));
-
-      // 1. First perform the array move
-      const reorderedList = arrayMove(instructionList, originalPos, newPos);
-
-      // 2. Then update IDs to maintain ascending order
-      return reorderedList.map((instruction, index) => ({
-        ...instruction,
-        id: index + 1, // Assuming you want 1-based step numbers
-      }));
+      reOrderInstructionsList();
+      return arrayMove(instructionList, originalPos, newPos);
     });
   };
 
@@ -534,27 +534,42 @@ export default function CreateNewPostForm() {
 
                       <FormControl>
                         <div className="flex flex-col gap-2">
-                          <Card className="p-1 inline-flex">
-                            <div className="p-1 flex items-center gap-1.5">
+                          <Card className="p-1">
+                            <form className="p-1 flex items-center justify-between gap-3">
+                              <div className="flex flex-row gap-3 items-center">
+                                <GripVertical
+                                  size={20}
+                                  color="grey"
+                                  className=" cursor-not-allowed align-middle"
+                                ></GripVertical>
+                                <span className="font-medium ml-2">
+                                  {instructionList.length + 1}
+                                </span>
+                              </div>
                               <Input
                                 value={instruction}
                                 onChange={(e) => setInstruction(e.target.value)}
                                 placeholder="Enter New Instruction"
-                                className="w-full "
+                                className="w-full border-0 text-sm shadow-none focus:border-0 focus:outline-none focus-visible:ring-0"
+                                type="text"
                                 disabled={false}
                               />
                               <Button
-                                type="button"
-                                onClick={() =>
-                                  addInstructionToList({
-                                    id: instructionList.length + 1,
-                                    instruction: instruction,
-                                  })
-                                }
+                                type="submit"
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  addInstructionToList(
+                                    {
+                                      id: instructionList.length + 1,
+                                      instruction: instruction,
+                                    },
+                                    false
+                                  );
+                                }}
                               >
-                                {isEditingInstruction ? "Edit" : "Add"}
+                                Add
                               </Button>
-                            </div>
+                            </form>
                           </Card>
                           <span className="text-red-600 text-sm">
                             {ingredientError}

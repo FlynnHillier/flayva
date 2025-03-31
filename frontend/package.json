@@ -10,6 +10,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@dnd-kit/core": "^6.3.1",
+    "@dnd-kit/sortable": "^10.0.0",
+    "@dnd-kit/utilities": "^3.2.2",
     "@flayva-monorepo/shared": "workspace:*",
     "@hookform/resolvers": "^4.1.2",
     "@lukemorales/query-key-factory": "^1.3.4",

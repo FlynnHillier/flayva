@@ -31,6 +31,10 @@ import { TagsInput } from "../recipe/create/recipe-tags-input";
 import IngredientSelector from "./ingredients-selector";
 import { useCreateNewPost } from "@/hooks/post.hooks";
 import { IngredientEntry } from "./ingredient-entry-schema";
+import { closestCorners, DndContext, DragEndEvent } from "@dnd-kit/core";
+import InstructionListComponent from "./instruction-list";
+import { arrayMove } from "@dnd-kit/sortable";
+import { Console } from "console";
 
 const { createNewPostSchema } = POST_VALIDATOR;
 
@@ -187,6 +191,80 @@ export default function CreateNewPostForm() {
     );
   };
 
+  type instructionSchema = { id: number; instruction: string };
+
+  const [instructionList, setInstructionList] = useState<instructionSchema[]>(
+    []
+  );
+
+  const [instruction, setInstruction] = useState<string>("");
+  const addInstructionToList = (newInstruction: instructionSchema) => {
+    if (isEditingInstruction) {
+      setInstructionList((prev) =>
+        prev.map((instruction) =>
+          instruction.id === instructionToBeEdited
+            ? {
+                id: instructionToBeEdited,
+                instruction: newInstruction.instruction,
+              }
+            : instruction
+        )
+      );
+      setInstructionToBeEdited(0);
+      setIsEditingInstruction(false);
+      setInstruction("");
+    } else {
+      setInstructionList((prev) => [...prev, newInstruction]);
+      setInstruction("");
+    }
+  };
+
+  const deleteInstructionFromList = (stepNumber: number) => {
+    setInstructionList((prev) =>
+      prev.filter((insturctionEntry) => insturctionEntry.id !== stepNumber)
+    );
+    reOrderInstructionsList();
+  };
+  const [instructionToBeEdited, setInstructionToBeEdited] = useState(0);
+  const [isEditingInstruction, setIsEditingInstruction] = useState(false);
+  const setEditingInstruction = (instruction: instructionSchema) => {
+    setInstruction(instruction.instruction);
+    setInstructionToBeEdited(instruction.id);
+    setIsEditingInstruction(true);
+  };
+
+  const getInstructionPos = (id: number) => {
+    return instructionList.findIndex((instruction) => instruction.id === id);
+  };
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+
+    if (!over || active.id === over.id) return;
+
+    setInstructionList((instructionList) => {
+      const originalPos = getInstructionPos(Number(active.id));
+      const newPos = getInstructionPos(Number(over.id));
+
+      // 1. First perform the array move
+      const reorderedList = arrayMove(instructionList, originalPos, newPos);
+
+      // 2. Then update IDs to maintain ascending order
+      return reorderedList.map((instruction, index) => ({
+        ...instruction,
+        id: index + 1, // Assuming you want 1-based step numbers
+      }));
+    });
+  };
+
+  const reOrderInstructionsList = () => {
+    setInstructionList((currentList) =>
+      currentList.map((instruction, index) => ({
+        ...instruction,
+        id: index + 1,
+      }))
+    );
+  };
   const { mutate, data, isPending, error } = useCreateNewPost({
     onError(error, variables, context) {
       toast.error("Something went wrong!");
@@ -337,8 +415,10 @@ export default function CreateNewPostForm() {
                                 </span>
                                 <span className="ml-2 text-muted-foreground">
                                   {ingredient.amount_whole}
-                                  {ingredient.amount_fractional_numerator &&
-                                    ingredient.amount_fractional_denominator && (
+                                  {ingredient.amount_fractional_numerator !==
+                                    0 &&
+                                    ingredient.amount_fractional_denominator !==
+                                      0 && (
                                       <span className="ml-1">
                                         <sup>
                                           {
@@ -426,35 +506,66 @@ export default function CreateNewPostForm() {
                   </FormItem>
                 )}
               />
-              <FormField
-                disabled={isDisabled}
-                control={form.control}
-                name="recipe.instructions"
-                render={({ field, fieldState: { error } }) => (
-                  <FormItem>
-                    <FormLabel>Instructions</FormLabel>
-                    {error && (
-                      <FormMessage className="text-red-500">
-                        {" "}
-                        {error.message}{" "}
-                      </FormMessage>
-                    )}
-                    <FormDescription>
-                      Let others know how they can recreate your dish
-                    </FormDescription>
-                    <FormControl>
-                      <Input
-                        value={field.value
-                          .map((ingredient) => ingredient.instruction)
-                          .join(", ")}
-                        placeholder="1 cup of flour, 2 eggs, 1 cup of milk"
-                        className="resize-none field-sizing-content"
-                        disabled={true}
-                      />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
+              <DndContext
+                collisionDetection={closestCorners}
+                onDragEnd={handleDragEnd}
+              >
+                <FormField
+                  disabled={isDisabled}
+                  control={form.control}
+                  name="recipe.instructions"
+                  render={({ field, fieldState: { error } }) => (
+                    <FormItem>
+                      <FormLabel>Instructions</FormLabel>
+                      {error && (
+                        <FormMessage className="text-red-500">
+                          {" "}
+                          {error.message}{" "}
+                        </FormMessage>
+                      )}
+                      <FormDescription>
+                        Let others know how they can recreate your dish
+                      </FormDescription>
+                      <InstructionListComponent
+                        instructions={instructionList}
+                        deleteInstructionFromList={deleteInstructionFromList}
+                        setEditingInstruction={setEditingInstruction}
+                      ></InstructionListComponent>
+
+                      <FormControl>
+                        <div className="flex flex-col gap-2">
+                          <Card className="p-1 inline-flex">
+                            <div className="p-1 flex items-center gap-1.5">
+                              <Input
+                                value={instruction}
+                                onChange={(e) => setInstruction(e.target.value)}
+                                placeholder="Enter New Instruction"
+                                className="w-full "
+                                disabled={false}
+                              />
+                              <Button
+                                type="button"
+                                onClick={() =>
+                                  addInstructionToList({
+                                    id: instructionList.length + 1,
+                                    instruction: instruction,
+                                  })
+                                }
+                              >
+                                {isEditingInstruction ? "Edit" : "Add"}
+                              </Button>
+                            </div>
+                          </Card>
+                          <span className="text-red-600 text-sm">
+                            {ingredientError}
+                          </span>
+                        </div>
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+              </DndContext>
+
               <Button type="submit" disabled={isDisabled}>
                 Submit
               </Button>

@@ -110,7 +110,7 @@ const IngredientSelector = ({
           onValueChange={setSelectedIngredient}
           disabled={!!editingIngredient}
         >
-          <SelectTrigger className="w-[160px]">
+          <SelectTrigger className="w-[180px]">
             <SelectValue placeholder="Select Ingredient" />
           </SelectTrigger>
           <SelectContent>

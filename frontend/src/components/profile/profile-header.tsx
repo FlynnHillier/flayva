@@ -10,23 +10,11 @@ import {
 } from "@/hooks/social.hooks";
 import { cn } from "@/lib/utils";
 import { Copy, CopyCheck, UserMinus, UserPen, UserPlus } from "lucide-react";
-import { ComponentProps, ReactNode, useCallback, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { ComponentProps, ReactNode, useCallback, useState } from "react";
 import { toast } from "sonner";
 import { ClassNameValue } from "tailwind-merge";
-
-const ProfilePicture = () => {
-  const { profile } = useProfile();
-
-  if (!profile) return <Skeleton className="w-20 h-20 rounded-full" />;
-
-  return (
-    <Avatar className="w-20 h-20 border-2 ">
-      <AvatarImage src={profile.user.profile_picture_url} alt="Profile picture" />
-      <AvatarFallback>{profile.user.username.charAt(0)}</AvatarFallback>
-    </Avatar>
-  );
-};
+import { EditOwnProfileModal } from "./profile-edit-modal";
+import { ProfilePicture } from "./profile-common";
 
 function Bio() {
   const { profile } = useProfile();
@@ -68,6 +56,17 @@ const SocialMetrics = ({ className }: { className?: ClassNameValue }) => {
       <MetricView value={profile?.socialMetrics.followers} name="followers" />
       <MetricView value={profile?.socialMetrics.following} name="following" />
     </div>
+  );
+};
+
+const EditOwnProfileButton = () => {
+  return (
+    <EditOwnProfileModal>
+      <Button variant="outline" className="hover:cursor-pointer">
+        <UserPen className="w-4 h-4" />
+        <span className="ml-1">Edit</span>
+      </Button>
+    </EditOwnProfileModal>
   );
 };
 
@@ -186,14 +185,7 @@ const ProfileButtons = () => {
     <div className="flex gap-2">
       {
         // Only show edit profile button if the profile is the current user's profile
-        profile.user.id === me?.user?.id && (
-          <Link to="/profile/edit">
-            <Button variant="outline" className="hover:cursor-pointer">
-              <UserPen className="w-4 h-4" />
-              <span className="ml-1">Edit</span>
-            </Button>
-          </Link>
-        )
+        profile.user.id === me?.user?.id && <EditOwnProfileButton />
       }
       {
         // Only show follow button if the profile is not the current user's profile
@@ -205,10 +197,12 @@ const ProfileButtons = () => {
 };
 
 export const ProfileHeader = () => {
+  const { profile } = useProfile();
+
   return (
     <div className="flex flex-col md:flex-row items-center md:items-start gap-6 max-w-7xl mx-auto p-4 w-full">
       <div className="shrink-0 ">
-        <ProfilePicture />
+        <ProfilePicture user={profile?.user} />
       </div>
       <div className="grow flex flex-col items-center md:block ">
         <div className="flex md:flex-row justify-between gap-4 flex-col items-center">

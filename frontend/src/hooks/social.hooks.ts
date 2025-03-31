@@ -92,3 +92,9 @@ export const useFetchOwnFollowingUserStatus = (userId: string) =>
     ...queries.social.fetchOwnFollowingUserStatus(userId),
     enabled: !!userId,
   });
+
+export const useUpdateProfile = createConfigurableMutation(
+  api.social.updateProfile,
+  ["social", "updateProfile"],
+  {}
+);

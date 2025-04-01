@@ -34,7 +34,9 @@ import { IngredientEntry } from "./ingredient-entry-schema";
 import { closestCorners, DndContext, DragEndEvent } from "@dnd-kit/core";
 import InstructionListComponent from "./instruction-list";
 import { arrayMove } from "@dnd-kit/sortable";
-import { Console } from "console";
+import InstructionItem from "./instruction-item";
+import InstructionInput from "./instruction-input";
+import IngredientsList from "./ingredients-list";
 
 const { createNewPostSchema } = POST_VALIDATOR;
 
@@ -142,7 +144,8 @@ export default function CreateNewPostForm() {
     },
   });
 
-  //fake ingredients
+  //fake ingredients -- need to be fetched from db.
+
   const ingredients = [
     {
       id: 15,
@@ -170,6 +173,7 @@ export default function CreateNewPostForm() {
     }[]
   >([]);
 
+  //when ingredients list changes, edit the formatted one (for database).
   useEffect(() => {
     const lastEntry = ingredientsList.at(-1);
     if (lastEntry) {
@@ -181,7 +185,6 @@ export default function CreateNewPostForm() {
         unit: lastEntry?.unit,
       };
       setFinalIngredientsList((prev) => [...prev, newIngredient]);
-      console.log(finalIngredientsList);
     }
   }, [ingredientsList]);
 
@@ -196,14 +199,25 @@ export default function CreateNewPostForm() {
   const [instructionList, setInstructionList] = useState<instructionSchema[]>(
     []
   );
-
   const [instruction, setInstruction] = useState<string>("");
+  const [instructionError, setInstructionError] = useState<string>("");
   const addInstructionToList = (
     newInstruction: instructionSchema,
     editing: boolean
   ) => {
+    if (newInstruction.instruction.length < 5) {
+      setInstructionError("Instruction length too short");
+      return;
+    }
+    if (
+      instructionList.some(
+        (item) => item.instruction === newInstruction.instruction
+      )
+    ) {
+      setInstructionError("Duplicate found");
+      return;
+    }
     if (editing) {
-      console.log("in the right place", newInstruction);
       setInstructionList((prev) =>
         prev.map((instruction) =>
           instruction.id === newInstruction.id
@@ -214,8 +228,6 @@ export default function CreateNewPostForm() {
             : instruction
         )
       );
-      setInstructionToBeEdited(0);
-      setIsEditingInstruction(false);
       setInstruction("");
     } else {
       setInstructionList((prev) => [...prev, newInstruction]);
@@ -229,10 +241,8 @@ export default function CreateNewPostForm() {
     );
     reOrderInstructionsList();
   };
-  const [instructionToBeEdited, setInstructionToBeEdited] = useState(0);
-  const [isEditingInstruction, setIsEditingInstruction] = useState(false);
+
   const setEditingInstruction = async (instruction: instructionSchema) => {
-    await setIsEditingInstruction(true);
     addInstructionToList(
       {
         id: instruction.id,
@@ -265,6 +275,7 @@ export default function CreateNewPostForm() {
       }))
     );
   };
+
   const { mutate, data, isPending, error } = useCreateNewPost({
     onError(error, variables, context) {
       toast.error("Something went wrong!");
@@ -404,70 +415,11 @@ export default function CreateNewPostForm() {
                     <FormDescription>
                       Add the ingredients needed to make your dish.
                     </FormDescription>
-                    <ul className="space-y-2">
-                      {ingredientsList.map((ingredient) => (
-                        <li key={ingredient.ingredient_id}>
-                          <Card className="p-1 hover:bg-accent/50 ">
-                            <div className="p-1 flex items-center justify-between gap-3">
-                              <div>
-                                <span className="font-medium ml-2">
-                                  {ingredient.name}
-                                </span>
-                                <span className="ml-2 text-muted-foreground">
-                                  {ingredient.amount_whole}
-                                  {ingredient.amount_fractional_numerator !==
-                                    0 &&
-                                    ingredient.amount_fractional_denominator !==
-                                      0 && (
-                                      <span className="ml-1">
-                                        <sup>
-                                          {
-                                            ingredient.amount_fractional_numerator
-                                          }
-                                        </sup>
-                                        &frasl;
-                                        <sub>
-                                          {
-                                            ingredient.amount_fractional_denominator
-                                          }
-                                        </sub>
-                                      </span>
-                                    )}
-                                  {ingredient.unit && (
-                                    <span className="ml-1">
-                                      {ingredient.unit}
-                                    </span>
-                                  )}
-                                </span>
-                              </div>
-
-                              <div className="flex gap-2">
-                                <Button
-                                  variant="ghost"
-                                  className="size-8 hover:bg-background"
-                                  onClick={() =>
-                                    setEditingIngredient(ingredient)
-                                  }
-                                >
-                                  <Pen className="size-4" />
-                                </Button>
-                                <Button
-                                  variant="ghost"
-                                  className="size-8 hover:bg-background"
-                                  onClick={() =>
-                                    deleteIngredientFromList(
-                                      ingredient.ingredient_id
-                                    )
-                                  }
-                                >
-                                  <Trash2 className="size-4" />
-                                </Button>
-                              </div>
-                            </div>
-                          </Card>
-                        </li>
-                      ))}
-                    </ul>
+                    <IngredientsList
+                      setEditingIngredient={setEditingIngredient}
+                      deleteIngredientFromList={deleteIngredientFromList}
+                      ingredientsList={ingredientsList}
+                    />
                     <FormControl>
                       <div className="flex flex-col gap-2">
                         <Card className="p-1 inline-flex w-min">
@@ -531,48 +483,16 @@ export default function CreateNewPostForm() {
                         deleteInstructionFromList={deleteInstructionFromList}
                         setEditingInstruction={setEditingInstruction}
                       ></InstructionListComponent>
-
                       <FormControl>
                         <div className="flex flex-col gap-2">
-                          <Card className="p-1">
-                            <form className="p-1 flex items-center justify-between gap-3">
-                              <div className="flex flex-row gap-3 items-center">
-                                <GripVertical
-                                  size={20}
-                                  color="grey"
-                                  className=" cursor-not-allowed align-middle"
-                                ></GripVertical>
-                                <span className="font-medium ml-2">
-                                  {instructionList.length + 1}
-                                </span>
-                              </div>
-                              <Input
-                                value={instruction}
-                                onChange={(e) => setInstruction(e.target.value)}
-                                placeholder="Enter New Instruction"
-                                className="w-full border-0 text-sm shadow-none focus:border-0 focus:outline-none focus-visible:ring-0"
-                                type="text"
-                                disabled={false}
-                              />
-                              <Button
-                                type="submit"
-                                onClick={(e) => {
-                                  e.preventDefault();
-                                  addInstructionToList(
-                                    {
-                                      id: instructionList.length + 1,
-                                      instruction: instruction,
-                                    },
-                                    false
-                                  );
-                                }}
-                              >
-                                Add
-                              </Button>
-                            </form>
-                          </Card>
+                          <InstructionInput
+                            instruction={instruction}
+                            instructionList={instructionList}
+                            addInstructionToList={addInstructionToList}
+                            setInstruction={setInstruction}
+                          />
                           <span className="text-red-600 text-sm">
-                            {ingredientError}
+                            {instructionError}
                           </span>
                         </div>
                       </FormControl>
@@ -580,7 +500,6 @@ export default function CreateNewPostForm() {
                   )}
                 />
               </DndContext>
-
               <Button type="submit" disabled={isDisabled}>
                 Submit
               </Button>

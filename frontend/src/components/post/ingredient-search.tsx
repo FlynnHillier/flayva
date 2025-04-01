@@ -1,5 +1,5 @@
-import React from "react";
-
+import React, { SetStateAction } from "react";
+import { useFetchIngredientsFromSearchQuery } from "@/hooks/ingredient.hooks";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -16,29 +16,20 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { useFetchIngredientsFromSearchQuery } from "@/hooks/ingredient.hooks";
 
-export function IngredientSearch() {
-  //DB FETCH
-  //const { data, isError, isLoading } = useFetchIngredientsFromSearchQuery("c");
-  //console.log("data : ", data);
-  //const ingredients = data?.ingredients;
-
-  const ingredients = [
-    {
-      id: 15,
-      name: "Chicken",
-      group: "Protien",
-    },
-    {
-      id: 18,
-      name: "Mince Beef",
-      group: "Protien",
-    },
-  ];
-
+export function IngredientSearch({
+  setIngredient,
+  setValue,
+  value,
+}: {
+  setIngredient: React.Dispatch<SetStateAction<string | null>>;
+  setValue: React.Dispatch<SetStateAction<string>>;
+  value: string;
+}) {
   const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState("");
+  const { data, isError, isLoading } =
+    useFetchIngredientsFromSearchQuery(value);
+  const ingredients = data?.ingredients || [];
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -47,38 +38,65 @@ export function IngredientSearch() {
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-[200px] justify-between"
+          className="w-full justify-between"
         >
-          {value
-            ? ingredients.find((ingredient) => ingredient.name === value)?.name
+          {ingredients && ingredients.length > 0
+            ? ingredients[0].name
             : "Select ingredient..."}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-0">
         <Command>
-          <CommandInput placeholder="Search framework..." />
+          <CommandInput
+            placeholder="Search ingredient..."
+            value={value}
+            onValueChange={setValue}
+          />
           <CommandList>
-            <CommandEmpty>No ingredient found.</CommandEmpty>
+            <CommandEmpty>
+              {isLoading
+                ? "Loading..."
+                : isError
+                ? "Error fetching ingredients."
+                : "No ingredient found."}
+            </CommandEmpty>
             <CommandGroup>
-              {ingredients.map((ingredient) => (
-                <CommandItem
-                  key={ingredient.name}
-                  value={ingredient.name}
-                  onSelect={(currentValue) => {
-                    setValue(currentValue === value ? "" : currentValue);
-                    setOpen(false);
-                  }}
-                >
-                  <Check
-                    className={cn(
-                      "mr-2 h-4 w-4",
-                      value === ingredient.name ? "opacity-100" : "opacity-0"
-                    )}
-                  />
-                  {ingredient.name}
-                </CommandItem>
-              ))}
+              {ingredients.map(
+                (ingredient: {
+                  name: string;
+                  id: number;
+                  group: string;
+                  subgroup: string;
+                }) => (
+                  <CommandItem
+                    key={ingredient.id}
+                    value={ingredient.name}
+                    onSelect={(currentValue) => {
+                      const selected =
+                        currentValue === value ? "" : currentValue;
+                      setValue(selected);
+                      setIngredient(
+                        selected
+                          ? JSON.stringify({
+                              name: ingredient.name,
+                              id: ingredient.id,
+                            })
+                          : null
+                      );
+                      setOpen(false);
+                    }}
+                  >
+                    <Check
+                      className={cn(
+                        "mr-2 h-4 w-4",
+                        value === ingredient.name ? "opacity-100" : "opacity-0"
+                      )}
+                    />
+                    {ingredient.name}
+                  </CommandItem>
+                )
+              )}
             </CommandGroup>
           </CommandList>
         </Command>

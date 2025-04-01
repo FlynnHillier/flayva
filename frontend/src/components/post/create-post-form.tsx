@@ -409,8 +409,8 @@ export default function CreateNewPostForm() {
                     />
                     <FormControl>
                       <div className="flex flex-col gap-2">
-                        <Card className="p-1 inline-flex w-min">
-                          <div className="p-1 flex items-center gap-1.5">
+                        <Card className="p-1">
+                          <div className="p-1 items-center justify-between gap-3">
                             <IngredientSelector
                               ingredientsList={ingredientsList}
                               editingIngredient={editingIngredient}

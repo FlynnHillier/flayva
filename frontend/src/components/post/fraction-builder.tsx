@@ -18,7 +18,7 @@ export function NumberSelector({
   wholeNumber: number | null;
   numerator: number | null;
   denominator: number | null;
-  selectedIngredient: string | undefined;
+  selectedIngredient: string | null;
   setWholeNumber: React.Dispatch<React.SetStateAction<number | null>>;
   setNumerator: React.Dispatch<React.SetStateAction<number | null>>;
   setDenominator: React.Dispatch<React.SetStateAction<number | null>>;

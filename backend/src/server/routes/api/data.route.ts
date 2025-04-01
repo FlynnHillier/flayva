@@ -56,7 +56,7 @@ router.get("/r/ingredients/q/:search", async (req, res) => {
       ELSE 3
     END`
     )
-    .limit(10);
+    .limit(5);
 
   const formattedIngredients = results.map((ingredient) => ({
     id: ingredient.id,

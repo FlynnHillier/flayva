@@ -11,6 +11,8 @@ export const querySuggestedSimilarTags = async (tagQuery: string) => {
 };
 
 export const querySuggestedIngredients = async (ingredientQuery: string) => {
+  if (ingredientQuery.length === 0) return { ingredients: [] };
+
   const { data } = await request({
     url: `/api/d/r/ingredients/q/${ingredientQuery}`,
     method: "GET",

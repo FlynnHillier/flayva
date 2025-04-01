@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   Select,
   SelectTrigger,
@@ -9,6 +9,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { NumberSelector } from "./fraction-builder";
 import { IngredientEntry } from "./ingredient-entry-schema";
+import IngredientSearch from "./ingredient-search";
 
 const ingredientUnits = [
   "kg",
@@ -24,13 +25,11 @@ const ingredientUnits = [
 ];
 
 const IngredientSelector = ({
-  ingredients,
   ingredientsList,
   editingIngredient,
   onSave,
   setError,
 }: {
-  ingredients: { id: number; name: string; group: string }[] | null;
   ingredientsList: IngredientEntry[];
   editingIngredient?: IngredientEntry | null;
   onSave: (ingredient: IngredientEntry, isEditing: boolean) => void;
@@ -59,7 +58,7 @@ const IngredientSelector = ({
     }
   }, [editingIngredient]);
 
-  const handleSave = async () => {
+  const handleSave = useCallback(async () => {
     if (!selectedIngredient || !selectedUnit) return;
 
     const ingredient = JSON.parse(selectedIngredient);
@@ -77,6 +76,7 @@ const IngredientSelector = ({
     };
 
     if (!isEditing) {
+      console.log("here");
       const exists = ingredientsList.some(
         (entry) => entry.ingredient_id === ingredient.id
       );
@@ -91,7 +91,17 @@ const IngredientSelector = ({
 
     await onSave(updatedIngredient, isEditing);
     resetValues();
-  };
+  }, [
+    selectedIngredient,
+    selectedUnit,
+    wholeNumber,
+    numerator,
+    denominator,
+    ingredientsList,
+    editingIngredient,
+    onSave,
+    setError,
+  ]);
 
   const resetValues = () => {
     setWholeNumber(null);
@@ -102,40 +112,27 @@ const IngredientSelector = ({
     setError("");
   };
 
+  const handleKeyDown = useCallback(
+    async (e: React.KeyboardEvent<HTMLInputElement>) => {
+      e.stopPropagation();
+      const target = e.currentTarget;
+      switch (e.key) {
+        case "Escape":
+
+        case "Enter":
+          e.preventDefault();
+          e.stopPropagation();
+          handleSave();
+          break;
+      }
+    },
+    [handleSave]
+  );
+
   return (
     <div>
       <div className="flex flex-row gap-2">
-        <Select
-          value={selectedIngredient}
-          onValueChange={setSelectedIngredient}
-          disabled={!!editingIngredient}
-        >
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Select Ingredient" />
-          </SelectTrigger>
-          <SelectContent>
-            {ingredients?.map((ingredient) => (
-              <SelectItem
-                key={ingredient.id}
-                value={JSON.stringify(ingredient)}
-              >
-                {ingredient.name}
-              </SelectItem>
-            ))}
-            {editingIngredient && (
-              <SelectItem
-                value={JSON.stringify({
-                  id: editingIngredient.ingredient_id,
-                  name: editingIngredient.name,
-                })}
-                className="hidden"
-                disabled
-              >
-                {editingIngredient.name}
-              </SelectItem>
-            )}
-          </SelectContent>
-        </Select>
+        <IngredientSearch />
 
         <Select
           value={selectedUnit}
@@ -153,16 +150,18 @@ const IngredientSelector = ({
             ))}
           </SelectContent>
         </Select>
-
-        <NumberSelector
-          wholeNumber={wholeNumber}
-          numerator={numerator}
-          denominator={denominator}
-          selectedIngredient={selectedIngredient}
-          setWholeNumber={setWholeNumber}
-          setDenominator={setDenominator}
-          setNumerator={setNumerator}
-        />
+        <div onKeyDown={handleKeyDown} tabIndex={-1} className="outline-none">
+          {" "}
+          <NumberSelector
+            wholeNumber={wholeNumber}
+            numerator={numerator}
+            denominator={denominator}
+            selectedIngredient={selectedIngredient}
+            setWholeNumber={setWholeNumber}
+            setDenominator={setDenominator}
+            setNumerator={setNumerator}
+          />
+        </div>
 
         <Button type="button" onClick={handleSave} className="max-w-18">
           {editingIngredient ? "Save" : "Add"}

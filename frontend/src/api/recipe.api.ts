@@ -2,7 +2,18 @@ import { request } from "@/lib/network";
 import { RecipeTag } from "@apptypes/recipe.types";
 
 export const querySuggestedSimilarTags = async (tagQuery: string) => {
-  const { data } = await request({ url: `/api/d/r/tags/q/${tagQuery}`, method: "GET" });
+  const { data } = await request({
+    url: `/api/d/r/tags/q/${tagQuery}`,
+    method: "GET",
+  });
 
   return data.tags as RecipeTag[];
+};
+
+export const querySuggestedIngredients = async (ingredientQuery: string) => {
+  const { data } = await request({
+    url: `/api/d/r/ingredients/q/${ingredientQuery}`,
+    method: "GET",
+  });
+  return data;
 };

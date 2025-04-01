@@ -146,19 +146,6 @@ export default function CreateNewPostForm() {
 
   //fake ingredients -- need to be fetched from db.
 
-  const ingredients = [
-    {
-      id: 15,
-      name: "Chicken",
-      group: "Protien",
-    },
-    {
-      id: 18,
-      name: "Mince Beef",
-      group: "Protien",
-    },
-  ];
-
   const [editingIngredient, setEditingIngredient] =
     useState<IngredientEntry | null>(null);
   const [ingredientsList, setIngredientsList] = useState<IngredientEntry[]>([]);
@@ -425,7 +412,6 @@ export default function CreateNewPostForm() {
                         <Card className="p-1 inline-flex w-min">
                           <div className="p-1 flex items-center gap-1.5">
                             <IngredientSelector
-                              ingredients={ingredients}
                               ingredientsList={ingredientsList}
                               editingIngredient={editingIngredient}
                               onSave={(updatedIngredient, isEditing) => {

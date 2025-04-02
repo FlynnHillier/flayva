@@ -35,6 +35,13 @@ export const getPostById: RequestHandler = async (req: Request, res: Response) =
 
   const post = await postServices.getPostById(postId);
 
+  if (!post) {
+    res.status(404).send({
+      message: `Post '${postId}' not found`,
+    });
+    return;
+  }
+
   res.send({
     post,
   });

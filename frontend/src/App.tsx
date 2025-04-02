@@ -2,6 +2,7 @@ import { Routes, Route, useLocation } from "react-router-dom";
 import { Outlet, Navigate } from "react-router-dom";
 import { useMemo } from "react";
 import { useMe } from "./hooks/auth.hooks";
+import { Toaster } from "sonner";
 
 /* Pages */
 import HomePage from "./pages/Home.page";
@@ -14,8 +15,8 @@ import RecipePage from "./pages/Recipe.page";
 import EditProfile from "./pages/profile-pages/Edit-profile.page";
 import ViewProfilePage from "./pages/profile-pages/Profile.page";
 import DevPage from "./pages/Dev.page";
-import { Toaster } from "sonner";
 import ProfileLayout from "@/pages/profile-pages/profile.layout";
+import ViewDetailedPostPage from "./pages/post-pages/view-detailed-post.page";
 
 /**
  * Routes that should not show the sidebar
@@ -71,10 +72,7 @@ function App() {
             <Route path="/profile" element={<ProfileLayout />}>
               <Route path="/profile/:id" element={<ViewProfilePage />} />
             </Route>
-            {
-              //TODO: change the location of profile edit
-            }
-            <Route path="/p/edit" element={<EditProfile />} />
+            <Route path="/p/:postId" element={<ViewDetailedPostPage />} />
           </Route>
           <Route element={<UnauthenticatedRouter />}>
             <Route path="/login" element={<LoginPage />} />

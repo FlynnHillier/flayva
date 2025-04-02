@@ -30,7 +30,8 @@ export const useDeleteExistingPost = (postId: string) =>
  * @param postId - The Id of the post to fetch
  * @returns The post with the given Id
  */
-export const useGetPostById = (postId: string) => useQuery(queries.post.getPostById(postId));
+export const useGetPostById = (postId: string) =>
+  useQuery({ ...queries.post.getPostById(postId), enabled: !!postId });
 
 /**
  * infinite scroll for post previews by the owner Id

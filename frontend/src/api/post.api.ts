@@ -40,12 +40,13 @@ export async function deleteExistingPost(postId: string) {
 }
 
 export async function getPostById(postId: string) {
+  await new Promise((resolve) => setTimeout(resolve, 2000)); // Simulate a delay
   const { data } = await request({
-    url: `/api/p/${postId}`,
+    url: `/api/p/get/id/${postId}`,
     method: "GET",
   });
 
-  return { post: data } as { post: Post | null };
+  return { post: data.post } as { post: Post };
 }
 
 export async function searchPost(searchQuery: string) {

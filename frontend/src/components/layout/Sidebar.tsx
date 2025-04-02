@@ -57,7 +57,7 @@ function SidebarItemFooter() {
   return (
     <Link
       to={data?.user ? `/profile/${data.user.id}` : "/login"}
-      className="flex items-center hover:scale-105 transition-transform duration-200 flex-row gap-2 "
+      className="className= flex justify-center items-center hover:scale-105 transition-transform duration-200  gap-2 sm:gap-4 w-full"
     >
       <span className="flex shrink-0 items-center">
         {isPending ? (

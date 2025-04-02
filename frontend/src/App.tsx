@@ -16,7 +16,7 @@ import EditProfile from "./pages/profile-pages/Edit-profile.page";
 import ViewProfilePage from "./pages/profile-pages/Profile.page";
 import DevPage from "./pages/Dev.page";
 import ProfileLayout from "@/pages/profile-pages/profile.layout";
-import ViewDetailedPostPage from "./pages/post-pages/view-detailed-post.page";
+import ViewDetailedPostPage from "./pages/post-pages/View-detailed-post.page";
 
 /**
  * Routes that should not show the sidebar

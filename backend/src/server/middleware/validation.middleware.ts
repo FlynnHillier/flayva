@@ -7,7 +7,7 @@ import { NextFunction, Response, Request, RequestHandler, Router } from "express
 import { devErrorMessage } from "@/lib/utils";
 import { MulterError } from "multer";
 
-type MulterFileParseOptions<S extends string> = { key: S; maxCount?: number };
+type MulterFileParseOptions<S extends string> = { key: S; maxCount?: number; single?: boolean };
 
 /**
  * A wrapper around multer's file reading middleware that handles errors
@@ -56,28 +56,33 @@ export function readRequestFiles(files: MulterFileParseOptions<string>[]): Reque
  */
 export function attachFilesToRequestBody(files: MulterFileParseOptions<string>[]) {
   const attach = (req: Request, res: Response, next: NextFunction) => {
-    const files: Record<string, Express.Multer.File[]> = (req as any).files;
+    const multerfiles: Record<string, Express.Multer.File[]> = (req as any).files;
 
-    if (!files) {
+    if (!multerfiles) {
       res.status(500).send(devErrorMessage("req.files is undefined, expected files to be present"));
       return;
     }
 
     // Construct an object that maps the specified file keys to an object with matching keys with values as an array of native File objects
-    const nativeFiles = Object.entries(files).reduce((acc, [key, value]) => {
+    const nativeFiles = Object.entries(multerfiles).reduce((acc, [key, value]) => {
       acc[key] = value.map(
         (multerFile) =>
           new File([multerFile.buffer], multerFile.originalname, { type: multerFile.mimetype })
       );
+
+      if (files.find((file) => file.key === key)?.single) {
+        // If the file is a single file, convert the array to a single object
+        acc[key] = acc[key][0];
+      }
+
       return acc;
-    }, {} as Record<string, File[]>);
+    }, {} as Record<string, File[] | File>);
 
     // Add the native file objects to the request body
     req.body = {
       ...req.body,
       ...nativeFiles,
     };
-
     next();
   };
 
@@ -117,15 +122,21 @@ export function formatBodyKeysToJson<T extends Record<string, any>>(keys: (keyof
  * @param options.files configuration for the files to be read from the request
  * @param options.json keys in the request body to parse into JSON
  */
-export function validateMultiPartFormData<
-  S extends z.ZodType,
-  K extends Extract<keyof z.infer<S>, string>
->(schema: S, options: Partial<{ files: MulterFileParseOptions<K>[]; json: K[] }> = {}) {
+export function validateMultiPartFormData<S extends z.ZodType>(
+  schema: S,
+  options: Partial<{
+    files: MulterFileParseOptions<Extract<keyof z.infer<S>, string>>[];
+    json: Extract<keyof z.infer<S>, string>[];
+  }> = {}
+) {
   const { files, json } = options;
 
   return Router().use([
     files ? attachFilesToRequestBody(files) : multerupload.none(), // Read the multipart form data into body
     ...(json ? [formatBodyKeysToJson(json)] : []), // convert
+    (req: Request, res: Response, next: NextFunction) => {
+      next();
+    },
     validateRequestBody(schema), // Validate the request body against the schema
   ]);
 }

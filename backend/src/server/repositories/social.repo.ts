@@ -1,6 +1,7 @@
 import { db } from "@/db";
 import { posts, users } from "@/db/schema";
 import { followers } from "@/db/schemas/social.schema";
+import { User } from "@flayva-monorepo/shared/types";
 import { and, eq, or } from "drizzle-orm";
 
 /**
@@ -63,10 +64,24 @@ export const isFollowing = async (followerId: string, followedId: string) => {
   return !!follower;
 };
 
+export const getUserAvatarCloudFileKey = async (userId: string) => {
+  const result = await getUserById(userId);
+
+  return result && result.profile_picture_url;
+};
+
+export const updateUser = async (userId: string, data: Partial<Omit<User, "id">>) => {
+  const [result] = await db.update(users).set(data).where(eq(users.id, userId)).returning();
+
+  return result as typeof result | null;
+};
+
 export default {
   getUserById,
   getUserProfileSocialStats,
   createFollower,
   deleteFollower,
   isFollowing,
+  getUserAvatarCloudFileKey,
+  updateUser,
 };

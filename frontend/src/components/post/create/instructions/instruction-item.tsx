@@ -1,9 +1,9 @@
-import { Card } from "../ui/card";
-import { Button } from "../ui/button";
+import { Card } from "../../../ui/card";
+import { Button } from "../../../ui/button";
 import { Pen, Trash2, GripVertical } from "lucide-react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { Input } from "../ui/input";
+import { Input } from "../../../ui/input";
 import { useState, useRef } from "react";
 import { cn } from "@/lib/utils";
 type instructionSchema = { id: number; instruction: string };

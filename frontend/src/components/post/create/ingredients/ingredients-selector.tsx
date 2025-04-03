@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { NumberSelector } from "./fraction-builder";
 import { IngredientEntry } from "./ingredient-entry-schema";
 import IngredientSearch from "./ingredient-search";
+import React from "react";
 
 const ingredientUnits = [
   "kg",
@@ -35,13 +36,14 @@ const IngredientSelector = ({
   onSave: (ingredient: IngredientEntry, isEditing: boolean) => void;
   setError: React.Dispatch<React.SetStateAction<string | null>>;
 }) => {
-  const [selectedIngredient, setSelectedIngredient] = useState<
-    string | undefined
-  >();
+  const [selectedIngredient, setSelectedIngredient] = useState<string | null>(
+    null
+  );
   const [selectedUnit, setSelectedUnit] = useState<string | undefined>();
   const [wholeNumber, setWholeNumber] = useState<number | null>(null);
   const [numerator, setNumerator] = useState<number | null>(null);
   const [denominator, setDenominator] = useState<number | null>(null);
+  const [searchValue, setSearchValue] = React.useState("");
 
   useEffect(() => {
     if (editingIngredient) {
@@ -110,15 +112,14 @@ const IngredientSelector = ({
     setSelectedIngredient("");
     setSelectedUnit("");
     setError("");
+    setSearchValue("");
   };
 
   const handleKeyDown = useCallback(
     async (e: React.KeyboardEvent<HTMLInputElement>) => {
       e.stopPropagation();
-      const target = e.currentTarget;
       switch (e.key) {
         case "Escape":
-
         case "Enter":
           e.preventDefault();
           e.stopPropagation();
@@ -130,16 +131,21 @@ const IngredientSelector = ({
   );
 
   return (
-    <div>
-      <div className="flex flex-row gap-2">
-        <IngredientSearch />
-
+    <div className="flex flex-row gap-3 items-center">
+      <div className="flex-1">
+        <IngredientSearch
+          setIngredient={setSelectedIngredient}
+          value={searchValue}
+          setValue={setSearchValue}
+        />
+      </div>
+      <div className="flex-1">
         <Select
           value={selectedUnit}
           onValueChange={setSelectedUnit}
           disabled={!selectedIngredient}
         >
-          <SelectTrigger className="w-[180px]">
+          <SelectTrigger className="w-full">
             <SelectValue placeholder="Select Unit" />
           </SelectTrigger>
           <SelectContent>
@@ -150,23 +156,23 @@ const IngredientSelector = ({
             ))}
           </SelectContent>
         </Select>
-        <div onKeyDown={handleKeyDown} tabIndex={-1} className="outline-none">
-          {" "}
-          <NumberSelector
-            wholeNumber={wholeNumber}
-            numerator={numerator}
-            denominator={denominator}
-            selectedIngredient={selectedIngredient}
-            setWholeNumber={setWholeNumber}
-            setDenominator={setDenominator}
-            setNumerator={setNumerator}
-          />
-        </div>
-
-        <Button type="button" onClick={handleSave} className="max-w-18">
-          {editingIngredient ? "Save" : "Add"}
-        </Button>
       </div>
+
+      <div onKeyDown={handleKeyDown} tabIndex={-1} className="outline-none ">
+        <NumberSelector
+          wholeNumber={wholeNumber}
+          numerator={numerator}
+          denominator={denominator}
+          selectedIngredient={selectedIngredient}
+          setWholeNumber={setWholeNumber}
+          setDenominator={setDenominator}
+          setNumerator={setNumerator}
+        />
+      </div>
+
+      <Button type="button" onClick={handleSave} className="max-w-18">
+        {editingIngredient ? "Save" : "Add"}
+      </Button>
     </div>
   );
 };

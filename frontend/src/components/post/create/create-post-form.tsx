@@ -2,7 +2,6 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Button } from "@/components/ui/button";
-import { Trash2, Pen, GripVertical } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import {
   Form,
@@ -26,17 +25,18 @@ import { DropzoneOptions } from "react-dropzone";
 import { POST as POST_VALIDATOR } from "@flayva-monorepo/shared/validation";
 import { POST as POST_CONSTANTS } from "@flayva-monorepo/shared/constants";
 import { toast } from "sonner";
-import { Input } from "../ui/input";
-import { TagsInput } from "../recipe/create/recipe-tags-input";
-import IngredientSelector from "./ingredients-selector";
+import { Input } from "../../ui/input";
+import { TagsInput } from "../../recipe/create/recipe-tags-input";
+import IngredientSelector from "./ingredients/ingredients-selector";
 import { useCreateNewPost } from "@/hooks/post.hooks";
-import { IngredientEntry } from "./ingredient-entry-schema";
+import { IngredientEntry } from "./ingredients/ingredient-entry-schema";
 import { closestCorners, DndContext, DragEndEvent } from "@dnd-kit/core";
-import InstructionListComponent from "./instruction-list";
+import InstructionListComponent from "./instructions/instruction-list";
 import { arrayMove } from "@dnd-kit/sortable";
-import InstructionItem from "./instruction-item";
-import InstructionInput from "./instruction-input";
-import IngredientsList from "./ingredients-list";
+import InstructionItem from "./instructions/instruction-item";
+import InstructionInput from "./instructions/instruction-input";
+import IngredientsList from "./ingredients/ingredients-list";
+import { ingredient_unit } from "@flayva-monorepo/shared/validation/recipe.validation";
 
 const { createNewPostSchema } = POST_VALIDATOR;
 
@@ -108,72 +108,40 @@ export default function CreateNewPostForm() {
       images: [],
       recipe: {
         tags: [],
-        // TODO: remove these default values
-        title: "Spaghetti Bolognaise",
-        description: "A delicious and easy to make spaghetti bolognaise recipe",
-        //TODO : these values are hard coded until components are created to handle them
-        ingredients: [
-          {
-            id: 10,
-            unit: "g",
-            amount: {
-              whole: 1,
-              fractional: {
-                denominator: 2,
-                numerator: 1,
-              },
-            },
-          },
-          {
-            id: 116,
-            unit: "tbsp",
-            amount: {
-              whole: 3,
-            },
-          },
-        ],
-        instructions: [
-          {
-            instruction: "Preheat the oven to 180 degrees",
-          },
-          {
-            instruction: "Mix the flour and eggs in a bowl",
-          },
-        ],
+        title: "",
+        description: "",
+        ingredients: [],
+        instructions: [],
       },
     },
   });
 
-  //fake ingredients -- need to be fetched from db.
+  type Unit = z.infer<typeof ingredient_unit>;
 
   const [editingIngredient, setEditingIngredient] =
     useState<IngredientEntry | null>(null);
   const [ingredientsList, setIngredientsList] = useState<IngredientEntry[]>([]);
   const [ingredientError, setIngredientError] = useState<string | null>(null);
-  const [finalIngredientsList, setFinalIngredientsList] = useState<
-    {
-      ingredientID?: number;
-      amount_whole?: number;
-      amount_fractional_numerator?: number;
-      amount_fractional_denominator?: number;
-      unit?: string;
-    }[]
-  >([]);
 
-  //when ingredients list changes, edit the formatted one (for database).
-  useEffect(() => {
-    const lastEntry = ingredientsList.at(-1);
-    if (lastEntry) {
-      const newIngredient = {
-        ingredientID: lastEntry?.ingredient_id,
-        amount_whole: lastEntry?.amount_whole,
-        amount_fractional_numerator: lastEntry?.amount_fractional_numerator,
-        amount_fractional_denominator: lastEntry?.amount_fractional_denominator,
-        unit: lastEntry?.unit,
-      };
-      setFinalIngredientsList((prev) => [...prev, newIngredient]);
-    }
-  }, [ingredientsList]);
+  const formatCustomFields = async () => {
+    const formattedIngredientsList = ingredientsList.map((ing) => ({
+      id: ing.ingredient_id,
+      amount: {
+        whole: ing.amount_whole,
+        fractional:
+          ing.amount_fractional_numerator && ing.amount_fractional_denominator
+            ? {
+                numerator: ing.amount_fractional_numerator,
+                denominator: ing.amount_fractional_denominator,
+              }
+            : undefined,
+      },
+      unit: ing.unit as Unit,
+    }));
+    form.setValue("recipe.ingredients", formattedIngredientsList);
+    form.setValue("recipe.instructions", instructionList);
+    console.log(formattedIngredientsList);
+  };
 
   const deleteIngredientFromList = (id: number) => {
     setIngredientsList((prev) =>
@@ -270,7 +238,13 @@ export default function CreateNewPostForm() {
   });
 
   const handleSubmit = useCallback(
-    (values: z.infer<typeof createNewPostSchema>) => mutate(values),
+    (values: z.infer<typeof createNewPostSchema>) => {
+      mutate(values);
+      form.reset();
+      setInstructionList([]);
+      setIngredientsList([]);
+      toast.message("Succesfully posted! ");
+    },
     [mutate]
   );
 
@@ -307,7 +281,7 @@ export default function CreateNewPostForm() {
                     <FormLabel>Post Header</FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="Spaghetti Bolognaise"
+                        placeholder="Enter Title"
                         className="resize-none"
                         {...field}
                       />
@@ -330,7 +304,7 @@ export default function CreateNewPostForm() {
                     )}
                     <FormControl>
                       <Textarea
-                        placeholder="A delicious and easy to make spaghetti bolognaise recipe"
+                        placeholder="Enter Description"
                         className="resize-none field-sizing-content"
                         {...field}
                       />
@@ -486,7 +460,11 @@ export default function CreateNewPostForm() {
                   )}
                 />
               </DndContext>
-              <Button type="submit" disabled={isDisabled}>
+              <Button
+                type="submit"
+                disabled={isDisabled}
+                onClick={formatCustomFields}
+              >
                 Submit
               </Button>
             </CardContent>

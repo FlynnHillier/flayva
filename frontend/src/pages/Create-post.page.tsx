@@ -1,8 +1,8 @@
-import CreateNewPostForm from "@/components/post/create-post-form";
+import CreateNewPostForm from "@/components/post/create/create-post-form";
 
 export default function CreatePostPage() {
   return (
-    <div className="w-screen flex justify-center">
+    <div className="">
       <CreateNewPostForm />
     </div>
   );

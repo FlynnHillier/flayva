@@ -1,8 +1,8 @@
 import React, { useCallback } from "react";
-import { Card } from "../ui/card";
+import { Card } from "@components/ui/card";
 import { GripVertical } from "lucide-react";
-import { Input } from "../ui/input";
-import { Button } from "../ui/button";
+import { Input } from "@components/ui/input";
+import { Button } from "@components/ui/button";
 type instructionSchema = { id: number; instruction: string };
 
 const InstructionInput = ({

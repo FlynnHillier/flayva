@@ -117,3 +117,13 @@ export async function updateProfile(postData: z.infer<typeof updateProfileFormSc
     user: data.user as User,
   };
 }
+
+export async function getUserByUsername(username: string, pageSize: number, pageNumber: number) {
+  const { data } = await request({
+    url: `/api/s/usernameSearch`,
+    method: "GET",
+    params: { username, pageSize, pageNumber },
+  });
+
+  return { data } as { data: any | null };
+}

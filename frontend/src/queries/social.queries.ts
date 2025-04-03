@@ -15,4 +15,8 @@ export const social = createQueryKeys("social", {
     queryKey: ["social", "isfollowing", userId],
     queryFn: () => api.social.getOwnFollowingUserStatus(userId),
   }),
+  getUserByUsername: (username: string, pageSize: number, pageNumber: number) => ({
+    queryFn: () => api.social.getUserByUsername(username, pageSize, pageNumber),
+    queryKey: ["social", "username", username],
+  })
 });

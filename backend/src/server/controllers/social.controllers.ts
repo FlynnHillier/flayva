@@ -86,6 +86,27 @@ export const updateOwnUserProfile: RequestHandler = async (req, res) => {
   else res.status(500).send({ message: "Failed to update profile" });
 };
 
+export const getUsersByUsername = async (req: Request, res: Response) => {
+	const { username, pageSize, pageNumber } = req.query;
+	console.log(username, pageSize, pageNumber)
+	if (!username || !pageSize || !pageNumber) {
+		res.status(400).send({
+			message:
+				'Missing required query parameters: username, pageSize, and pageNumber',
+		});
+		return;
+	}
+
+	const users = await socialServices.getUsersByUsername(
+		username.toString(),
+		parseInt(pageSize.toString()),
+		parseInt(pageNumber.toString())
+	);
+
+	console.log(users.pagination)
+	res.status(200).send({ users });
+};
+
 export default {
   getUserById,
   getProfilePreview,
@@ -93,4 +114,5 @@ export default {
   unfollowUser,
   getFollowStatus,
   updateOwnUserProfile,
+  getUsersByUsername
 };

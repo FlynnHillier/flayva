@@ -177,6 +177,32 @@ export const editProfileAvatar = async (userId: string, image: File) => {
   };
 };
 
+
+/**
+ * Get a list of users based on their username that are similar to the search query. Uses pagination
+ * @param username - The username of a user in a search query
+ * @param pageSize - The size of the results to be returned (for pagination)
+ * @param pageNumber - The page number for the results to be returned (for pagination)
+ *
+ */
+export const getUsersByUsername = async (
+	username: string,
+	pageSize: number,
+	pageNumber: number
+) => {
+	const users = await socialRepo.getUsersByUsername(
+		username,
+		pageSize,
+		pageNumber
+	);
+
+	if (!users) {
+		return false;
+	}
+
+	return users;
+};
+
 export default {
   getProfilePreview,
   getUserById,
@@ -185,4 +211,5 @@ export default {
   unfollowUser,
   isFollowingUser,
   updateProfile,
+  getUsersByUsername
 };

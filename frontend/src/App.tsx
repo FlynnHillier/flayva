@@ -13,6 +13,7 @@ import CreatePostPage from "./pages/Create-post.page";
 import RecipePage from "./pages/Recipe.page";
 import EditProfile from "./pages/profile-pages/Edit-profile.page";
 import ViewProfilePage from "./pages/profile-pages/Profile.page";
+import SearchPage from './pages/Search.page'
 import DevPage from "./pages/Dev.page";
 import { Toaster } from "sonner";
 import ProfileLayout from "@/pages/profile-pages/profile.layout";
@@ -71,6 +72,7 @@ function App() {
             <Route path="/profile" element={<ProfileLayout />}>
               <Route path="/profile/:id" element={<ViewProfilePage />} />
             </Route>
+            <Route path="/search" element={<SearchPage />} />
             {
               //TODO: change the location of profile edit
             }

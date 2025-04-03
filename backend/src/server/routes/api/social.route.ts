@@ -49,4 +49,10 @@ router.post(
 
 router.get("/isfollowing/:targetUserId", ensureAuthenticated, socialControllers.getFollowStatus);
 
+/** 
+ * Get users by username
+ */
+router.get("/usernameSearch", ensureAuthenticated, socialControllers.getUsersByUsername);
+
+
 export default router;

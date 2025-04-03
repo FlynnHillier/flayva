@@ -3,7 +3,7 @@ import { createConfigurableMutation } from "@/hooks/util/configurableMutation";
 import { queryClient } from "@/lib/query";
 import { queries } from "@/queries";
 import { ProfilePreview } from "@flayva-monorepo/shared/types";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
 
 export const useFetchUserById = (userId: string) => {
   return useQuery({ ...queries.social.fetchUserById(userId), enabled: !!userId });
@@ -103,3 +103,28 @@ export const useUpdateProfile = createConfigurableMutation(
     },
   }
 );
+
+
+export const useGetUserByUsername = (username: string, pageSize: number, pageNumber: number) => {
+  return useQuery(queries.social.getUserByUsername(username, pageSize, pageNumber));
+};
+
+export const useInfiniteUserSearch = (username: string, initialPageSize: number, subsequentPageSize: number) => {
+  return useInfiniteQuery({
+    queryKey: ['infiniteUsers', username],
+    queryFn: ({ pageParam = 1 }) => {
+      const pageSize = pageParam === 1 ? initialPageSize : subsequentPageSize;
+      return api.social.getUserByUsername(username, pageSize, pageParam);
+    },
+    initialPageParam: 1,
+    getNextPageParam: (lastPage, allPages) => {
+      const pagination = lastPage.data?.users?.pagination;
+      if (!pagination) return undefined;
+      
+      return pagination.currentPage < pagination.totalPages 
+        ? pagination.currentPage + 1 
+        : undefined;
+    },
+    enabled: !!username,
+  });
+};

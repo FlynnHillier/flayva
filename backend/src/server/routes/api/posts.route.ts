@@ -50,4 +50,11 @@ router.get("/get/feed", postControllers.getFeed);
  */
 router.get("/owner/inf/:ownerId", postControllers.infiniteScrollProfilePostPreviews);
 
+/**
+ * Get post previews by title with infinte scrolling
+ *
+ * @param title - The ID of the owner to get post previews for
+ */
+router.get("/title/inf/:title", postControllers.infiniteScrollTitlePostPreviews);
+
 export default router;

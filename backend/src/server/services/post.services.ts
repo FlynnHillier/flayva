@@ -1,5 +1,6 @@
 import { POST_PREVIEW_INFINITE_SCROLL_BATCH_SIZE } from "@/constants/posts.constants";
 import postRepo from "@/server/repositories/post.repo";
+import recipeRepo from "../repositories/recipe.repo";
 import { uploadPostImages } from "@/server/services/images.services";
 import { createNewPostSchema } from "@flayva-monorepo/shared/validation/post.validation";
 import { z } from "zod";
@@ -80,10 +81,41 @@ export const getFeed = async () => {
   return posts;
 };
 
+/**
+ * Get a list of post previews by the title with infinite scroll
+ * @param recipeTitle - The search query
+ * @param cursor - The cursor for pagination
+ * @return A list of post previews and the next cursor for pagination
+ */
+export const infiniteScrollTitlePostPreviews = async (
+	recipeTitle: string,
+	cursor: number
+) => {
+	const recipes = await recipeRepo.getRecipesByTitle(
+		recipeTitle,
+		cursor
+	);
+
+  const posts = [];
+
+  for (let i = 0; i < recipes.previews.length; i++) {
+    posts[i] = await postRepo.getPostByRecipeId(recipes.previews[i].id);
+  }
+
+	return {
+    previews: posts,
+    nextCursor:
+      posts.length < POST_PREVIEW_INFINITE_SCROLL_BATCH_SIZE
+        ? null
+        : cursor + POST_PREVIEW_INFINITE_SCROLL_BATCH_SIZE,
+  };
+};
+
 export default {
   createNewPost,
   getPostById,
   getFeed,
   deletePost,
   infiniteScrollProfilePostPreviews,
+  infiniteScrollTitlePostPreviews,
 };

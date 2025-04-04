@@ -283,6 +283,16 @@ export const getPostById = async (
 };
 
 /**
+ * Get a post by its recipe ID
+ * @param postId - The ID of the post to fetch
+ * @param options - query options to dictate which posts to fetch
+ */
+export const getPostByRecipeId = (
+  recipeId: string,
+  options: Omit<Parameters<typeof getPosts>[0], "where"> = {}
+) => getPosts({ ...options, where: (posts, { eq }) => eq(posts.recipeId, recipeId) });
+
+/**
  * Get the most recent posts
  * @param limit - The number of posts to fetch
  *
@@ -317,4 +327,5 @@ export default {
   deleteExistingPost,
   getPostsByOwnerId,
   getPostPreviewsByOwnerId,
+  getPostByRecipeId
 };

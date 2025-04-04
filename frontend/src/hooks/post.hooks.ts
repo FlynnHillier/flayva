@@ -45,3 +45,17 @@ export const useInfiniteScrollProfilePostPreviews = (ownerId: string) =>
     initialPageParam: 0,
     getNextPageParam: ({ nextCursor }) => nextCursor,
   });
+ 
+  /**
+ * infinite scroll for post previews by the post title
+ *
+ * @param ownerId - The Id of the owner of the posts
+ */
+// TODO: perhaps add this to query-key-store
+export const useInfiniteScrollTitlePostPreviews = (title: string) =>
+useInfiniteQuery({
+  queryKey: ["posts-preview", "title", title],
+  queryFn: ({ pageParam }) => api.post.getInfiniteScrollPostPreviewsByTitle(title, pageParam),
+  initialPageParam: 0,
+  getNextPageParam: ({ nextCursor }) => nextCursor,
+});

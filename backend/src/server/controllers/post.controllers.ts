@@ -61,10 +61,28 @@ export const infiniteScrollProfilePostPreviews: RequestHandler = async (
   });
 };
 
+export const infiniteScrollTitlePostPreviews: RequestHandler = async (
+  req: Request,
+  res: Response
+) => {
+  const { title } = req.params;
+  const cursor = req.query.cursor ? Number(req.query.cursor) : 0;
+
+  const result = await postServices.infiniteScrollTitlePostPreviews(title, cursor);
+
+  console.log(result.previews)
+
+  res.status(200).send({
+    previews: result.previews,
+    nextCursor: result.nextCursor,
+  });
+};
+
 export default {
   deletePost,
   createPost,
   getPostById,
   getFeed,
   infiniteScrollProfilePostPreviews,
+  infiniteScrollTitlePostPreviews,
 };

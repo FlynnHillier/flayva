@@ -87,3 +87,24 @@ export async function getInfiniteScrollPostPreviewsByOwnerId(ownerId: string, cu
     nextCursor: number | null;
   };
 }
+
+export async function getInfiniteScrollPostPreviewsByTitle(title: string, cursor: number) {
+  const { data } = await request({
+    url: `/api/p/title/inf/${title}`,
+    method: "GET",
+    params: { cursor },
+  });
+
+  const { previews, nextCursor } = data;
+
+  if (previews === undefined || nextCursor === undefined)
+    throw new UnexpectedResponseFormatError(
+      "getInfiniteScrollPostPreviewsByTitle",
+      "previews or nextCursor is missing in the response"
+    );
+
+  return { previews, nextCursor } as {
+    previews: PostPreview[];
+    nextCursor: number | null;
+  };
+}

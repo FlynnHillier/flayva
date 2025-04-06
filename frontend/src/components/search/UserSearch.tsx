@@ -4,6 +4,7 @@ import { useInfiniteUserSearch } from '@/hooks/social.hooks';
 import { useDebounce } from '@/hooks/useDebounce.hooks';
 import { useInView } from 'react-intersection-observer';
 import { Skeleton } from '../ui/skeleton';
+import { Link } from 'react-router-dom';
 
 export default function UserSearch({ input }: { input: string }) {
 	const initialPageSize = 20;
@@ -42,13 +43,15 @@ export default function UserSearch({ input }: { input: string }) {
 	return (
 		<div id="scrollableDiv" className="h-full overflow-auto">
 			{users.map((user: User) => (
-				<div key={user.id} className="flex items-center gap-3 p-2">
-					<img
-						src={user.profile_picture_url}
-						className="w-10 h-10 rounded-full"
-					/>
-					<h2 className="font-semibold">{user.username}</h2>
-				</div>
+				<Link to={'/profile/' + user.id} className='w-full'>
+					<div key={user.id} className="flex items-center gap-3 p-2">
+						<img
+							src={user.profile_picture_url}
+							className="w-10 h-10 rounded-full"
+						/>
+						<h2 className="font-semibold">{user.username}</h2>
+					</div>
+				</Link>
 			))}
 
 			{(isLoading || isFetchingNextPage) && (
@@ -68,10 +71,10 @@ export default function UserSearch({ input }: { input: string }) {
 			)}
 
 			{!hasNextPage && users.length > 0 && (
-        <div className="w-full flex items-center justify-center">
-          <p>No more users found</p>
-        </div>
-      )}
+				<div className="w-full flex items-center justify-center">
+					<p>No more users found</p>
+				</div>
+			)}
 
 			<div ref={ref} style={{ height: '20px' }}></div>
 		</div>

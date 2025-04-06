@@ -89,7 +89,7 @@ export default function RecipeSearch({ input }: { input: string }) {
 	}, [inView, hasNextPage, isFetching]);
 
 	return (
-		<div className="w-full max-w-7xl p-3 grid grid-cols-1 sm:grid-cols-2  md:grid-cols-2 xl:grid-cols-2  gap-3  place-items-center">
+		<div className="w-full max-w-7xl p-3 grid grid-cols-1 sm:grid-cols-2  md:grid-cols-2 xl:grid-cols-2  gap-5  place-items-center">
 			{previews.map((preview) => (
 				<PostPreviewElement key={preview.id} preview={preview[0]} />
 			))}

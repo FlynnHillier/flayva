@@ -35,35 +35,42 @@ export const querySimilarValidTagOptions = async (searchQuery: string) =>
  *
  */
 export const getRecipesByTitle = async (
-	recipeTitle: string,
-	cursor: number
+  recipeTitle: string,
+  cursor: number
 ) => {
-	// TODO: return null instead of false when nothing returned
-	// TODO: refeed into getbyid
-
-	const recipesList = await db
-		.select()
-		.from(recipes)
-		.where(sql`${recipes.title} ILIKE ${'%' + recipeTitle + '%'}`)
-		.orderBy(
-			sql`CASE
-      WHEN ${recipes.title} ILIKE ${recipeTitle.toLowerCase()} THEN 1 
-      WHEN ${recipes.title} ILIKE ${`${recipeTitle.toLowerCase()}%`} THEN 2
-      ELSE 3
-    END`,
-			asc(recipes.id)
-		)
-		.limit(POST_PREVIEW_INFINITE_SCROLL_BATCH_SIZE)
-		.offset((cursor) * POST_PREVIEW_INFINITE_SCROLL_BATCH_SIZE);
-    
-	return {
+  const limit = POST_PREVIEW_INFINITE_SCROLL_BATCH_SIZE;
+  const offset = cursor * limit;
+  
+  // Fetch one more item than needed to check if there are more results
+  const recipesListWithExtra = await db
+    .select()
+    .from(recipes)
+    .where(sql`${recipes.title} ILIKE ${'%' + recipeTitle + '%'}`)
+    .orderBy(
+      sql`CASE
+        WHEN ${recipes.title} ILIKE ${recipeTitle.toLowerCase()} THEN 1 
+        WHEN ${recipes.title} ILIKE ${`${recipeTitle.toLowerCase()}%`} THEN 2
+        ELSE 3
+      END`,
+      asc(recipes.id)
+    )
+    .limit(limit + 1) // Fetch one extra to check if there are more
+    .offset(offset);
+  
+  // Check if we have more results by seeing if we got the extra item
+  const hasMore = recipesListWithExtra.length > limit;
+  
+  // Remove the extra item before returning to the client
+  const recipesList = hasMore 
+    ? recipesListWithExtra.slice(0, limit) 
+    : recipesListWithExtra;
+  
+  return {
     previews: recipesList,
-    nextCursor:
-      recipesList.length < POST_PREVIEW_INFINITE_SCROLL_BATCH_SIZE
-        ? null
-        : cursor + POST_PREVIEW_INFINITE_SCROLL_BATCH_SIZE,
+    nextCursor: hasMore ? cursor + 1 : null,
   };
 };
+
 
 export default {
   querySimilarValidTagOptions,

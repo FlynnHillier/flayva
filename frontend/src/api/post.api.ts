@@ -97,6 +97,8 @@ export async function getInfiniteScrollPostPreviewsByTitle(title: string, cursor
 
   const { previews, nextCursor } = data;
 
+
+
   if (previews === undefined || nextCursor === undefined)
     throw new UnexpectedResponseFormatError(
       "getInfiniteScrollPostPreviewsByTitle",

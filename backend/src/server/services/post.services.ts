@@ -102,12 +102,11 @@ export const infiniteScrollTitlePostPreviews = async (
     posts[i] = await postRepo.getPostByRecipeId(recipes.previews[i].id);
   }
 
+  console.log({posts})
+
 	return {
     previews: posts,
-    nextCursor:
-      posts.length < POST_PREVIEW_INFINITE_SCROLL_BATCH_SIZE
-        ? null
-        : cursor + POST_PREVIEW_INFINITE_SCROLL_BATCH_SIZE,
+    nextCursor: recipes.nextCursor
   };
 };
 

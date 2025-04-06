@@ -12,24 +12,42 @@ import { useDebounce } from '@/hooks/useDebounce.hooks';
 
 
 const PostPreviewElement = ({ preview }: { preview: PostPreview }) => {
-	const imagePreviewUrl = "https://loremflickr.com/200/200?random=1";
-	
+	const imagePreviewUrl = 'https://loremflickr.com/280/280?random=1';
+	console.log({preview})
 	return (
 		<Link
-			to="/p/test-123"
-			className="rounded-sm overflow-hidden aspect-square w-full border-1 relative flex justify-center items-center"
+			to={'/p/' + preview.id}
+			className="relative aspect-square w-full overflow-hidden rounded-lg shadow-md"
+			style={{
+				backgroundImage: `url(${imagePreviewUrl})`,
+				backgroundSize: 'cover',
+				backgroundPosition: 'center',
+			}}
 		>
-			<span className="absolute bottom-2 left-2 text-white text-md font-bold bg-black/50 bg-opacity-50 py-1 px-1.5 z-20 rounded-sm max-w-4/5 truncate">
-				{preview.recipe.title}
-			</span>
-			<div className="absolute inset-0 bg-black opacity-0 hover:opacity-20 z-10 transition-opacity ease-in-out " />
-			{imagePreviewUrl && (
-				// <img
-				// 	src={uploadThingFileUrlFromKey(imagePreviewUrl)}
-				// 	className="object-cover shrink-0 min-w-full min-h-full"
-				// />
-				<img src="https://loremflickr.com/200/200?random=1" className="object-cover shrink-0 min-w-full min-h-full" />
-			)}
+			{/* User info at top */}
+			<div className="absolute inset-x-0 top-0 flex items-center gap-2 bg-gradient-to-b from-black/60 to-transparent p-3">
+				
+        <span className="text-md font-medium text-white">
+					{preview.recipe.title}
+				</span>
+			</div>
+
+			{/* Recipe title at bottom */}
+			<div className="absolute bottom-3 left-3 max-w-[85%] flex items-center gap-2">
+      <img
+					src={preview.owner.profile_picture_url}
+					className="h-8 w-8 rounded-full object-cover"
+					alt=""
+				/>
+				<div>
+					<span className="text-sm font-medium text-white">
+						{preview.owner.username}
+					</span>
+				</div>
+			</div>
+
+			{/* Hover overlay */}
+			<div className="absolute inset-0 bg-black/20 opacity-0 transition-opacity duration-300 hover:opacity-100" />
 		</Link>
 	);
 };

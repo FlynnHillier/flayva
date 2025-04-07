@@ -112,6 +112,8 @@ export function PostImageCarousel({ className }: { className?: ClassNameValue })
     api.on("slidesChanged", onSlidesChanged);
     api.on("resize", onResize);
 
+    updateCanSroll()
+
     return () => {
       api.off("scroll", onScroll);
       api.off("slidesChanged", onSlidesChanged);

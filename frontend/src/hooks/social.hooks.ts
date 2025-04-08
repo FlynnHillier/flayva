@@ -1,16 +1,21 @@
 import { api } from "@/api/api";
 import { createConfigurableMutation } from "@/hooks/util/configurableMutation";
-import { queryClient } from "@/lib/query";
+import { queryClient, setQueryData } from "@/lib/query";
 import { queries } from "@/queries";
-import { ProfilePreview } from "@flayva-monorepo/shared/types";
 import { useQuery } from "@tanstack/react-query";
 
 export const useFetchUserById = (userId: string) => {
-  return useQuery({ ...queries.social.fetchUserById(userId), enabled: !!userId });
+  return useQuery({
+    ...queries.social.fetchUserById(userId),
+    enabled: !!userId,
+  });
 };
 
 export const useFetchProfilePreview = (userId: string) => {
-  return useQuery({ ...queries.social.fetchProfilePreview(userId), enabled: !!userId });
+  return useQuery({
+    ...queries.social.fetchProfilePreview(userId),
+    enabled: !!userId,
+  });
 };
 
 export const useFollowUser = createConfigurableMutation(
@@ -20,20 +25,14 @@ export const useFollowUser = createConfigurableMutation(
     onSuccess: ({ success }, { userId }) => {
       if (success) {
         // Invalidate follow status query
-        queryClient.invalidateQueries(queries.social.fetchOwnFollowingUserStatus(userId));
+        queryClient.invalidateQueries(
+          queries.social.fetchOwnFollowingUserStatus(userId)
+        );
 
         // Update profile preview query with new follower count
-        queryClient.setQueryData(
-          queries.social.fetchProfilePreview(userId).queryKey,
-          (
-            oldData:
-              | Awaited<
-                  ReturnType<
-                    Awaited<ReturnType<typeof queries.social.fetchProfilePreview>>["queryFn"]
-                  >
-                >
-              | undefined
-          ) =>
+        setQueryData(
+          queries.social.fetchProfilePreview(userId),
+          (oldData) =>
             oldData && {
               ...oldData,
               profile: {
@@ -50,27 +49,24 @@ export const useFollowUser = createConfigurableMutation(
   }
 );
 
+queries.social.fetchUserById;
+
 export const useUnfollowUser = createConfigurableMutation(
-  async ({ userId }: { userId: string }) => await api.social.unfollowUser(userId),
+  async ({ userId }: { userId: string }) =>
+    await api.social.unfollowUser(userId),
   ["social", "unfollow"],
   {
     onSuccess: ({ success }, { userId }) => {
       if (success) {
         // Invalidate follow status query
-        queryClient.invalidateQueries(queries.social.fetchOwnFollowingUserStatus(userId));
+        queryClient.invalidateQueries(
+          queries.social.fetchOwnFollowingUserStatus(userId)
+        );
 
         // Update profile preview query with new follower count
-        queryClient.setQueryData(
-          queries.social.fetchProfilePreview(userId).queryKey,
-          (
-            oldData:
-              | Awaited<
-                  ReturnType<
-                    Awaited<ReturnType<typeof queries.social.fetchProfilePreview>>["queryFn"]
-                  >
-                >
-              | undefined
-          ) =>
+        setQueryData(
+          queries.social.fetchProfilePreview(userId),
+          (oldData) =>
             oldData && {
               ...oldData,
               profile: {
@@ -98,7 +94,9 @@ export const useUpdateProfile = createConfigurableMutation(
   ["social", "updateProfile"],
   {
     onSuccess(data) {
-      queryClient.invalidateQueries(queries.social.fetchProfilePreview(data.user.id));
+      queryClient.invalidateQueries(
+        queries.social.fetchProfilePreview(data.user.id)
+      );
       queryClient.invalidateQueries(queries.auth.me());
     },
   }

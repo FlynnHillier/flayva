@@ -4,8 +4,9 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Post } from "@flayva-monorepo/shared/types";
 import { Badge } from "@/components/ui/badge";
 import { capitalizeFirstLetter, cn } from "@/lib/utils";
-import { Heart, MessageSquare } from "lucide-react";
+import { MessageSquare } from "lucide-react";
 import { ClassNameValue } from "tailwind-merge";
+import { PostLikeButton } from "./post-interactions";
 
 function Description({
   description,
@@ -37,7 +38,9 @@ function Tags({
   return (
     <section className={cn("flex flex-row gap-1 flex-wrap", className)}>
       {tagLinks === undefined
-        ? Array.from({ length: 3 }, (_, i) => <Skeleton className="w-14 h-6 rounded-xl" key={i} />)
+        ? Array.from({ length: 3 }, (_, i) => (
+            <Skeleton className="w-14 h-6 rounded-xl" key={i} />
+          ))
         : tagLinks.map(({ tag }) => (
             <Badge className="h-6 rounded-xl" variant={"outline"} key={tag.id}>
               {capitalizeFirstLetter(tag.name)}
@@ -48,13 +51,12 @@ function Tags({
 }
 
 function Interactions({ className }: { className?: ClassNameValue }) {
+  const { post } = usePost();
   //TODO: add interactions
 
   return (
     <section className={cn("flex flex-row gap-4", className)}>
-      <button>
-        <Heart className="w-6 h-6" />
-      </button>
+      <PostLikeButton postId={post?.id} />
       <button>
         <MessageSquare className="w-6 h-6" />
       </button>

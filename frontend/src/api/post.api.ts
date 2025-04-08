@@ -4,7 +4,9 @@ import { Post, PostPreview } from "@flayva-monorepo/shared/types";
 import { createNewPostSchema } from "@flayva-monorepo/shared/validation/post.validation";
 import { z } from "zod";
 
-export async function createNewPost(postData: z.infer<typeof createNewPostSchema>) {
+export async function createNewPost(
+  postData: z.infer<typeof createNewPostSchema>
+) {
   const fd = new FormData();
 
   postData.images.forEach((image) => {
@@ -68,7 +70,10 @@ export async function getPostPreviewsByOwnerId(ownerId: string) {
   return { previews: data } as { previews: PostPreview[] };
 }
 
-export async function getInfiniteScrollPostPreviewsByOwnerId(ownerId: string, cursor: number) {
+export async function getInfiniteScrollPostPreviewsByOwnerId(
+  ownerId: string,
+  cursor: number
+) {
   const { data } = await request({
     url: `/api/p/owner/inf/${ownerId}`,
     method: "GET",
@@ -87,4 +92,37 @@ export async function getInfiniteScrollPostPreviewsByOwnerId(ownerId: string, cu
     previews: PostPreview[];
     nextCursor: number | null;
   };
+}
+
+/**
+ * INTERACTIONS
+ */
+export async function getLikeStatus(postId: string) {
+  await new Promise((resolve) => setTimeout(resolve, 2000)); // Simulate a delay
+  const { data } = await request({
+    url: `/api/p/interactions/like/status/${postId}`,
+    method: "GET",
+  });
+  const { liked } = data as { liked: boolean };
+  return { liked };
+}
+
+export async function likePost(postId: string) {
+  const { data } = await request({
+    url: "/api/p/interactions/like",
+    method: "POST",
+    data: { postId },
+  });
+
+  return data as { liked: boolean };
+}
+
+export async function unlikePost(postId: string) {
+  const { data } = await request({
+    url: "/api/p/interactions/like",
+    method: "DELETE",
+    data: { postId },
+  });
+
+  return data as { unliked: boolean };
 }

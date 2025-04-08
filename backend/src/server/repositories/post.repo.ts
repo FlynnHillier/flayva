@@ -1,6 +1,7 @@
 import { db } from "@/db";
 import {
   post_images,
+  post_likes,
   posts,
   recipe_ingredients,
   recipe_instruction_steps,
@@ -12,7 +13,8 @@ import { createNewPostSchema } from "@flayva-monorepo/shared/validation/post.val
 import { z } from "zod";
 import { UploadedFileData } from "uploadthing/types";
 import { DbFindManyParams } from "@/types/db.types";
-import { eq } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
+import { NestedRepositoryObject } from "@/types/api.types";
 
 /**
  * MANAGING POSTS
@@ -29,7 +31,10 @@ export const saveNewPost = (
   {
     imageUploads,
     recipe: recipeData,
-  }: { imageUploads: UploadedFileData[]; recipe: z.infer<typeof createNewPostSchema>["recipe"] }
+  }: {
+    imageUploads: UploadedFileData[];
+    recipe: z.infer<typeof createNewPostSchema>["recipe"];
+  }
 ) =>
   db.transaction(async (tx) => {
     const [recipe] = await tx
@@ -56,8 +61,10 @@ export const saveNewPost = (
               recipe_id: recipe.id,
               ingredient_id: ingredient.id,
               amount_whole: ingredient.amount.whole,
-              amount_fractional_numerator: ingredient.amount.fractional?.numerator,
-              amount_fractional_denominator: ingredient.amount.fractional?.denominator,
+              amount_fractional_numerator:
+                ingredient.amount.fractional?.numerator,
+              amount_fractional_denominator:
+                ingredient.amount.fractional?.denominator,
               unit: ingredient.unit,
             }))
           );
@@ -95,7 +102,9 @@ export const saveNewPost = (
         ? Promise.resolve()
         : tx
             .insert(post_images)
-            .values(imageUploads.map((image) => ({ key: image.key, postID: post.id })));
+            .values(
+              imageUploads.map((image) => ({ key: image.key, postID: post.id }))
+            );
 
     await Promise.all([
       insertIngredientsPromise,
@@ -119,7 +128,11 @@ export const saveNewPost = (
 export const deleteExistingPost = async (postId: string) => {
   //TODO: currently recipes are not deleted when a post is deleted - revisit this when we decide if we are implementing forking or not
 
-  const [deleted] = await db.delete(posts).where(eq(posts.id, postId)).returning().execute();
+  const [deleted] = await db
+    .delete(posts)
+    .where(eq(posts.id, postId))
+    .returning()
+    .execute();
 
   return !!deleted;
 };
@@ -134,7 +147,9 @@ export const deleteExistingPost = async (postId: string) => {
  * @param options query options to dictate which posts to fetch
  * @returns post previews
  */
-export const getPostPreviews = (options: Omit<DbFindManyParams<"posts">, "with" | "columns">) =>
+export const getPostPreviews = (
+  options: Omit<DbFindManyParams<"posts">, "with" | "columns">
+) =>
   db.query.posts.findMany({
     columns: {
       id: true,
@@ -173,7 +188,11 @@ export const getPostPreviews = (options: Omit<DbFindManyParams<"posts">, "with" 
 export const getPostPreviewsByOwnerId = (
   ownerId: string,
   options: Omit<Parameters<typeof getPostPreviews>[0], "where">
-) => getPostPreviews({ where: (posts, { eq }) => eq(posts.ownerId, ownerId), ...options });
+) =>
+  getPostPreviews({
+    where: (posts, { eq }) => eq(posts.ownerId, ownerId),
+    ...options,
+  });
 
 /**
  * GETTING POSTS
@@ -184,7 +203,9 @@ export const getPostPreviewsByOwnerId = (
  *
  * @param options query options to dictate which posts to fetch
  */
-export const getPosts = (options: Omit<DbFindManyParams<"posts">, "with" | "columns">) =>
+export const getPosts = (
+  options: Omit<DbFindManyParams<"posts">, "with" | "columns">
+) =>
   db.query.posts
     .findMany({
       columns: {
@@ -304,7 +325,99 @@ export const getRecentPosts = async (limit: number) => {
 export const getPostsByOwnerId = (
   ownerId: string,
   options: Omit<Parameters<typeof getPosts>[0], "where"> = {}
-) => getPosts({ where: (posts, { eq }) => eq(posts.ownerId, ownerId), ...options });
+) =>
+  getPosts({
+    where: (posts, { eq }) => eq(posts.ownerId, ownerId),
+    ...options,
+  });
+
+export const interactions = {
+  /**
+   * Handle like interactions for posts
+   */
+  like: {
+    status: async (postId: string, userId: string) => {
+      const [liked] = await db
+        .select()
+        .from(post_likes)
+        .where(
+          and(eq(post_likes.postID, postId), eq(post_likes.userID, userId))
+        )
+        .execute();
+
+      return liked as typeof liked | undefined;
+    },
+    add: async (postId: string, userId: string) => {
+      const [liked] = await db
+        .insert(post_likes)
+        .values({
+          postID: postId,
+          userID: userId,
+        })
+        .onConflictDoNothing()
+        .returning();
+
+      return liked as typeof liked | undefined;
+    },
+    remove: async (postId: string, userId: string) => {
+      const [deleted] = await db
+        .delete(post_likes)
+        .where(
+          and(eq(post_likes.postID, postId), eq(post_likes.userID, userId))
+        )
+        .returning()
+        .execute();
+
+      return deleted as typeof deleted | undefined;
+    },
+    toggle: async (postId: string, userId: string) => {
+      const [liked] = await db
+        .insert(post_likes)
+        .values({
+          postID: postId,
+          userID: userId,
+        })
+        .onConflictDoNothing()
+        .returning();
+
+      if (liked) {
+        // if the insert was successful, it means the user liked the post
+        return {
+          added: true,
+          entry: liked,
+        };
+      }
+
+      // if the insert was not successful, it means the user already liked the post
+      // so we need to delete the like
+      const [deleted] = await db
+        .delete(post_likes)
+        .where(
+          and(eq(post_likes.postID, postId), eq(post_likes.userID, userId))
+        )
+        .returning()
+        .execute();
+
+      if (deleted)
+        return {
+          removed: true,
+          entry: deleted,
+        };
+
+      return { entry: null };
+    },
+  },
+} satisfies NestedRepositoryObject;
+
+export const createPostLikeInteraction = (userId: string, postId: string) =>
+  db
+    .insert(post_likes)
+    .values({
+      postID: postId,
+      userID: userId,
+    })
+    .onConflictDoNothing()
+    .returning();
 
 /**
  * Default export including all functions from this file
@@ -317,4 +430,6 @@ export default {
   deleteExistingPost,
   getPostsByOwnerId,
   getPostPreviewsByOwnerId,
+  createPostLikeInteraction,
+  interactions,
 };

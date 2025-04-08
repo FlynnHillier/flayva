@@ -49,3 +49,22 @@ export const queryClient = new QueryClient({
     },
   },
 });
+
+/**
+ * Sets the query data for a given query
+ * @param query - The query object containing the query key and function
+ * @param updater - The updater function to modify the old data
+ */
+export function setQueryData<
+  T extends {
+    queryKey: readonly unknown[];
+    queryFn: (...args: any[]) => Promise<any> | any;
+  }
+>(
+  query: T,
+  updater: (
+    old: Awaited<ReturnType<T["queryFn"]>> | undefined
+  ) => Awaited<ReturnType<T["queryFn"]>> | undefined
+): void {
+  queryClient.setQueryData(query.queryKey, updater);
+}

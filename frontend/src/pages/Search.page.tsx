@@ -1,19 +1,22 @@
 import { useState } from 'react';
 import Tags from '@/components/search/common/Tags';
-import RecipeSearch from '@/components/search/RecipeSearch';
-import UserSearch from '@/components/search/UserSearch';
+import RecipeSearchResults from '@/components/search/RecipeSearch';
+import UserSearchResults from '@/components/search/UserSearch';
 import { Search, CookingPot, Users } from 'lucide-react';
 import { Switch } from '@radix-ui/react-switch';
 
+// Main page for searching
 export default function SearchComponent() {
 	const [input, setInput] = useState('');
 	const [current, setCurrent] = useState(true); // Toggle between user and recipe search
 
+	// Simple function to switch between current search type
 	function switchCurrent() {
 		setCurrent(!current);
 		setInput(''); // Clear input when switching
 	}
 
+	// Component for a search bar
 	function SearchBar() {
 		return (
 			<div className="w-9/12 border-2 p-2 rounded-lg flex items-center">
@@ -30,6 +33,7 @@ export default function SearchComponent() {
 		);
 	}
 
+	// Component for a switch bar, to switch between user/recipe search
 	function SwitchBar() {
 		return (
 			<div className="flex items-center gap-3 p-2 justify-center">
@@ -51,7 +55,7 @@ export default function SearchComponent() {
 		);
 	}
 
-	// TODO: shadcn switch
+	// Main component
 	return (
 		<>
 			<div className="w-screen h-screen flex justify-center items-center gap-5">
@@ -60,12 +64,15 @@ export default function SearchComponent() {
 						<SwitchBar />
 						<SearchBar />
 					</div>
-
+					
+					{/* Dynamically chooses whether to display user/recipe search based on user input */}
 					<div className="flex-grow overflow-auto mt-5">
+						{/* Currently using "a" as a standard input */}
+						{/* TODO: make suggestion for a user */}
 						{current ? (
-							<RecipeSearch input={input || 'a'} /> // Pass input to RecipeSearch
+							<RecipeSearchResults input={input || 'a'} /> // Pass input to RecipeSearch
 						) : (
-							<UserSearch input={input || 'a'} /> // Pass input to UserSearch
+							<UserSearchResults input={input || 'a'} /> // Pass input to UserSearch
 						)}
 					</div>
 				</div>

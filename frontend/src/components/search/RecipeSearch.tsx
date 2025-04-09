@@ -4,16 +4,17 @@ import { useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'sonner';
 import { useInView } from 'react-intersection-observer';
-import { FourSquare } from 'react-loading-indicators';
 import { Button } from '@/components/ui/button';
 import { useDebounce } from '@/hooks/useDebounce.hooks';
+import { Skeleton } from '../ui/skeleton';
 
-
+// Component to display a preview of a recipe
 const PostPreviewElement = ({ preview }: { preview: PostPreview }) => {
-	const imagePreviewUrl = 'https://loremflickr.com/280/280?random=1';
+	// Either uses the first image of the recipe preview or a random image (more for testing purposes)
+	const imagePreviewUrl = preview.images[0] || 'https://loremflickr.com/280/280?random=1';
 
-	
 	return (
+		// Link to the full recipe/post
 		<Link
 			to={'/p/' + preview.id}
 			className="relative aspect-square w-full overflow-hidden rounded-lg shadow-md"
@@ -50,9 +51,29 @@ const PostPreviewElement = ({ preview }: { preview: PostPreview }) => {
 	);
 };
 
-export default function RecipeSearch({ input }: { input: string }) {
-  const debouncedInput = useDebounce(input, 500);
+// Skeleton component that mimics the PostPreviewElement
+const PostPreviewSkeleton = () => {
+  return (
+    <div className="relative aspect-square w-full overflow-hidden rounded-lg shadow-sm bg-gray-200">
+      {/* Top title skeleton */}
+      <div className="absolute inset-x-0 top-0 flex items-center gap-2  from-black/60 to-transparent p-3">
+        <Skeleton className="h-6 w-32 rounded-md" />
+      </div>
 
+      {/* Bottom user info skeleton */}
+      <div className="absolute bottom-3 left-3 max-w-[85%] flex items-center gap-2">
+        <Skeleton className="h-8 w-8 rounded-full" />
+        <Skeleton className="h-4 w-24 rounded-md" />
+      </div>
+    </div>
+  );
+};
+
+// Main component
+export default function RecipeSearchResults({ input }: { input: string }) {
+  const debouncedInput = useDebounce(input, 500); // Uses a debounced input to save many searches
+
+	// Main hook call for infinite scrolling
 	const {
 		data,
 		fetchNextPage,
@@ -63,6 +84,7 @@ export default function RecipeSearch({ input }: { input: string }) {
 		isFetched,
 	} = useInfiniteScrollTitlePostPreviews(debouncedInput);
 
+	// Maps the results to a better formatted array
 	const previews = useMemo(
 		() => (data ? data.pages.flatMap((page) => page.previews) : []),
 		[data, data?.pages]
@@ -70,6 +92,7 @@ export default function RecipeSearch({ input }: { input: string }) {
 
 	const { ref, inView } = useInView();
 
+	// Error message 
 	useEffect(() => {
 		if (error)
 			toast.error(
@@ -87,7 +110,7 @@ export default function RecipeSearch({ input }: { input: string }) {
 	}, [inView, hasNextPage, isFetching]);
 
 	return (
-		<div className="w-full max-w-7xl p-3 grid grid-cols-1 sm:grid-cols-2  md:grid-cols-2 xl:grid-cols-2  gap-5  place-items-center">
+		<div className="w-full max-w-7xl p-3 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 xl:grid-cols-2 gap-5 place-items-center">
 			{previews.map((preview) => (
 				<PostPreviewElement key={preview.id} preview={preview} />
 			))}
@@ -100,11 +123,13 @@ export default function RecipeSearch({ input }: { input: string }) {
 				)
 			}
 			{
-				// If fetching, show a loading indicator
+				// If fetching, show skeleton loading indicators
 				(isFetchingNextPage || !isFetched) && (
-					<div className="col-span-full text-center text-gray-500">
-						<FourSquare color={'gray'} size={'small'} />
-					</div>
+					<>
+						{Array.from({ length: 4 }).map((_, index) => (
+							<PostPreviewSkeleton key={`skeleton-${index}`} />
+						))}
+					</>
 				)
 			}
 			{error && (

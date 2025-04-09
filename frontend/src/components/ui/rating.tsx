@@ -40,7 +40,7 @@ const RatingIcon = ({
   return (
     <div className={cn("relative inline-block group")}>
       {React.cloneElement(Icon, {
-        className: cn("fill-transparent", className, ""),
+        className: cn(className, "fill-transparent"),
         ref,
         ...props,
         style: {

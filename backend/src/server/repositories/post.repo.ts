@@ -6,6 +6,7 @@ import {
   recipe_ingredients,
   recipe_instruction_steps,
   recipe_meta_infos,
+  recipe_ratings,
   recipe_tags,
   recipes,
 } from "@/db/schema";
@@ -226,7 +227,18 @@ export const getPosts = (
           },
         },
         recipe: {
+          extras: {
+            ratingsCount: db.$count(recipe_ratings).as("ratingsCount"),
+          },
+
           with: {
+            ratings: {
+              with: {},
+              columns: {
+                rating: true,
+                review: true,
+              },
+            },
             tagLinks: {
               with: {
                 tag: {

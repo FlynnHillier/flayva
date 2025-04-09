@@ -4,16 +4,21 @@ import { capitalizeFirstLetter, cn } from "@/lib/utils";
 import { User } from "@flayva-monorepo/shared/types";
 import { ProfilePicture } from "@/components/profile/profile-common";
 import { Link } from "react-router-dom";
+import { PostRatingSummary } from "./post-interactions";
 
 function UserBanner({ user }: { user: User | undefined }) {
   return (
     <Link
       to={user ? `/profile/${user.id}` : ""}
-      className={cn("flex items-center gap-2", { "pointer-events-none": !user })}
+      className={cn("flex items-center gap-2", {
+        "pointer-events-none": !user,
+      })}
     >
       <ProfilePicture user={user} className="w-10 h-10" />
       {user?.username ? (
-        <span className="font-medium text-primary text-lg">{user.username}</span>
+        <span className="font-medium text-primary text-lg">
+          {user.username}
+        </span>
       ) : (
         <Skeleton className="h-4 w-36" />
       )}
@@ -45,16 +50,6 @@ function DateStamp({ date }: { date: string | undefined }) {
   );
 }
 
-function Rating() {
-  // TODO: update this
-  return (
-    <div className="mt-2 flex items-center text-yellow-500">
-      <span className="text-lg">⭐⭐⭐⭐☆</span>
-      <span className="ml-2 text-gray-600">(4.5/5)</span>
-    </div>
-  );
-}
-
 export function PostHeader() {
   const { post } = usePost();
   return (
@@ -63,8 +58,15 @@ export function PostHeader() {
         <UserBanner user={post?.owner} />
         <DateStamp date={post?.created_at ?? undefined} />
       </div>
-      <div className="mt-4 flex flex-row flex-wrap items-center gap-x-4 max-w-full border-b-1 ">
-        <Title title={post?.recipe.title} /> <Rating />
+      <div className="mt-4 flex flex-row flex-wrap items-center gap-x-4 max-w-full border-b-1 h-fit ">
+        <Title title={post?.recipe.title} />
+        <PostRatingSummary
+          ratings={{
+            average: 2.5,
+            count: 5,
+          }}
+          className="my-2"
+        />
       </div>
     </header>
   );

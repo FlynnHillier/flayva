@@ -1,6 +1,8 @@
 import { RECIPE_TAGS_SEARCH_QUERY_RETURN_LIMIT } from "@/constants/posts.constants";
 import { db } from "@/db";
-import { tags } from "@/db/schema";
+import { recipe_ratings, tags } from "@/db/schema";
+import { NestedRepositoryObject } from "@/types/api.types";
+import { DbFindManyParams } from "@/types/db.types";
 import { sql } from "drizzle-orm";
 
 /**
@@ -25,6 +27,85 @@ export const querySimilarValidTagOptions = async (searchQuery: string) =>
     )
     .limit(RECIPE_TAGS_SEARCH_QUERY_RETURN_LIMIT);
 
+/**
+ *
+ *
+ * INTERACTIONS
+ *
+ *
+ *
+ */
+const INTERACTIONS_DEFAULTS = {
+  ratings: {
+    get: (opts: Omit<DbFindManyParams<"recipe_ratings">, "with" | "columns">) =>
+      db.query.recipe_ratings.findMany({
+        with: {
+          user: {
+            columns: {
+              username: true,
+              profile_picture_url: true,
+              id: true,
+            },
+          },
+        },
+        columns: {
+          rating: true,
+          review: true,
+          date: true,
+          id: true,
+          recipe_id: true,
+        },
+
+        ...opts,
+      }),
+  },
+} satisfies NestedRepositoryObject;
+
+export const interactions = {
+  ratings: {
+    get: {
+      by: INTERACTIONS_DEFAULTS.ratings.get,
+      byId: async (ratingId: string) => {
+        const [rating] = await INTERACTIONS_DEFAULTS.ratings.get({
+          where: (recipe_ratings, { eq }) => eq(recipe_ratings.id, ratingId),
+        });
+
+        return rating as typeof rating | undefined;
+      },
+      byUserIdAndRecipeId: async (recipeId: string, userId: string) => {
+        const [rating] = await INTERACTIONS_DEFAULTS.ratings.get({
+          where: (recipe_ratings, { eq, and }) =>
+            and(
+              eq(recipe_ratings.recipe_id, recipeId),
+              eq(recipe_ratings.user_id, userId)
+            ),
+        });
+
+        return rating as typeof rating | undefined;
+      },
+    },
+    add: async (
+      recipeId: string,
+      userId: string,
+      content: { rating: number; review?: string }
+    ) => {
+      const [rating] = await db
+        .insert(recipe_ratings)
+        .values({
+          recipe_id: recipeId,
+          user_id: userId,
+          rating: content.rating,
+          review: content.review,
+        })
+        .onConflictDoNothing()
+        .returning();
+
+      return rating as typeof rating | undefined;
+    },
+  },
+} satisfies NestedRepositoryObject;
+
 export default {
   querySimilarValidTagOptions,
+  interactions,
 };

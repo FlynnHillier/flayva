@@ -1,12 +1,14 @@
+import { Rating } from "@/components/ui/rating";
 import {
   useGetPostLikeStatus,
   useLikePost,
   useUnlikePost,
 } from "@/hooks/post.hooks";
 import { cn } from "@/lib/utils";
-import { Heart } from "lucide-react";
+import { Heart, Star } from "lucide-react";
 import React, { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
+import { ClassNameValue } from "tailwind-merge";
 
 /**
  * A base component for post interaction icons.
@@ -35,6 +37,16 @@ const PostInteractionButton = React.forwardRef<
     {icon}
   </button>
 ));
+
+/**
+ *
+ *
+ *
+ * LIKE / UNLIKE
+ *
+ *
+ *
+ */
 
 /**
  * Post Like icon.
@@ -155,3 +167,76 @@ export const PostLikeButton = ({ postId }: { postId: string | undefined }) => {
     />
   );
 };
+
+/**
+ *
+ *
+ *
+ * RATING
+ *
+ *
+ *
+ */
+
+const PostRatingSkeleton = ({ className }: { className?: ClassNameValue }) => (
+  <Rating
+    rating={5}
+    interactive={false}
+    className={cn(
+      "animate-pulse fill-secondary text-primary/80 shrink-0",
+      className
+    )}
+  />
+);
+
+export const PostRating = ({
+  rating,
+  interactive,
+  onInteract,
+}: {
+  rating: number | undefined;
+  interactive: boolean;
+  onInteract?: (rating: number) => void;
+}) => {
+  if (rating === undefined) return <PostRatingSkeleton />;
+
+  return (
+    <Rating
+      rating={rating}
+      interactive={interactive}
+      className={"fill-amber-300 stroke-[1.5] stroke-black"}
+      onInteract={onInteract}
+    />
+  );
+};
+
+/**
+ * A component to summarise the ratings of a post.
+ */
+export const PostRatingSummary = ({
+  ratings,
+  className,
+}: {
+  ratings:
+    | {
+        average: number;
+        count: number;
+      }
+    | undefined;
+  className?: ClassNameValue;
+}) => (
+  // TODO: improve skeletons
+  <div
+    className={cn("flex flex-row flex-nowrap items-center gap-x-1", className)}
+  >
+    <PostRating rating={ratings?.average} interactive={false} />
+
+    <span className="font-semibold">{ratings?.count} Ratings</span>
+  </div>
+);
+
+export const PostRatingInteractive = ({
+  onSelect,
+}: {
+  onSelect: (rating: number) => void;
+}) => <PostRating rating={0} interactive={true} onInteract={onSelect} />;

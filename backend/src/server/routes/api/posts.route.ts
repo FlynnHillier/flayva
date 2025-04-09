@@ -59,25 +59,25 @@ router.use(
   "/interactions",
   ensureAuthenticated,
   createRouter({
-    "/like": [
-      {
-        method: "POST",
-        handler: [
+    "/like": {
+      handlers: {
+        POST: [
           validateRequestBody(z.object({ postId: z.string() })),
           postControllers.interactions.like.add,
         ],
-      },
-      {
-        method: "DELETE",
-        handler: [
+        DELETE: [
           validateRequestBody(z.object({ postId: z.string() })),
           postControllers.interactions.like.remove,
         ],
       },
-    ],
-    "/like/status/:postId": [
-      { method: "GET", handler: [postControllers.interactions.like.status] },
-    ],
+      router: createRouter({
+        "/status/:postId": {
+          handlers: {
+            GET: [postControllers.interactions.like.status],
+          },
+        },
+      }),
+    },
   })
 );
 

@@ -1,4 +1,5 @@
 import { PostBody } from "./post-body";
+import { PostFooter } from "./post-footer";
 import { PostHeader } from "./post-header";
 import { PostRecipeDetails } from "./post-recipe-details";
 
@@ -8,6 +9,7 @@ export function PostView() {
       <PostHeader />
       <PostBody />
       <PostRecipeDetails />
+      <PostFooter />
     </div>
   );
 }

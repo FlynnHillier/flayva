@@ -5,23 +5,28 @@ import {
   DropdownMenuTrigger,
   DropdownMenuContent,
 } from "@/components/ui/dropdown-menu";
+import React from "react";
 
 export function NumberSelector({
   wholeNumber,
   numerator,
   denominator,
   selectedIngredient,
+  open,
   setWholeNumber,
   setNumerator,
   setDenominator,
+  setOpen,
 }: {
   wholeNumber: number | null;
   numerator: number | null;
   denominator: number | null;
   selectedIngredient: string | null;
+  open: boolean;
   setWholeNumber: React.Dispatch<React.SetStateAction<number | null>>;
   setNumerator: React.Dispatch<React.SetStateAction<number | null>>;
   setDenominator: React.Dispatch<React.SetStateAction<number | null>>;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const hasFraction =
     numerator !== null &&
@@ -57,12 +62,15 @@ export function NumberSelector({
     .join(" ");
 
   return (
-    <DropdownMenu>
+    <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>
         <Button
           variant="outline"
           disabled={!selectedIngredient}
           className="min-w-[120px] font-normal"
+          onClick={() => {
+            setOpen(true);
+          }}
         >
           {displayValue || "Select A Value"}
         </Button>

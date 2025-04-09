@@ -184,9 +184,11 @@ export default function CreateNewPostForm() {
         )
       );
       setInstruction("");
+      setInstructionError("");
     } else {
       setInstructionList((prev) => [...prev, newInstruction]);
       setInstruction("");
+      setInstructionError("");
     }
   };
 
@@ -376,40 +378,34 @@ export default function CreateNewPostForm() {
                     <FormDescription>
                       Add the ingredients needed to make your dish.
                     </FormDescription>
-                    <IngredientsList
-                      setEditingIngredient={setEditingIngredient}
-                      deleteIngredientFromList={deleteIngredientFromList}
-                      ingredientsList={ingredientsList}
-                    />
+
                     <FormControl>
                       <div className="flex flex-col gap-2">
-                        <Card className="p-1">
-                          <div className="p-1 items-center justify-between gap-3">
-                            <IngredientSelector
-                              ingredientsList={ingredientsList}
-                              editingIngredient={editingIngredient}
-                              onSave={(updatedIngredient, isEditing) => {
-                                if (isEditing) {
-                                  setIngredientsList((prev) =>
-                                    prev.map((ing) =>
-                                      ing.ingredient_id ===
-                                      updatedIngredient.ingredient_id
-                                        ? updatedIngredient
-                                        : ing
-                                    )
-                                  );
-                                } else {
-                                  setIngredientsList((prev) => [
-                                    ...prev,
-                                    updatedIngredient,
-                                  ]);
-                                }
-                                setEditingIngredient(null);
-                              }}
-                              setError={setIngredientError}
-                            ></IngredientSelector>
-                          </div>
-                        </Card>
+                        <IngredientSelector
+                          ingredientsList={ingredientsList}
+                          editingIngredient={editingIngredient}
+                          onSave={(updatedIngredient, isEditing) => {
+                            if (isEditing) {
+                              setIngredientsList((prev) =>
+                                prev.map((ing) =>
+                                  ing.ingredient_id ===
+                                  updatedIngredient.ingredient_id
+                                    ? updatedIngredient
+                                    : ing
+                                )
+                              );
+                            } else {
+                              setIngredientsList((prev) => [
+                                ...prev,
+                                updatedIngredient,
+                              ]);
+                            }
+                            setEditingIngredient(null);
+                          }}
+                          setError={setIngredientError}
+                          setEditingIngredient={setEditingIngredient}
+                          deleteIngredientFromList={deleteIngredientFromList}
+                        ></IngredientSelector>
                         <span className="text-red-600 text-sm">
                           {ingredientError}
                         </span>

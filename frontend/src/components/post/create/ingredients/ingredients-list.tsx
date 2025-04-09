@@ -40,7 +40,11 @@ const IngredientsList = ({
                 <Button
                   variant="ghost"
                   className="size-8 hover:bg-background"
-                  onClick={() => setEditingIngredient(ingredient)}
+                  onClick={(e) => {
+                    e.preventDefault();
+
+                    setEditingIngredient(ingredient);
+                  }}
                 >
                   <Pen className="size-4" />
                 </Button>

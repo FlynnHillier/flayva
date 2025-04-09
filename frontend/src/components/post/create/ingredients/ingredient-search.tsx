@@ -1,4 +1,4 @@
-import React, { SetStateAction } from "react";
+import React, { SetStateAction, useEffect } from "react";
 import { useFetchIngredientsFromSearchQuery } from "@/hooks/ingredient.hooks";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -16,21 +16,25 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-
+import { IngredientEntry } from "./ingredient-entry-schema";
 export function IngredientSearch({
   setIngredient,
   setValue,
   value,
+  editingIngredient,
 }: {
   setIngredient: React.Dispatch<SetStateAction<string | null>>;
   setValue: React.Dispatch<SetStateAction<string>>;
   value: string;
+  editingIngredient: IngredientEntry | null | undefined;
 }) {
   const [open, setOpen] = React.useState(false);
   const { data, isError, isLoading } =
     useFetchIngredientsFromSearchQuery(value);
   const ingredients = data?.ingredients || [];
-
+  useEffect(() => {
+    console.log(editingIngredient);
+  }, [editingIngredient]);
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
@@ -40,7 +44,9 @@ export function IngredientSearch({
           aria-expanded={open}
           className="w-full justify-between"
         >
-          {ingredients && ingredients.length > 0
+          {editingIngredient
+            ? editingIngredient.name
+            : ingredients && ingredients.length > 0
             ? ingredients[0].name
             : "Select ingredient..."}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />

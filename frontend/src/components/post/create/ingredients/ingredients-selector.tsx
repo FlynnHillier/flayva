@@ -11,6 +11,8 @@ import { NumberSelector } from "./fraction-builder";
 import { IngredientEntry } from "./ingredient-entry-schema";
 import IngredientSearch from "./ingredient-search";
 import React from "react";
+import IngredientsList from "./ingredients-list";
+import { Card } from "@/components/ui/card";
 
 const ingredientUnits = [
   "kg",
@@ -30,11 +32,17 @@ const IngredientSelector = ({
   editingIngredient,
   onSave,
   setError,
+  setEditingIngredient,
+  deleteIngredientFromList,
 }: {
   ingredientsList: IngredientEntry[];
   editingIngredient?: IngredientEntry | null;
   onSave: (ingredient: IngredientEntry, isEditing: boolean) => void;
   setError: React.Dispatch<React.SetStateAction<string | null>>;
+  setEditingIngredient: React.Dispatch<
+    React.SetStateAction<IngredientEntry | null>
+  >;
+  deleteIngredientFromList: (id: number) => void;
 }) => {
   const [selectedIngredient, setSelectedIngredient] = useState<string | null>(
     null
@@ -65,7 +73,7 @@ const IngredientSelector = ({
 
     const ingredient = JSON.parse(selectedIngredient);
     const isEditing = !!editingIngredient;
-
+    setOpen(false);
     const updatedIngredient: IngredientEntry = {
       ingredient_id: isEditing
         ? editingIngredient.ingredient_id
@@ -78,7 +86,6 @@ const IngredientSelector = ({
     };
 
     if (!isEditing) {
-      console.log("here");
       const exists = ingredientsList.some(
         (entry) => entry.ingredient_id === ingredient.id
       );
@@ -130,49 +137,70 @@ const IngredientSelector = ({
     [handleSave]
   );
 
+  const [open, setOpen] = useState(false);
+
   return (
-    <div className="flex flex-row gap-3 items-center">
-      <div className="flex-1">
-        <IngredientSearch
-          setIngredient={setSelectedIngredient}
-          value={searchValue}
-          setValue={setSearchValue}
-        />
-      </div>
-      <div className="flex-1">
-        <Select
-          value={selectedUnit}
-          onValueChange={setSelectedUnit}
-          disabled={!selectedIngredient}
-        >
-          <SelectTrigger className="w-full">
-            <SelectValue placeholder="Select Unit" />
-          </SelectTrigger>
-          <SelectContent>
-            {ingredientUnits.map((unit) => (
-              <SelectItem key={unit} value={unit}>
-                {unit}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
+    <div className="flex flex-col gap-2">
+      <IngredientsList
+        setEditingIngredient={setEditingIngredient}
+        deleteIngredientFromList={deleteIngredientFromList}
+        ingredientsList={ingredientsList}
+      />
 
-      <div onKeyDown={handleKeyDown} tabIndex={-1} className="outline-none ">
-        <NumberSelector
-          wholeNumber={wholeNumber}
-          numerator={numerator}
-          denominator={denominator}
-          selectedIngredient={selectedIngredient}
-          setWholeNumber={setWholeNumber}
-          setDenominator={setDenominator}
-          setNumerator={setNumerator}
-        />
-      </div>
+      <Card className="p-1">
+        <div className="p-1 items-center justify-between gap-3">
+          <div className="flex flex-row gap-3 items-center">
+            <div className="flex-1">
+              <IngredientSearch
+                setIngredient={setSelectedIngredient}
+                value={searchValue}
+                setValue={setSearchValue}
+                editingIngredient={editingIngredient}
+              />
+            </div>
+            <div className="flex-1">
+              <Select
+                value={selectedUnit}
+                onValueChange={setSelectedUnit}
+                disabled={!selectedIngredient}
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select Unit" />
+                </SelectTrigger>
+                <SelectContent>
+                  {ingredientUnits.map((unit) => (
+                    <SelectItem key={unit} value={unit}>
+                      {unit}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
 
-      <Button type="button" onClick={handleSave} className="max-w-18">
-        {editingIngredient ? "Save" : "Add"}
-      </Button>
+            <div
+              onKeyDown={handleKeyDown}
+              tabIndex={-1}
+              className="outline-none "
+            >
+              <NumberSelector
+                wholeNumber={wholeNumber}
+                numerator={numerator}
+                denominator={denominator}
+                selectedIngredient={selectedIngredient}
+                setWholeNumber={setWholeNumber}
+                setDenominator={setDenominator}
+                setNumerator={setNumerator}
+                open={open}
+                setOpen={setOpen}
+              />
+            </div>
+
+            <Button type="button" onClick={handleSave} className="max-w-18">
+              {editingIngredient ? "Save" : "Add"}
+            </Button>
+          </div>
+        </div>
+      </Card>
     </div>
   );
 };

@@ -89,7 +89,7 @@ export async function getOwnFollowingUserStatus(userId: string) {
 export async function updateProfile(postData: z.infer<typeof updateProfileFormSchema>) {
   const fd = new FormData();
 
-  console.log("postData", postData);
+  ("postData", postData);
 
   if (postData.avatar) {
     fd.append("avatar", postData.avatar);
@@ -118,7 +118,7 @@ export async function updateProfile(postData: z.infer<typeof updateProfileFormSc
   };
 }
 
-export async function getUserByUsername(username: string, pageSize: number, pageNumber: number) {
+export async function searchUserByUsername(username: string, pageSize: number, pageNumber: number) {
   const { data } = await request({
     url: `/api/s/usernameSearch`,
     method: "GET",

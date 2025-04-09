@@ -1,6 +1,4 @@
-import { useProfile } from '@/contexts/profile.context';
 import { useInfiniteScrollTitlePostPreviews } from '@/hooks/post.hooks';
-import { uploadThingFileUrlFromKey } from '@/lib/ut';
 import { type PostPreview } from '@flayva-monorepo/shared/types';
 import { useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
@@ -13,7 +11,8 @@ import { useDebounce } from '@/hooks/useDebounce.hooks';
 
 const PostPreviewElement = ({ preview }: { preview: PostPreview }) => {
 	const imagePreviewUrl = 'https://loremflickr.com/280/280?random=1';
-	console.log({preview})
+
+	
 	return (
 		<Link
 			to={'/p/' + preview.id}
@@ -26,8 +25,7 @@ const PostPreviewElement = ({ preview }: { preview: PostPreview }) => {
 		>
 			{/* User info at top */}
 			<div className="absolute inset-x-0 top-0 flex items-center gap-2 bg-gradient-to-b from-black/60 to-transparent p-3">
-				
-        <span className="text-md font-medium text-white">
+        <span className="text-sm lg:text-lg text-white font-semibold backdrop-blur-xs p-1">
 					{preview.recipe.title}
 				</span>
 			</div>
@@ -65,15 +63,10 @@ export default function RecipeSearch({ input }: { input: string }) {
 		isFetched,
 	} = useInfiniteScrollTitlePostPreviews(debouncedInput);
 
-  console.log({hasNextPage})
-
 	const previews = useMemo(
 		() => (data ? data.pages.flatMap((page) => page.previews) : []),
 		[data, data?.pages]
-
 	);
-
-	console.log(previews)
 
 	const { ref, inView } = useInView();
 
@@ -85,13 +78,18 @@ export default function RecipeSearch({ input }: { input: string }) {
 	}, [error]);
 
 	useEffect(() => {
+		(previews)
+	}, [previews])
+
+
+	useEffect(() => {
 		if (inView && hasNextPage && !isFetching) fetchNextPage();
 	}, [inView, hasNextPage, isFetching]);
 
 	return (
 		<div className="w-full max-w-7xl p-3 grid grid-cols-1 sm:grid-cols-2  md:grid-cols-2 xl:grid-cols-2  gap-5  place-items-center">
 			{previews.map((preview) => (
-				<PostPreviewElement key={preview.id} preview={preview[0]} />
+				<PostPreviewElement key={preview.id} preview={preview} />
 			))}
 			{
 				// If there are no posts and not fetching, show a message

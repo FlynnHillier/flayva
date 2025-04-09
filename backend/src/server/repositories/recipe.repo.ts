@@ -74,5 +74,5 @@ export const getRecipesByTitle = async (
 
 export default {
   querySimilarValidTagOptions,
-  getRecipesByTitle
+  searchRecipesByTitle: getRecipesByTitle
 };

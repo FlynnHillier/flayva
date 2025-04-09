@@ -7,8 +7,8 @@ import { Skeleton } from '../ui/skeleton';
 import { Link } from 'react-router-dom';
 
 export default function UserSearch({ input }: { input: string }) {
-	const initialPageSize = 20;
-	const subsequentPageSize = 6;
+	const INITIAL_PAGE_SIZE = 20;
+	const SUBSEQUENT_PAGE_SIZE = 6;
 	const debouncedInput = useDebounce(input, 500);
 	const { ref, inView } = useInView();
 
@@ -21,8 +21,8 @@ export default function UserSearch({ input }: { input: string }) {
 		refetch,
 	} = useInfiniteUserSearch(
 		debouncedInput,
-		initialPageSize,
-		subsequentPageSize
+		INITIAL_PAGE_SIZE,
+		SUBSEQUENT_PAGE_SIZE
 	);
 
 	useEffect(() => {
@@ -67,6 +67,7 @@ export default function UserSearch({ input }: { input: string }) {
 					<Skeleton className="w-[65%] h-[20px] rounded-full mb-2" />
 					<Skeleton className="w-[65%] h-[20px] rounded-full mb-2" />
 					<Skeleton className="w-[65%] h-[20px] rounded-full" />
+{/* TODO: change */}
 				</div>
 			)}
 

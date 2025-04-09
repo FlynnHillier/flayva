@@ -114,7 +114,7 @@ export const useInfiniteUserSearch = (username: string, initialPageSize: number,
     queryKey: ['infiniteUsers', username],
     queryFn: ({ pageParam = 1 }) => {
       const pageSize = pageParam === 1 ? initialPageSize : subsequentPageSize;
-      return api.social.getUserByUsername(username, pageSize, pageParam);
+      return api.social.searchUserByUsername(username, pageSize, pageParam);
     },
     initialPageParam: 1,
     getNextPageParam: (lastPage, allPages) => {

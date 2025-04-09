@@ -88,7 +88,7 @@ export const updateOwnUserProfile: RequestHandler = async (req, res) => {
 
 export const getUsersByUsername = async (req: Request, res: Response) => {
 	const { username, pageSize, pageNumber } = req.query;
-	console.log(username, pageSize, pageNumber)
+	(username, pageSize, pageNumber)
 	if (!username || !pageSize || !pageNumber) {
 		res.status(400).send({
 			message:
@@ -103,7 +103,7 @@ export const getUsersByUsername = async (req: Request, res: Response) => {
 		parseInt(pageNumber.toString())
 	);
 
-	console.log(users.pagination)
+	(users.pagination)
 	res.status(200).send({ users });
 };
 

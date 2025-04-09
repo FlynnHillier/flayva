@@ -91,18 +91,12 @@ export const infiniteScrollTitlePostPreviews = async (
 	recipeTitle: string,
 	cursor: number
 ) => {
-	const recipes = await recipeRepo.getRecipesByTitle(
+	const recipes = await recipeRepo.searchRecipesByTitle(
 		recipeTitle,
 		cursor
 	);
 
-  const posts = [];
-
-  for (let i = 0; i < recipes.previews.length; i++) {
-    posts[i] = await postRepo.getPostByRecipeId(recipes.previews[i].id);
-  }
-
-  console.log({posts})
+  const posts = await postRepo.getPostsById(recipes.previews.map(obj => obj.id))
 
 	return {
     previews: posts,

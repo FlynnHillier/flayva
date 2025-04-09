@@ -257,14 +257,27 @@ export const getPosts = (options: Omit<DbFindManyParams<"posts">, "with" | "colu
     .execute();
 
 /**
- * Get a post by its ID
- * @param postId - The ID of the post to fetch
+ * Get post(s) by ID(s)
+ * @param postId - The ID of the post or array of post IDs to fetch
  * @param options - query options to dictate which posts to fetch
  */
 export const getPostsById = (
-  postId: string,
+  postId: string | string[],
   options: Omit<Parameters<typeof getPosts>[0], "where"> = {}
-) => getPosts({ ...options, where: (posts, { eq }) => eq(posts.id, postId) });
+) => {
+  if (Array.isArray(postId)) {
+    return getPosts({ 
+      ...options, 
+      where: (posts, { eq, or }) => or(...postId.map(id => eq(posts.id, id)))
+    });
+  }
+  
+  return getPosts({ 
+    ...options, 
+    where: (posts, { eq }) => eq(posts.id, postId) 
+  });
+}
+
 
 /**
  * Get a post by its ID
@@ -323,6 +336,7 @@ export const getPostsByOwnerId = (
 export default {
   saveNewPost,
   getPostById,
+  getPostsById,
   getRecentPosts,
   deleteExistingPost,
   getPostsByOwnerId,

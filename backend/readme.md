@@ -36,6 +36,15 @@ In order to update your PostgreSQL tables to reflect the structure defined withi
 1. click `create`
 1. select the newly created client and copy the `Client ID` & `Client Secret` into your `.env.local` file
 
+## UploadThing
+
+UploadThing is used to store our media in the cloud
+
+1. Sign up for uploadthing https://uploadthing.com/dashboard/
+2. create new app
+3. on your newly created app within your dashboard, navigate to 'API Keys'
+4. Copy this API key into the relevant environment variable
+
 ## Environment
 
 1. Ensure the variables specified in `.env.example` are copied/replaced by a file called `.env.local` and are filled out appropriately.

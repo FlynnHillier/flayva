@@ -1,5 +1,5 @@
 import { TagsInput } from "@/components/recipe/create/recipe-tags-input";
-import { RecipeTag } from "@apptypes/recipe.types";
+import { RecipeTag } from "@flayva-monorepo/shared/types";
 import { useState } from "react";
 
 export default function DevPage() {

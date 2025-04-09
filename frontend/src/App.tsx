@@ -12,11 +12,13 @@ import LoginPage from "./pages/Login.page";
 import LogoutPage from "./pages/Logout.page";
 import CreatePostPage from "./pages/Create-post.page";
 import RecipePage from "./pages/Recipe.page";
-import ProfilePage from "./pages/Profile.page";
-import DevPage from "./pages/Dev.page";
-import { Toaster } from "sonner";
+import EditProfile from "./pages/profile-pages/Edit-profile.page";
+import ProfilePage from "./pages/profile-pages/Profile.page";
+import ProfileLayout from "@/pages/profile-pages/profile.layout";
 import CommentsPage from "./pages/Comments.page";
 
+import DevPage from "./pages/Dev.page";
+import { Toaster } from "sonner";
 /**
  * Routes that should not show the sidebar
  */
@@ -62,30 +64,38 @@ function App() {
   );
 
   return (
-    <NuqsAdapter>
-      <div className="w-screen h-screen flex flex-row flex-nowrap justify-start">
-        {shouldShowSidebar && <AppSidebar />}
-        <main className="grow h-screen flex flex-col flex-nowrap overflow-x-hidden overflow-y-auto relative">
-          <Routes>
-            <Route index element={<HomePage />} />
-            <Route element={<AuthenticatedRouter />}>
-              <Route path="/post" element={<CreatePostPage />} />
-              <Route path="/logout" element={<LogoutPage />} />
-              <Route path="/feed" element={<FeedPage />} />
-              <Route path="/profile/:userid" element={<ProfilePage />} />
-              <Route path="/recipe/:recipeid" element={<RecipePage />} />
-              <Route path="/recipe/:recipeid/comments" element={<CommentsPage/>} />
-            </Route>
-            <Route element={<UnauthenticatedRouter />}>
-              <Route path="/login" element={<LoginPage />} />
-            </Route>
-            <Route path="/dev" element={<DevPage />} />
-            <Route path="*" element={<div>404 - Not found</div>} />
-          </Routes>
-          <Toaster position="top-right" closeButton={false} />
-        </main>
-      </div>
-    </NuqsAdapter>
+    <div className="w-screen h-screen flex flex-row flex-nowrap justify-start">
+      {shouldShowSidebar && <AppSidebar />}
+      <main className="grow h-screen flex flex-col flex-nowrap overflow-x-hidden overflow-y-auto relative">
+        <Routes>
+          <Route index element={<HomePage />} />
+          <Route element={<AuthenticatedRouter />}>
+            <Route path="/post" element={<CreatePostPage />} />
+            <Route path="/logout" element={<LogoutPage />} />
+            <Route path="/feed" element={<FeedPage />} />
+            <Route path="/profile/edit" element={<EditProfile />} />
+            <Route path="/profile" element={<ProfilePage />} />
+          </Route>
+          <Route path="/profile" element={<ProfileLayout />}>
+            <Route path="/profile/:id" element={<ViewProfilePage />} />
+          </Route>
+          {
+            //TODO: change the location of profile edit
+          }
+          <Route path="/p/edit" element={<EditProfile />} />
+          <Route element={<UnauthenticatedRouter />}>
+            <Route path="/login" element={<LoginPage />} />
+          </Route>
+          <Route element={<UnauthenticatedRouter />}>
+            <Route path="/recipe" element={<RecipePage />} />
+          </Route>
+          =========
+          <Route path="/dev" element={<DevPage />} />
+          <Route path="*" element={<div>404 - Not found</div>} />
+        </Routes>
+        <Toaster position="top-right" closeButton={false} />
+      </main>
+    </div>
   );
 }
 

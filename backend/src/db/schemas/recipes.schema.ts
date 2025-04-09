@@ -23,7 +23,6 @@ export const recipes = pgTable("recipes", {
   id: varchar("id")
     .primaryKey()
     .$defaultFn(() => nanoid(RECIPE.RECIPE_ID_LENGTH)),
-  master_post_id: varchar("master_post_id").references(() => posts.id, { onDelete: "set null" }),
   title: varchar("title").notNull(),
   description: varchar("description").notNull(),
   created_at: timestamp("created_at", { mode: "string" }).defaultNow(),
@@ -42,7 +41,7 @@ export const recipe_meta_infos = pgTable("recipe_meta_infos", {
 export const recipe_instruction_steps = pgTable(
   "recipe_instruction_steps",
   {
-    recipeId: varchar("recipe_id").references(() => recipes.id, { onDelete: "cascade" }),
+    recipeId: varchar("recipe_id").notNull().references(() => recipes.id, { onDelete: "cascade" }),
     stepNumber: integer("step_number").notNull(),
     instruction: varchar("instruction").notNull(),
   },
@@ -107,7 +106,7 @@ export const ingredient_items = pgTable("ingredients_items", {
 // ## RELATIONS ##
 
 export const relations_recipes = relations(recipes, ({ one, many }) => ({
-  masterPost: one(posts, { fields: [recipes.master_post_id], references: [posts.id] }),
+  post: one(posts, { fields: [recipes.id], references: [posts.recipeId] }),
   ratings: many(recipe_ratings),
   ingredients: many(recipe_ingredients),
   tagLinks: many(recipe_tags),
@@ -140,6 +139,7 @@ export const relations_recipe_ingredients = relations(recipe_ingredients, ({ one
 // Define relations for the recipe_tags table.
 export const relations_recipe_tags = relations(recipe_tags, ({ one }) => ({
   tag: one(tags, { fields: [recipe_tags.tagID], references: [tags.id] }),
+  recipe: one(recipes, { fields: [recipe_tags.recipeID], references: [recipes.id] }),
 }));
 
 // Define relations for the tags table.

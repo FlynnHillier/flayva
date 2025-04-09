@@ -37,3 +37,7 @@ export const createNewPostSchema = zfd.formData({
   recipe: RECIPE.recipe,
   images: images,
 });
+
+export const deleteExistingPostSchema = z.object({
+  postId: z.string(),
+});

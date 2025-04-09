@@ -1,4 +1,4 @@
-import { RECIPE } from "shared/src/validation";
+import { tag } from "@validation/recipe.validation";
 import { z } from "zod";
 
-export type RecipeTag = z.infer<typeof RECIPE.tag>;
+export type RecipeTag = z.infer<typeof tag>;

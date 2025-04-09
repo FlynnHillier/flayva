@@ -19,6 +19,8 @@ import {
   INGREDIENT_UNITS,
   RECIPE_INGREDIENT_FRACTIONAL_DENOMINATOR_MIN,
   RECIPE_INGREDIENT_FRACTIONAL_DENOMINATOR_MAX,
+  TAG_CATEGORIES,
+  TAG_GROUPS,
 } from "../constants/recipes.constants";
 import { z } from "zod";
 
@@ -75,7 +77,16 @@ export const ingredients = z
 export const tag = z.object({
   tagId: z.number().min(RECIPE_TAG_ID_MIN).max(RECIPE_TAG_ID_MAX),
   tagName: z.string(),
+  category: z.enum(TAG_CATEGORIES),
+  group: z.enum(TAG_GROUPS).nullable(),
 });
+
+export const tagReference = tag.pick({ tagId: true, tagName: true });
+
+export const tagReferences = z
+  .array(tagReference)
+  .min(RECIPE_TAG_COUNT_MIN)
+  .max(RECIPE_TAG_COUNT_MAX);
 
 export const tags = z.array(tag).min(RECIPE_TAG_COUNT_MIN).max(RECIPE_TAG_COUNT_MAX);
 
@@ -99,6 +110,6 @@ export const recipe = z.object({
   description: description,
   instructions: instructions,
   ingredients: ingredients,
-  tags: tags,
+  tags: tagReferences,
   metaInfo: metaInfo.optional(),
 });

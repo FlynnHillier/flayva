@@ -5,7 +5,8 @@ import { POST_IMAGE_MAX_COUNT } from "@flayva-monorepo/shared/constants/post.con
 import { ensureAuthenticated } from "@/server/middleware/auth.middleware";
 
 import postControllers from "@/server/controllers/post.controllers";
-
+import { validateRequestBody } from "zod-express-middleware";
+import { isRequestPostOwner } from "@/server/middleware/post.middleware";
 const router: Router = Router();
 
 /**
@@ -20,5 +21,33 @@ router.post(
   }),
   postControllers.createPost
 );
+
+/**
+ * Delete an existing post
+ */
+router.delete(
+  "/delete",
+  ensureAuthenticated,
+  validateRequestBody(POST_VALIDATION.deleteExistingPostSchema),
+  isRequestPostOwner((req) => req.body.postId),
+  postControllers.deletePost
+);
+
+/**
+ * Get a post by its ID
+ */
+router.get("/get/id/:id", postControllers.getPostById);
+
+/**
+ * Get a feed of posts
+ */
+router.get("/get/feed", postControllers.getFeed);
+
+/**
+ * Get post previews by owner ID with infinte scrolling
+ *
+ * @param ownerId - The ID of the owner to get post previews for
+ */
+router.get("/owner/inf/:ownerId", postControllers.infiniteScrollProfilePostPreviews);
 
 export default router;

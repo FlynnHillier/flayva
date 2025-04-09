@@ -70,7 +70,6 @@ export const infiniteScrollTitlePostPreviews: RequestHandler = async (
 
   const result = await postServices.infiniteScrollTitlePostPreviews(title, cursor);
 
-  ({result})
 
   res.status(200).send({
     previews: result.previews,

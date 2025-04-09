@@ -96,6 +96,13 @@ export const infiniteScrollTitlePostPreviews = async (
 		cursor
 	);
 
+  console.log({recipes})
+
+  if (recipes.previews.length == 0) return {
+    previews: [],
+    nextCursor: null
+  }
+
   const posts = await postRepo.getPostsById(recipes.previews.map(obj => obj.id))
 
 	return {

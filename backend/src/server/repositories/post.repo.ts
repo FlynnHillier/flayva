@@ -227,10 +227,10 @@ export const getPosts = (
           },
         },
         recipe: {
-          extras: {
-            ratingsCount: db.$count(recipe_ratings).as("ratingsCount"),
-          },
-
+          // extras: {
+          //   ratingsCount: db.$count(recipe_ratings).as("ratingsCount"),
+          //   //TODO: could we add a correct query for the average rating here?
+          // },
           with: {
             ratings: {
               with: {},
@@ -343,6 +343,13 @@ export const getPostsByOwnerId = (
     ...options,
   });
 
+/**
+ *
+ *
+ * INTERACTIONS
+ *
+ *
+ */
 export const interactions = {
   /**
    * Handle like interactions for posts

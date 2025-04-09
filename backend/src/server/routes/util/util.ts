@@ -15,7 +15,7 @@ export const createRouter = (
     }
   >
 ) => {
-  const router = Router();
+  const router = Router({ mergeParams: true });
 
   Object.entries(routes).forEach(([path, { handlers, router: subRouter }]) => {
     Object.entries(handlers).forEach(([method, handler]) => {

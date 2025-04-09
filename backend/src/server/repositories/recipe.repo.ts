@@ -3,7 +3,7 @@ import { db } from "@/db";
 import { recipe_ratings, tags } from "@/db/schema";
 import { NestedRepositoryObject } from "@/types/api.types";
 import { DbFindManyParams } from "@/types/db.types";
-import { sql } from "drizzle-orm";
+import { and, eq, gt, lte, SQL, sql } from "drizzle-orm";
 
 /**
  * Query the database for tags that are similar to the search query
@@ -35,8 +35,36 @@ export const querySimilarValidTagOptions = async (searchQuery: string) =>
  *
  *
  */
-const INTERACTIONS_DEFAULTS = {
+
+/**
+ * INTERACTION BASIS
+ * these are the basic queries that are used to fetch data from the database
+ * other queries will use these as a base to build upon
+ * this is to avoid code duplication and to make the code more readable
+ */
+const INTERACTIONS_BASIS = {
   ratings: {
+    statistics: async ({ where }: { where?: SQL }) =>
+      db
+        .select({
+          averageRating: sql<number>`avg(${recipe_ratings.rating})`,
+          ratingCount: sql<number>`count(${recipe_ratings.rating})`,
+          distribution: {
+            1: sql<number>`count(${recipe_ratings.rating}) filter (where ${recipe_ratings.rating} = 1)`,
+            2: sql<number>`count(${recipe_ratings.rating}) filter (where ${recipe_ratings.rating} = 2)`,
+            3: sql<number>`count(${recipe_ratings.rating}) filter (where ${recipe_ratings.rating} = 3)`,
+            4: sql<number>`count(${recipe_ratings.rating}) filter (where ${recipe_ratings.rating} = 4)`,
+            5: sql<number>`count(${recipe_ratings.rating}) filter (where ${recipe_ratings.rating} = 5)`,
+          },
+        })
+        .from(recipe_ratings)
+        .where(
+          and(
+            where,
+            gt(recipe_ratings.rating, 0),
+            lte(recipe_ratings.rating, 5)
+          )
+        ),
     get: (opts: Omit<DbFindManyParams<"recipe_ratings">, "with" | "columns">) =>
       db.query.recipe_ratings.findMany({
         with: {
@@ -45,6 +73,7 @@ const INTERACTIONS_DEFAULTS = {
               username: true,
               profile_picture_url: true,
               id: true,
+              bio: true,
             },
           },
         },
@@ -63,25 +92,52 @@ const INTERACTIONS_DEFAULTS = {
 
 export const interactions = {
   ratings: {
-    get: {
-      by: INTERACTIONS_DEFAULTS.ratings.get,
-      byId: async (ratingId: string) => {
-        const [rating] = await INTERACTIONS_DEFAULTS.ratings.get({
-          where: (recipe_ratings, { eq }) => eq(recipe_ratings.id, ratingId),
+    statistics: {
+      byRecipeId: async (recipeId: string) => {
+        const [rating] = await INTERACTIONS_BASIS.ratings.statistics({
+          where: eq(recipe_ratings.recipe_id, recipeId),
         });
 
         return rating as typeof rating | undefined;
       },
-      byUserIdAndRecipeId: async (recipeId: string, userId: string) => {
-        const [rating] = await INTERACTIONS_DEFAULTS.ratings.get({
-          where: (recipe_ratings, { eq, and }) =>
-            and(
-              eq(recipe_ratings.recipe_id, recipeId),
-              eq(recipe_ratings.user_id, userId)
-            ),
-        });
+    },
+    get: {
+      get: INTERACTIONS_BASIS.ratings.get,
+      aggregate: {
+        byRecipeId: async (
+          recipeId: string,
+          opts: Omit<
+            Parameters<typeof INTERACTIONS_BASIS.ratings.get>[0],
+            "where"
+          > = {}
+        ) => {
+          const ratings = await INTERACTIONS_BASIS.ratings.get({
+            where: eq(recipe_ratings.recipe_id, recipeId),
+            ...opts,
+          });
 
-        return rating as typeof rating | undefined;
+          return ratings;
+        },
+      },
+      single: {
+        byRatingId: async (ratingId: string) => {
+          const [rating] = await INTERACTIONS_BASIS.ratings.get({
+            where: (recipe_ratings, { eq }) => eq(recipe_ratings.id, ratingId),
+          });
+
+          return rating as typeof rating | undefined;
+        },
+        byUserIdAndRecipeId: async (recipeId: string, userId: string) => {
+          const [rating] = await INTERACTIONS_BASIS.ratings.get({
+            where: (recipe_ratings, { eq, and }) =>
+              and(
+                eq(recipe_ratings.recipe_id, recipeId),
+                eq(recipe_ratings.user_id, userId)
+              ),
+          });
+
+          return rating as typeof rating | undefined;
+        },
       },
     },
     add: async (

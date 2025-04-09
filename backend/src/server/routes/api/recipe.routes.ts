@@ -7,17 +7,35 @@ import recipeControllers from "@/server/controllers/recipe.controllers";
 
 const router: Router = Router();
 
+/**
+ * INTERACTIONS
+ */
 router.use(
-  "/interactions",
+  "/interactions/:recipeId",
   ensureAuthenticated,
   createRouter({
-    "/:recipeId/rating": {
+    /**
+     * RATINGS
+     */
+    "/ratings": {
       handlers: {
-        POST: [
-          validateRequestBody(createNewRatingSchema),
-          recipeControllers.interactions.ratings.add,
-        ],
+        GET: [recipeControllers.interactions.ratings.pagination],
       },
+      router: createRouter({
+        "/rating": {
+          handlers: {
+            POST: [
+              validateRequestBody(createNewRatingSchema),
+              recipeControllers.interactions.ratings.add,
+            ],
+          },
+        },
+        "/statistics": {
+          handlers: {
+            GET: [recipeControllers.interactions.ratings.statistics],
+          },
+        },
+      }),
     },
   })
 );

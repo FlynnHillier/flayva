@@ -4,13 +4,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
-import { PostRating } from "../view/post-interactions";
+import { PostRating } from "./ratings-common";
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
@@ -30,7 +29,7 @@ const RecipeRatingPhrase = ({ rating }: { rating: number }) => {
     case 5:
       return "Outstanding, a new favorite!";
     default:
-      return "Select a rating";
+      return "";
   }
 };
 
@@ -58,7 +57,7 @@ export const AddRecipeRatingForm = ({
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit((data) => addRecipeRating(data))}
-        className="flex flex-col items-center flex-nowrap w-xl"
+        className="flex flex-col items-center flex-nowrap max-w-xl w-full"
       >
         <h2 className="text-2xl font-semibold">Cooked this?</h2>
         <h1 className="text-3xl font-semibold">Leave a review!</h1>
@@ -77,6 +76,7 @@ export const AddRecipeRatingForm = ({
                   onInteract={(rating) => {
                     field.onChange(rating);
                   }}
+                  className="w-9 h-9"
                 />
               </div>
             )}
@@ -85,8 +85,8 @@ export const AddRecipeRatingForm = ({
             control={form.control}
             name="review"
             render={({ field, fieldState: { error } }) => (
-              <FormItem>
-                <FormLabel>Tell us more?</FormLabel>
+              <FormItem className="w-full">
+                {/* <FormLabel>Tell us more?</FormLabel> */}
                 {error && (
                   <FormMessage className="text-red-500">
                     {error.message}
@@ -94,8 +94,8 @@ export const AddRecipeRatingForm = ({
                 )}
                 <FormControl>
                   <Textarea
-                    placeholder="A delicious and easy to make spaghetti bolognaise recipe"
-                    className="resize-none field-sizing-content w-96"
+                    placeholder="Tell us more about your experience!"
+                    className="resize-none field-sizing-content w-full"
                     {...field}
                   />
                 </FormControl>

@@ -47,14 +47,28 @@ const INTERACTIONS_BASIS = {
     statistics: async ({ where }: { where?: SQL }) =>
       db
         .select({
-          averageRating: sql<number>`avg(${recipe_ratings.rating})`,
-          ratingCount: sql<number>`count(${recipe_ratings.rating})`,
+          averageRating: sql<number>`avg(${recipe_ratings.rating})`.mapWith(
+            Number
+          ),
+          ratingCount: sql<number>`count(${recipe_ratings.rating})`.mapWith(
+            Number
+          ),
           distribution: {
-            1: sql<number>`count(${recipe_ratings.rating}) filter (where ${recipe_ratings.rating} = 1)`,
-            2: sql<number>`count(${recipe_ratings.rating}) filter (where ${recipe_ratings.rating} = 2)`,
-            3: sql<number>`count(${recipe_ratings.rating}) filter (where ${recipe_ratings.rating} = 3)`,
-            4: sql<number>`count(${recipe_ratings.rating}) filter (where ${recipe_ratings.rating} = 4)`,
-            5: sql<number>`count(${recipe_ratings.rating}) filter (where ${recipe_ratings.rating} = 5)`,
+            1: sql<number>`count(${recipe_ratings.rating}) filter (where ${recipe_ratings.rating} = 1)`.mapWith(
+              Number
+            ),
+            2: sql<number>`count(${recipe_ratings.rating}) filter (where ${recipe_ratings.rating} = 2)`.mapWith(
+              Number
+            ),
+            3: sql<number>`count(${recipe_ratings.rating}) filter (where ${recipe_ratings.rating} = 3)`.mapWith(
+              Number
+            ),
+            4: sql<number>`count(${recipe_ratings.rating}) filter (where ${recipe_ratings.rating} = 4)`.mapWith(
+              Number
+            ),
+            5: sql<number>`count(${recipe_ratings.rating}) filter (where ${recipe_ratings.rating} = 5)`.mapWith(
+              Number
+            ),
           },
         })
         .from(recipe_ratings)

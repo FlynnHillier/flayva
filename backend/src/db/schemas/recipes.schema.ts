@@ -87,9 +87,11 @@ export const recipe_ratings = pgTable("recipe_ratings", {
   id: varchar("id")
     .primaryKey()
     .$defaultFn(() => nanoid(RECIPE.RECIPE_RATING_ID_LENGTH)),
-  recipe_id: varchar("recipe_id").references(() => recipes.id, {
-    onDelete: "cascade",
-  }),
+  recipe_id: varchar("recipe_id")
+    .notNull()
+    .references(() => recipes.id, {
+      onDelete: "cascade",
+    }),
   user_id: varchar("user_id")
     .notNull()
     .references(() => users.id, {

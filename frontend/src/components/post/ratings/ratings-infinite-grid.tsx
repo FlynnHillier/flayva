@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import { FourSquare } from "react-loading-indicators";
 import { ClassNameValue } from "tailwind-merge";
 import { cn } from "@/lib/utils";
-
 export const RatingsInfiniteGrid = ({
   recipeId,
   className,
@@ -86,7 +85,6 @@ export const RatingsInfiniteGrid = ({
           </Button>
         </div>
       )}
-
       <div ref={ref} className="w-full h-[1px]" />
     </div>
   );

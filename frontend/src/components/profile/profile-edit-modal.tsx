@@ -15,7 +15,14 @@ import { ReactNode, useCallback, useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "../ui/form";
 import { Input } from "../ui/input";
 import { FileUploader, FileInput } from "../ui/file-upload";
 import { Pencil } from "lucide-react";
@@ -104,7 +111,10 @@ export const EditOwnProfileModal = ({ children }: { children: ReactNode }) => {
         })}
       >
         {isShowingConfirmExit && (
-          <ConfirmExitDialog onConfirm={closeDialog} onCancel={hideConfirmExitDialog} />
+          <ConfirmExitDialog
+            onConfirm={closeDialog}
+            onCancel={hideConfirmExitDialog}
+          />
         )}
         <DialogHeader className={cn({ hidden: isShowingConfirmExit })}>
           <DialogTitle className="text-center "> Edit Profile </DialogTitle>
@@ -222,7 +232,10 @@ export const EditProfileForm = ({
     <Form {...form}>
       <form
         onSubmit={handleSubmit}
-        className={cn("flex flex-col space-y-2 items-center w-full min-w-fit", className)}
+        className={cn(
+          "flex flex-col space-y-2 items-center w-full min-w-fit",
+          className
+        )}
       >
         <FormField
           disabled={isDisabled}
@@ -234,10 +247,17 @@ export const EditProfileForm = ({
                 <EditProfilePicture
                   user={user}
                   image={field.value}
-                  onImageUpload={(file) => file && form.setValue("avatar", file)}
+                  onImageUpload={(file) =>
+                    file && form.setValue("avatar", file)
+                  }
                 />
               </FormControl>
-              {error && <FormMessage className="text-red-500"> {error.message} </FormMessage>}
+              {error && (
+                <FormMessage className="text-red-500">
+                  {" "}
+                  {error.message}{" "}
+                </FormMessage>
+              )}
             </FormItem>
           )}
         />
@@ -248,7 +268,12 @@ export const EditProfileForm = ({
           render={({ field, fieldState: { error } }) => (
             <FormItem className="w-full">
               <FormLabel>Username</FormLabel>
-              {error && <FormMessage className="text-red-500"> {error.message} </FormMessage>}
+              {error && (
+                <FormMessage className="text-red-500">
+                  {" "}
+                  {error.message}{" "}
+                </FormMessage>
+              )}
               <FormControl>
                 <Input placeholder="Gordon Ramsay" {...field} />
               </FormControl>
@@ -262,7 +287,12 @@ export const EditProfileForm = ({
           render={({ field, fieldState: { error } }) => (
             <FormItem className="w-full">
               <FormLabel>Bio</FormLabel>
-              {error && <FormMessage className="text-red-500"> {error.message} </FormMessage>}
+              {error && (
+                <FormMessage className="text-red-500">
+                  {" "}
+                  {error.message}{" "}
+                </FormMessage>
+              )}
               <FormControl>
                 <Textarea
                   placeholder="Tell us a bit about yourself!"
@@ -273,7 +303,11 @@ export const EditProfileForm = ({
             </FormItem>
           )}
         />
-        <Button type="submit" className="self-end" disabled={!form.formState.isDirty || isDisabled}>
+        <Button
+          type="submit"
+          className="self-end"
+          disabled={!form.formState.isDirty || isDisabled}
+        >
           Save Changes
         </Button>
       </form>

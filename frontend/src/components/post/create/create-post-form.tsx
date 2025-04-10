@@ -2,7 +2,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Button } from "@/components/ui/button";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   Form,
   FormControl,
@@ -13,7 +13,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { CloudUpload, Paperclip } from "lucide-react";
+import { CloudUpload, Paperclip, Trash2 } from "lucide-react";
 import {
   FileUploader,
   FileUploaderContent,
@@ -21,6 +21,14 @@ import {
   FileInput,
 } from "@/components/ui/file-upload";
 import { Textarea } from "@/components/ui/textarea";
+
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 import { DropzoneOptions } from "react-dropzone";
 import { POST as POST_VALIDATOR } from "@flayva-monorepo/shared/validation";
 import { POST as POST_CONSTANTS } from "@flayva-monorepo/shared/constants";
@@ -37,7 +45,7 @@ import InstructionItem from "./instructions/instruction-item";
 import InstructionInput from "./instructions/instruction-input";
 import IngredientsList from "./ingredients/ingredients-list";
 import { ingredient_unit } from "@flayva-monorepo/shared/validation/recipe.validation";
-
+import { SlideshowItem } from "@/components/Slideshow";
 const { createNewPostSchema } = POST_VALIDATOR;
 
 // TODO: use constants instaed of hard code
@@ -65,38 +73,126 @@ function ImageSection({
     },
   };
 
+  const imagePreviews = useMemo<string[] | undefined>(() => {
+    if (!images) return undefined;
+    return images.map((image) => URL.createObjectURL(image));
+  }, [images]);
+
+  //cleanup effect
+  useEffect(() => {
+    return () => {
+      if (imagePreviews) {
+        imagePreviews.forEach((url) => URL.revokeObjectURL(url));
+      }
+    };
+  }, [imagePreviews]);
+
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    console.log(currentIndex);
+  }, [currentIndex]);
+
   // TODO: change this to show a preview of the uploaded images instead of just the name
   return (
-    <FileUploader
-      value={images}
-      onValueChange={onValueChange}
-      dropzoneOptions={DROPZONE_CONFIG}
-      className="relative bg-background rounded-lg p-2"
-    >
-      <FileInput
-        id="fileInput"
-        className="outline-dashed outline-1 outline-slate-500"
+    <div>
+      <FileUploader
+        value={images}
+        onValueChange={onValueChange}
+        dropzoneOptions={DROPZONE_CONFIG}
+        className="relative bg-background rounded-lg p-2"
       >
-        <div className="flex items-center justify-center flex-col p-8 w-full ">
-          <CloudUpload className="text-gray-500 w-10 h-10" />
-          <p className="mb-1 text-sm text-gray-500 dark:text-gray-400">
-            <span className="font-semibold">Click to upload</span>
-            &nbsp; or drag and drop
-          </p>
-          <p className="text-xs text-gray-500 dark:text-gray-400">
-            SVG, PNG, JPG or GIF
-          </p>
+        <FileInput
+          id="fileInput"
+          className="outline-dashed outline-1 outline-slate-500"
+        >
+          <div className="flex items-center justify-center flex-col p-8 w-full ">
+            <CloudUpload className="text-gray-500 w-10 h-10" />
+            <p className="mb-1 text-sm text-gray-500 dark:text-gray-400">
+              <span className="font-semibold">Click to upload</span>
+              &nbsp; or drag and drop
+            </p>
+            <p className="text-xs text-gray-500 dark:text-gray-400">
+              SVG, PNG, JPG or GIF
+            </p>
+          </div>
+        </FileInput>
+        <div className="hidden md:block">
+          <div className="flex flex-row gap-3 ">
+            {imagePreviews &&
+              imagePreviews.map((i, index) => (
+                <div className="relative w-fit max-w-30 rounded-2xl">
+                  <img key={index} className="rounded-xl" src={i}></img>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      e.preventDefault();
+                      const newFiles = images.filter(
+                        (_, imgIndex) => imgIndex !== index
+                      );
+                      onValueChange(newFiles);
+                      setCurrentIndex(currentIndex - 1);
+                    }}
+                  >
+                    {" "}
+                    <Trash2 className="absolute top-2 right-2 w-4 h-4 hover:cursor-pointer hover:stroke-destructive duration-200 ease-in-out" />
+                  </button>
+                </div>
+              ))}
+          </div>
         </div>
-      </FileInput>
-      <FileUploaderContent>
-        {images.map((image, i) => (
-          <FileUploaderItem key={i} index={i}>
-            <Paperclip className="h-4 w-4 stroke-current" />
-            <span>{image.name}</span>
-          </FileUploaderItem>
-        ))}
-      </FileUploaderContent>
-    </FileUploader>
+        <div className="block md:hidden">
+          <div className="relative w-full aspect-square mx-auto max-w-4xl">
+            {imagePreviews && imagePreviews?.length > 0 ? (
+              <div className="w-full h-full rounded-xl overflow-hidden">
+                <Carousel className="w-full h-full relative">
+                  <CarouselContent>
+                    {imagePreviews.map((i, index) => (
+                      <CarouselItem key={index} className="relative">
+                        <div className="relative w-full h-full">
+                          <SlideshowItem Image={i} alt={i} />
+                        </div>
+                      </CarouselItem>
+                    ))}
+                  </CarouselContent>
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      const newFiles = images?.filter(
+                        (_, imgIndex) => imgIndex !== currentIndex
+                      );
+                      onValueChange(newFiles);
+                    }}
+                  >
+                    <Trash2 className="absolute bg-background/80 rounded-full p-1 right-2 top-2 w-6 h-6 hover:stroke-destructive" />
+                  </button>
+
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      setCurrentIndex(currentIndex - 1);
+                    }}
+                  >
+                    <CarouselPrevious className="absolute left-2 top-1/2 -translate-y-1/2" />
+                  </button>
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      setCurrentIndex(currentIndex + 1);
+                    }}
+                  >
+                    <CarouselNext className="absolute right-2 top-1/2 -translate-y-1/2" />
+                  </button>
+                </Carousel>
+              </div>
+            ) : null}
+          </div>
+        </div>
+      </FileUploader>
+    </div>
   );
 }
 

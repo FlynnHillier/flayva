@@ -13,6 +13,7 @@ import LogoutPage from "./pages/Logout.page";
 import CreatePostPage from "./pages/Create-post.page";
 import RecipePage from "./pages/Recipe.page";
 import EditProfile from "./pages/profile-pages/Edit-profile.page";
+import ViewProfilePage from "./pages/profile-pages/Profile.page";
 import ProfilePage from "./pages/profile-pages/Profile.page";
 import ProfileLayout from "@/pages/profile-pages/profile.layout";
 import CommentsPage from "./pages/Comments.page";

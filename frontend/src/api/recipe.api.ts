@@ -76,7 +76,6 @@ export const ratings = {
     return data as RecipeRating;
   },
   fetchPersonal: async (recipeId: string) => {
-    await new Promise((resolve) => setTimeout(resolve, 3000)); // Simulate a delay
     const { data } = await request({
       url: `/api/r/interactions/${recipeId}/ratings/rating/me`,
       method: "GET",

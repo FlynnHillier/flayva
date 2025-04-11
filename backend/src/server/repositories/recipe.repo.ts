@@ -106,6 +106,39 @@ const INTERACTIONS_BASIS = {
 
 export const interactions = {
   ratings: {
+    /**
+     * Delete a rating
+     */
+    delete: {
+      /**
+       * Delete a rating by recipeId and userId
+       */
+      byRecipeIdAndUserId: async (recipeId: string, userId: string) => {
+        const [rating] = await db
+          .delete(recipe_ratings)
+          .where(
+            and(
+              eq(recipe_ratings.recipe_id, recipeId),
+              eq(recipe_ratings.user_id, userId)
+            )
+          )
+          .returning();
+
+        return rating as typeof rating | undefined;
+      },
+      /**
+       * Delete a rating by ratingId
+       */
+      byRatingId: async (ratingId: string) => {
+        const [rating] = await db
+          .delete(recipe_ratings)
+          .where(eq(recipe_ratings.id, ratingId))
+          .returning();
+
+        return rating as typeof rating | undefined;
+      },
+    },
+
     statistics: {
       byRecipeId: async (recipeId: string) => {
         const [rating] = await INTERACTIONS_BASIS.ratings.statistics({
@@ -115,6 +148,9 @@ export const interactions = {
         return rating as typeof rating | undefined;
       },
     },
+    /**
+     * Get ratings for a recipe
+     */
     get: {
       get: INTERACTIONS_BASIS.ratings.get,
       aggregate: {
@@ -134,6 +170,23 @@ export const interactions = {
         },
       },
       single: {
+        /**
+         * Fetch a single rating by recipeId and userId
+         */
+        byRecipeIdAndUserId: async (recipeId: string, userId: string) => {
+          const [rating] = await INTERACTIONS_BASIS.ratings.get({
+            where: (recipe_ratings, { eq, and }) =>
+              and(
+                eq(recipe_ratings.recipe_id, recipeId),
+                eq(recipe_ratings.user_id, userId)
+              ),
+          });
+
+          return rating as typeof rating | undefined;
+        },
+        /**
+         * Fetch a single rating by ratingId
+         */
         byRatingId: async (ratingId: string) => {
           const [rating] = await INTERACTIONS_BASIS.ratings.get({
             where: (recipe_ratings, { eq }) => eq(recipe_ratings.id, ratingId),

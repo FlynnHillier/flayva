@@ -38,11 +38,15 @@ export const AddRecipeRatingForm = ({
 }: {
   recipeId: string | undefined;
 }) => {
+  // TODO: configure so that hooks are always called in the same order
   if (!recipeId) return null; //TODO: loading view
   const { mutate: addRecipeRating, isPending } = useAddRecipeRating(recipeId)({
     onError: (error) => {
       console.error("Error adding recipe rating:", error);
       toast.error("Failed to add recipe rating");
+    },
+    onSuccess: () => {
+      toast.success("Rating added successfully!");
     },
   });
   const form = useForm<z.infer<typeof RECIPE.createNewRatingSchema>>({
@@ -57,7 +61,7 @@ export const AddRecipeRatingForm = ({
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit((data) => addRecipeRating(data))}
-        className="flex flex-col items-center flex-nowrap max-w-xl w-full"
+        className="flex flex-col items-center flex-nowrap max-w-xl w-full select-none"
       >
         <h2 className="text-2xl font-semibold">Cooked this?</h2>
         <h1 className="text-3xl font-semibold">Leave a review!</h1>
@@ -85,7 +89,7 @@ export const AddRecipeRatingForm = ({
             control={form.control}
             name="review"
             render={({ field, fieldState: { error } }) => (
-              <FormItem className="w-full">
+              <FormItem className="w-full select-none">
                 {/* <FormLabel>Tell us more?</FormLabel> */}
                 {error && (
                   <FormMessage className="text-red-500">

@@ -34,19 +34,131 @@ export const searchSimilarValidRecipeTag: RequestHandler = async (req, res) => {
  */
 export const interactions = {
   ratings: {
+    /**
+     * Fetch ratings for a recipe
+     */
+    delete: {
+      me: async (req, res) => {
+        const { recipeId } = req.params;
+
+        const deleted =
+          await recipeServices.interactions.ratings.delete.byRecipeIdAndUserId(
+            recipeId,
+            req.user!.id
+          );
+
+        if (!deleted) {
+          res.status(404).send({ message: "Review does not exist" });
+          return;
+        }
+
+        res.status(200).send({ message: "Review deleted" });
+      },
+      byRatingId: async (req, res) => {
+        // TODO: make this ensure also respects the recipeId passed in the params
+
+        const { ratingId } = req.params;
+
+        const existing =
+          await recipeServices.interactions.ratings.get.single.byRatingId(
+            ratingId
+          );
+
+        if (!existing) {
+          res.status(404).send({ message: "Review does not exist" });
+          return;
+        }
+
+        if (existing.user.id !== req.user!.id) {
+          res
+            .status(403)
+            .send({ message: "You are not allowed to delete this review" });
+          return;
+        }
+
+        const deleted =
+          await recipeServices.interactions.ratings.delete.byRatingId(ratingId);
+
+        if (!deleted) {
+          res.status(404).send({ message: "Review does not exist" });
+          return;
+        }
+
+        res.status(200).send({ deleted: deleted });
+      },
+    },
+
+    fetch: {
+      /**
+       * Fetch a user's own rating for a recipe
+       */
+      me: async (req, res) => {
+        const { recipeId } = req.params;
+
+        const rating =
+          await recipeServices.interactions.ratings.get.single.byRecipeIdAndUserId(
+            recipeId,
+            req.user!.id
+          );
+
+        res.status(200).send({
+          rating: rating ?? null,
+        });
+      },
+      /**
+       * Fetch a rating by recipeId and userId
+       */
+      byRecipeIdAndUserId: async (req, res) => {
+        const { recipeId, userId } = req.params;
+
+        const rating =
+          await recipeServices.interactions.ratings.get.single.byRecipeIdAndUserId(
+            recipeId,
+            userId
+          );
+
+        if (!rating) {
+          res.status(404).send({ message: "Rating not found" });
+          return;
+        }
+
+        res.status(200).send(rating);
+      },
+      /**
+       * Fetch a rating by ratingId
+       */
+      byRatingId: async (req, res) => {
+        const { ratingId } = req.params;
+
+        const rating =
+          await recipeServices.interactions.ratings.get.single.byRatingId(
+            ratingId
+          );
+
+        if (!rating) {
+          res.status(404).send({ message: "Rating not found" });
+          return;
+        }
+
+        res.status(200).send(rating);
+      },
+    },
+    /**
+     * Add a new rating to a recipe
+     */
     add: async (req, res) => {
       const { recipeId } = req.params;
       const { rating, review } = req.body as z.infer<
         typeof createNewRatingSchema
       >;
 
-      const { exists, rating: existingRating } =
-        await recipeServices.interactions.ratings.exists(
+      const existingRating =
+        await recipeServices.interactions.ratings.get.single.byRecipeIdAndUserId(
           recipeId,
           req.user!.id
         );
 
-      if (exists) {
+      if (existingRating) {
         res.status(409).send({
           message: "rating already exists",
           ratingId: existingRating?.id,
@@ -84,6 +196,9 @@ export const interactions = {
 
       res.status(200).send(formattedAddedRating);
     },
+    /**
+     * Fetch statistics for a recipe's ratings
+     */
     statistics: async (req, res) => {
       const { recipeId } = req.params;
 
@@ -106,6 +221,9 @@ export const interactions = {
         },
       });
     },
+    /**
+     * Fetch ratings for a recipe with pagination
+     */
     pagination: async (req, res) => {
       const { recipeId } = req.params;
       const { cursor } = req.query as { cursor: string | undefined };

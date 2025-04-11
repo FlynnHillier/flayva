@@ -29,6 +29,30 @@ router.use(
               recipeControllers.interactions.ratings.add,
             ],
           },
+          router: createRouter({
+            "/me": {
+              handlers: {
+                GET: [recipeControllers.interactions.ratings.fetch.me],
+                DELETE: [recipeControllers.interactions.ratings.delete.me],
+              },
+            },
+            "/r/:ratingId": {
+              handlers: {
+                GET: [recipeControllers.interactions.ratings.fetch.byRatingId],
+                DELETE: [
+                  recipeControllers.interactions.ratings.delete.byRatingId,
+                ],
+              },
+            },
+            "/u/:userId": {
+              handlers: {
+                GET: [
+                  recipeControllers.interactions.ratings.fetch
+                    .byRecipeIdAndUserId,
+                ],
+              },
+            },
+          }),
         },
         "/statistics": {
           handlers: {

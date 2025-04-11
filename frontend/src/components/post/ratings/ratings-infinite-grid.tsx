@@ -1,4 +1,7 @@
-import { useRecipeRatingsPagination } from "@/hooks/recipe.hooks";
+import {
+  useFetchPersonalRecipeRating,
+  useRecipeRatingsPagination,
+} from "@/hooks/recipe.hooks";
 import { useEffect, useMemo } from "react";
 import { useInView } from "react-intersection-observer";
 import { RecipeRatingView } from "./rating";
@@ -7,6 +10,8 @@ import { Button } from "@/components/ui/button";
 import { FourSquare } from "react-loading-indicators";
 import { ClassNameValue } from "tailwind-merge";
 import { cn } from "@/lib/utils";
+import { RecipeRating } from "@flayva-monorepo/shared/types";
+
 export const RatingsInfiniteGrid = ({
   recipeId,
   className,
@@ -24,8 +29,18 @@ export const RatingsInfiniteGrid = ({
     isFetched,
   } = useRecipeRatingsPagination(recipeId);
 
-  const ratings = useMemo(
-    () => (data ? data.pages.flatMap((page) => page.ratings) : []),
+  const { data: ownRating } = useFetchPersonalRecipeRating(recipeId);
+
+  const ratings = useMemo<RecipeRating[]>(
+    () => [
+      // Always display the own rating first, if it exists
+      ...(ownRating?.rating ? [ownRating.rating] : []),
+      ...(data
+        ? data.pages.flatMap((page) =>
+            page.ratings.filter((rating) => rating.id !== ownRating?.rating?.id)
+          )
+        : []),
+    ],
     [data?.pages]
   );
 
@@ -53,7 +68,7 @@ export const RatingsInfiniteGrid = ({
         <RecipeRatingView
           key={rating.id}
           rating={rating}
-          className="w-full h-full "
+          className="w-full h-full"
         />
       ))}
       {

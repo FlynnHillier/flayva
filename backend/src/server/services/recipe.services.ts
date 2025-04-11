@@ -30,6 +30,25 @@ export const interactions = {
       byRecipeId: async (recipeId: string) =>
         recipeRepo.interactions.ratings.statistics.byRecipeId(recipeId),
     },
+    /**
+     * Delete ratings
+     */
+    delete: {
+      /**
+       * Delete a rating by recipeId and userId
+       */
+      byRecipeIdAndUserId: async (recipeId: string, userId: string) =>
+        recipeRepo.interactions.ratings.delete.byRecipeIdAndUserId(
+          recipeId,
+          userId
+        ),
+      /**
+       * Delete a rating by ratingId
+       */
+      byRatingId: async (ratingId: string) =>
+        recipeRepo.interactions.ratings.delete.byRatingId(ratingId),
+    },
+
     get: {
       /**
        * Single ratings
@@ -37,6 +56,11 @@ export const interactions = {
       single: {
         byRatingId: (ratingId: string) =>
           recipeRepo.interactions.ratings.get.single.byRatingId(ratingId),
+        byRecipeIdAndUserId: (recipeId: string, userId: string) =>
+          recipeRepo.interactions.ratings.get.single.byRecipeIdAndUserId(
+            recipeId,
+            userId
+          ),
       },
       /**
        * Aggregate ratings
@@ -62,21 +86,6 @@ export const interactions = {
           };
         },
       },
-    },
-    /**
-     * Check if a rating exists for a given user on a recipe
-     */
-    exists: async (recipeId: string, userId: string) => {
-      const existing =
-        await recipeRepo.interactions.ratings.get.single.byUserIdAndRecipeId(
-          recipeId,
-          userId
-        );
-
-      return {
-        exists: !!existing,
-        rating: existing,
-      };
     },
     /**
      * Add a new rating to a recipe

@@ -24,6 +24,14 @@ export const ratings = {
 
     return data as RecipeRating;
   },
+  delete: async (recipeId: string, ratingId: string) => {
+    const { data } = await request({
+      url: `/api/r/interactions/${recipeId}/ratings/rating/r/${ratingId}`,
+      method: "DELETE",
+    });
+
+    return data as { deleted: RecipeRating };
+  },
   statistics: async (recipeId: string) => {
     const { data } = await request({
       url: `/api/r/interactions/${recipeId}/ratings/statistics`,
@@ -57,6 +65,25 @@ export const ratings = {
     return data as {
       ratings: RecipeRating[];
       nextCursor: number | null;
+    };
+  },
+  deletePersonal: async (recipeId: string) => {
+    const { data } = await request({
+      url: `/api/r/interactions/${recipeId}/ratings/rating/me`,
+      method: "DELETE",
+    });
+
+    return data as RecipeRating;
+  },
+  fetchPersonal: async (recipeId: string) => {
+    await new Promise((resolve) => setTimeout(resolve, 3000)); // Simulate a delay
+    const { data } = await request({
+      url: `/api/r/interactions/${recipeId}/ratings/rating/me`,
+      method: "GET",
+    });
+
+    return data as {
+      rating: RecipeRating | null;
     };
   },
 } satisfies ApiObject;

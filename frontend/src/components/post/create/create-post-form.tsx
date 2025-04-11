@@ -1,4 +1,4 @@
-import { useForm } from "react-hook-form";
+import { set, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Button } from "@/components/ui/button";
@@ -102,94 +102,124 @@ function ImageSection({
         dropzoneOptions={DROPZONE_CONFIG}
         className="relative bg-background rounded-lg p-2"
       >
-        <FileInput
-          id="fileInput"
-          className="outline-dashed outline-1 outline-slate-500"
-        >
-          <div className="flex items-center justify-center flex-col p-8 w-full ">
-            <CloudUpload className="text-gray-500 w-10 h-10" />
-            <p className="mb-1 text-sm text-gray-500 dark:text-gray-400">
-              <span className="font-semibold">Click to upload</span>
-              &nbsp; or drag and drop
-            </p>
-            <p className="text-xs text-gray-500 dark:text-gray-400">
-              SVG, PNG, JPG or GIF
-            </p>
-          </div>
-        </FileInput>
         <div className="hidden md:block">
-          <div className="flex flex-row gap-3 ">
-            {imagePreviews &&
-              imagePreviews.map((i, index) => (
-                <div className="relative w-fit max-w-30 rounded-2xl">
-                  <img key={index} className="rounded-xl" src={i}></img>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      e.preventDefault();
-                      const newFiles = images.filter(
-                        (_, imgIndex) => imgIndex !== index
-                      );
-                      onValueChange(newFiles);
-                      setCurrentIndex(currentIndex - 1);
-                    }}
-                  >
-                    {" "}
-                    <Trash2 className="absolute top-2 right-2 w-4 h-4 hover:cursor-pointer hover:stroke-destructive duration-200 ease-in-out" />
-                  </button>
-                </div>
-              ))}
+          <div className="flex flex-col gap-3">
+            <FileInput
+              id="fileInput"
+              className="outline-dashed outline-1 outline-slate-500"
+            >
+              <div className="flex items-center justify-center flex-col p-8 w-full ">
+                <CloudUpload className="text-gray-500 w-10 h-10" />
+                <p className="mb-1 text-sm text-gray-500 dark:text-gray-400">
+                  <span className="font-semibold">Click to upload</span>
+                  &nbsp; or drag and drop
+                </p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">
+                  SVG, PNG, JPG or GIF
+                </p>
+              </div>
+            </FileInput>
+            <div className="flex flex-row gap-3 ">
+              {imagePreviews &&
+                imagePreviews.map((i, index) => (
+                  <div className="relative w-fit max-w-30 rounded-2xl">
+                    <img key={index} className="rounded-xl" src={i}></img>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        const newFiles = images.filter(
+                          (_, imgIndex) => imgIndex !== index
+                        );
+                        onValueChange(newFiles);
+                        setCurrentIndex(currentIndex - 1);
+                      }}
+                    >
+                      {" "}
+                      <Trash2 className="absolute top-2 right-2 w-4 h-4 hover:cursor-pointer hover:stroke-destructive duration-200 ease-in-out" />
+                    </button>
+                  </div>
+                ))}
+            </div>
           </div>
         </div>
         <div className="block md:hidden">
-          <div className="relative w-full aspect-square mx-auto max-w-4xl">
-            {imagePreviews && imagePreviews?.length > 0 ? (
-              <div className="w-full h-full rounded-xl overflow-hidden">
-                <Carousel className="w-full h-full relative">
-                  <CarouselContent>
-                    {imagePreviews.map((i, index) => (
-                      <CarouselItem key={index} className="relative">
-                        <div className="relative w-full h-full">
-                          <SlideshowItem Image={i} alt={i} />
-                        </div>
-                      </CarouselItem>
-                    ))}
-                  </CarouselContent>
-                  <button
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      const newFiles = images?.filter(
-                        (_, imgIndex) => imgIndex !== currentIndex
-                      );
-                      onValueChange(newFiles);
-                    }}
-                  >
-                    <Trash2 className="absolute bg-background/80 rounded-full p-1 right-2 top-2 w-6 h-6 hover:stroke-destructive" />
-                  </button>
-
-                  <button
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      setCurrentIndex(currentIndex - 1);
-                    }}
-                  >
-                    <CarouselPrevious className="absolute left-2 top-1/2 -translate-y-1/2" />
-                  </button>
-                  <button
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      setCurrentIndex(currentIndex + 1);
-                    }}
-                  >
-                    <CarouselNext className="absolute right-2 top-1/2 -translate-y-1/2" />
-                  </button>
-                </Carousel>
+          {imagePreviews && imagePreviews.length < 1 ? (
+            <FileInput
+              id="fileInput"
+              className="outline-dashed outline-1 outline-slate-500"
+            >
+              <div className="relative w-full aspect-square mx-auto max-w-4xl">
+                <div className="w-full h-full rounded-xl overflow-hidden bg-background/80 flex items-center justify-center">
+                  {" "}
+                  <div className="flex flex-col gap-3 items-center">
+                    <CloudUpload className="text-gray-500 w-10 h-10" />
+                    <p className="mb-1 text-sm text-gray-500 dark:text-gray-400">
+                      <span className="font-semibold">Click to upload</span>
+                    </p>
+                  </div>
+                </div>
               </div>
-            ) : null}
-          </div>
+            </FileInput>
+          ) : (
+            <div className="relative w-full aspect-square mx-auto max-w-4xl">
+              {imagePreviews ? (
+                <div className="w-full h-full rounded-xl overflow-hidden">
+                  <Carousel className="w-full h-full relative">
+                    <CarouselContent>
+                      {imagePreviews.map((i, index) => (
+                        <CarouselItem key={index} className="relative">
+                          <div className="relative w-full h-full">
+                            <SlideshowItem Image={i} alt={i} />
+                          </div>
+                        </CarouselItem>
+                      ))}
+                    </CarouselContent>
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        console.log(imagePreviews, images);
+
+                        const newFiles = images?.filter(
+                          (_, imgIndex) => imgIndex !== currentIndex
+                        );
+                        onValueChange(newFiles);
+                        if (newFiles) {
+                          if (currentIndex >= newFiles.length) {
+                            const newIndex = Math.max(newFiles.length - 1, 0);
+                            setCurrentIndex(newIndex);
+                          }
+                        }
+                        console.log(imagePreviews, images);
+                      }}
+                    >
+                      <Trash2 className="absolute bg-background/80 rounded-full p-1 right-2 top-2 w-6 h-6 hover:stroke-destructive cursor-pointer" />
+                    </button>
+
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        setCurrentIndex(currentIndex - 1);
+                      }}
+                    >
+                      <CarouselPrevious className="absolute left-2 top-1/2 -translate-y-1/2" />
+                    </button>
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        setCurrentIndex(currentIndex + 1);
+                      }}
+                    >
+                      <CarouselNext className="absolute right-2 top-1/2 -translate-y-1/2" />
+                    </button>
+                  </Carousel>
+                </div>
+              ) : null}
+            </div>
+          )}
         </div>
       </FileUploader>
     </div>

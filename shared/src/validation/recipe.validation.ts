@@ -60,7 +60,7 @@ const ingredient_amount = z.object({
   fractional: ingredient_fractional_amount.optional(),
 });
 
-const ingredient_unit = z.enum(INGREDIENT_UNITS);
+export const ingredient_unit = z.enum(INGREDIENT_UNITS);
 
 export const ingredient = z.object({
   id: z.number().min(RECIPE_INGREDIENT_MIN_ID).max(RECIPE_INGREDIENT_MAX_ID),
@@ -88,7 +88,10 @@ export const tagReferences = z
   .min(RECIPE_TAG_COUNT_MIN)
   .max(RECIPE_TAG_COUNT_MAX);
 
-export const tags = z.array(tag).min(RECIPE_TAG_COUNT_MIN).max(RECIPE_TAG_COUNT_MAX);
+export const tags = z
+  .array(tag)
+  .min(RECIPE_TAG_COUNT_MIN)
+  .max(RECIPE_TAG_COUNT_MAX);
 
 // ## META INFO ##
 export const metaInfo = z.object({
@@ -99,7 +102,10 @@ export const metaInfo = z.object({
 
 // ## RECIPE ##
 
-export const title = z.string().min(RECIPE_TITLE_LENGTH_MIN).max(RECIPE_TITLE_LENGTH_MAX);
+export const title = z
+  .string()
+  .min(RECIPE_TITLE_LENGTH_MIN)
+  .max(RECIPE_TITLE_LENGTH_MAX);
 export const description = z
   .string()
   .min(RECIPE_DESCRIPTION_LENGTH_MIN)

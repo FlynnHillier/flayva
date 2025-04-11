@@ -48,7 +48,7 @@ function SidebarItem({
   return (
     <Link to={url} className="flex items-center hover:scale-105 transition-transform duration-200">
       <span className="flex shrink-0 items-center">
-        <Icon className="h-7 w-7" />
+        <Icon className={`h-7 w-7 ${isActive ? 'stroke-3' : 'stroke-2'}`} />
       </span>
       <span className={`text-3xl pl-5 lg:flex hidden ${isActive ? "font-bold" : ""}`}>{text}</span>
     </Link>

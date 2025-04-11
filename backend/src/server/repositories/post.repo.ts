@@ -227,10 +227,6 @@ export const getPosts = (
           },
         },
         recipe: {
-          // extras: {
-          //   ratingsCount: db.$count(recipe_ratings).as("ratingsCount"),
-          //   //TODO: could we add a correct query for the average rating here?
-          // },
           with: {
             ratings: {
               with: {},
@@ -286,6 +282,10 @@ export const getPosts = (
         },
       },
       ...options,
+      extras: {
+        ...options.extras,
+        likeCount: db.$count(post_likes).mapWith(Number).as("likeCount"), //TODO: mapwith is not working
+      },
     })
     .execute();
 

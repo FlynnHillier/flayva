@@ -71,6 +71,18 @@ export const useLikePost = (postId: string) =>
           setQueryData(queries.post.getPostLikeStatus(postId), (__) => ({
             liked: true,
           }));
+
+          setQueryData(
+            queries.post.getPostById(postId),
+            (post) =>
+              post && {
+                ...post,
+                post: {
+                  ...post.post,
+                  likeCount: Number(post.post.likeCount) + 1,
+                },
+              }
+          );
         }
       },
     }
@@ -86,6 +98,18 @@ export const useUnlikePost = (postId: string) =>
           setQueryData(queries.post.getPostLikeStatus(postId), (_) => ({
             liked: false,
           }));
+
+          setQueryData(
+            queries.post.getPostById(postId),
+            (post) =>
+              post && {
+                ...post,
+                post: {
+                  ...post.post,
+                  likeCount: Number(post.post.likeCount) - 1,
+                },
+              }
+          );
         }
       },
     }

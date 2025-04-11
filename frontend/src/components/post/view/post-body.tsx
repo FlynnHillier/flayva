@@ -4,7 +4,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Post } from "@flayva-monorepo/shared/types";
 import { Badge } from "@/components/ui/badge";
 import { capitalizeFirstLetter, cn } from "@/lib/utils";
-import { MessageSquare } from "lucide-react";
 import { ClassNameValue } from "tailwind-merge";
 import { PostLikeButton } from "./post-interactions";
 
@@ -55,11 +54,11 @@ function Interactions({ className }: { className?: ClassNameValue }) {
   //TODO: add interactions
 
   return (
-    <section className={cn("flex flex-row gap-4", className)}>
-      <PostLikeButton postId={post?.id} />
-      <button>
-        <MessageSquare className="w-6 h-6" />
-      </button>
+    <section className={cn("flex flex-row gap-4 select-none", className)}>
+      <div className="flex flex-row gap-1 items-center">
+        <PostLikeButton postId={post?.id} />
+        <span className="text-base font-semibold">{post?.likeCount}</span>
+      </div>
     </section>
   );
 }

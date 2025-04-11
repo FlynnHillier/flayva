@@ -26,12 +26,11 @@ function SelectedTag({
 
   return (
     <Badge
-      // tabIndex={activeIndex !== -1 ? 0 : activeIndex}
       key={tag.tagId}
       aria-disabled={disabled}
       data-active={active}
       className={cn(
-        "relative px-1 rounded flex items-center gap-1 data-[active='true']:ring-2 data-[active='true']:ring-muted-foreground truncate aria-disabled:opacity-50 aria-disabled:cursor-not-allowed"
+        "relative px-2 py-1 rounded flex items-center gap-2 data-[active='true']:ring-2 data-[active='true']:ring-muted-foreground truncate aria-disabled:opacity-50 aria-disabled:cursor-not-allowed"
       )}
       variant={"secondary"}
     >
@@ -65,7 +64,8 @@ function SuggestionTag({
     <button
       key={suggestion.tagId}
       onClick={onClick}
-      className={cn("block w-full p-2 text-left", {
+      className={cn("block w-full p-3 text-left transition-all", {
+        "hover:shadow-lg hover:bg-gray-100": !isActive,
         "font-semibold bg-gray-200": isActive,
       })}
     >
@@ -74,12 +74,6 @@ function SuggestionTag({
   );
 }
 
-/**
- * @name TagsInput
- * @description A component that allows users to input multiple tags
- *
- * T is the type of the suggestion object
- */
 interface TagsInputProps extends React.HTMLAttributes<HTMLDivElement> {
   tags: RecipeTag[];
   onTagsChange: (value: RecipeTag[]) => void;
@@ -157,8 +151,11 @@ export function TagsInput({
     [tags]
   );
 
-  // ## Manage Suggestions ##
+  const clearTags = () => {
+    onTagsChange([]);
+  };
 
+  // ## Manage Suggestions ##
   const clearSuggestions = useCallback(() => {
     setSuggestions([]);
   }, [setSuggestions]);
@@ -185,10 +182,7 @@ export function TagsInput({
   }, [suggestionsQueryData]);
 
   useEffect(() => {
-    // Clear the suggestion index when the suggestions become empty
     if (!suggestions || suggestions.length === 0) return setActiveSuggestionIndex(-1);
-
-    // Reset the suggestion index when the suggestions change
     setActiveSuggestionIndex(0);
   }, [suggestions]);
 
@@ -257,7 +251,6 @@ export function TagsInput({
       // Handle the keydown event
       const target = e.currentTarget;
       switch (e.key) {
-        // ## Selected Tag Interaction ##
         case "ArrowLeft":
           if (dir === "rtl") {
             if (tags.length > 0 && activeSelectedTagIndex !== -1) {
@@ -302,7 +295,6 @@ export function TagsInput({
           setActiveSelectedTagIndex(newIndex);
           break;
 
-        // ## Suggestion Interaction ##
         case "Tab":
           e.preventDefault();
           moveSuggestionNext();
@@ -340,10 +332,9 @@ export function TagsInput({
     <>
       <div
         {...props}
-        // ref={ref}
         dir={dir}
         className={cn(
-          "flex items-center flex-wrap gap-1 p-1 rounded-lg bg-background overflow-hidden   ring-1 ring-muted  ",
+          "flex items-center flex-wrap gap-2 p-2 rounded-lg bg-background overflow-hidden ring-1 ring-muted w-full max-w-[380px]",
           {
             "focus-within:ring-ring": activeSelectedTagIndex === -1,
           },
@@ -372,14 +363,14 @@ export function TagsInput({
           placeholder={placeholder}
           onClick={() => setActiveSelectedTagIndex(-1)}
           className={cn(
-            "outline-0 border-none h-7 min-w-fit flex-1 focus-visible:outline-0 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-0 placeholder:text-muted-foreground px-1",
+            "outline-0 border-none h-8 min-w-fit flex-1 focus-visible:outline-0 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-0 placeholder:text-muted-foreground px-2",
             activeSelectedTagIndex !== -1 && "caret-transparent"
           )}
         />
       </div>
       <div
         className={cn(
-          "absolute mt-0.5 z-10 w-full bg-background shadow-lg rounded-b-sm overflow-hidden",
+          "absolute mt-1 z-10 min-w-fit bg-background shadow-lg rounded-b-sm overflow-hidden w-full max-w-[380px]",
           {
             hidden: !suggestions || suggestions.length === 0,
           }
@@ -394,6 +385,14 @@ export function TagsInput({
           />
         ))}
       </div>
+      <button
+        onClick={clearTags}
+        className="ml-2 mt-2 p-2 text-xs text-red-500 bg-transparent hover:border rounded hover:bg-red-500 hover:text-white"
+        aria-label="Clear all tags"
+        style={{ display: tags.length > 0 ? 'inline-block' : 'none' }}
+      >
+        Clear Tags
+      </button>
     </>
   );
 }

@@ -2,7 +2,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useProfile } from "@/contexts/profile.context";
-import { useMe } from "@/hooks/auth.hooks";
+import { useLogout, useMe } from "@/hooks/auth.hooks";
 import {
   useFetchOwnFollowingUserStatus,
   useFollowUser,
@@ -15,6 +15,7 @@ import { toast } from "sonner";
 import { ClassNameValue } from "tailwind-merge";
 import { EditOwnProfileModal } from "./profile-edit-modal";
 import { ProfilePicture } from "./profile-common";
+import { useGlobalErrorToast } from "@/hooks/error.hooks";
 
 function Bio() {
   const { profile } = useProfile();
@@ -175,6 +176,26 @@ const FollowToggleButton = () => {
   );
 };
 
+const LogoutButton = () => {
+  const { data } = useMe();
+  
+    const { showErrorToast } = useGlobalErrorToast();
+    const { isPending, mutate } = useLogout({
+      onError: () => showErrorToast("failed to log out!"),
+      onSuccess: () => {
+        toast.success("Logged out!");
+      },
+    });
+  
+    return (
+      <>
+        <Button disabled={isPending} onClick={() => mutate(undefined)}>
+          Logout
+        </Button>
+      </>
+    );
+}
+
 const ProfileButtons = () => {
   const { data: me } = useMe();
   const { profile } = useProfile();
@@ -192,6 +213,7 @@ const ProfileButtons = () => {
         me?.user && me?.user?.id !== profile.user.id && <FollowToggleButton />
       }
       <ShareProfileButton />
+      <LogoutButton />
     </div>
   );
 };

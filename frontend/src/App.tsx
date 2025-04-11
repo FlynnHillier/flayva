@@ -8,7 +8,6 @@ import HomePage from "./pages/Home.page";
 import AppSidebar from "./components/layout/Sidebar";
 import FeedPage from "./pages/Feed.page";
 import LoginPage from "./pages/Login.page";
-import LogoutPage from "./pages/Logout.page";
 import CreatePostPage from "./pages/Create-post.page";
 import RecipePage from "./pages/Recipe.page";
 import EditProfile from "./pages/profile-pages/Edit-profile.page";
@@ -66,7 +65,6 @@ function App() {
           <Route index element={<HomePage />} />
           <Route element={<AuthenticatedRouter />}>
             <Route path="/post" element={<CreatePostPage />} />
-            <Route path="/logout" element={<LogoutPage />} />
             <Route path="/feed" element={<FeedPage />} />
             <Route path="/profile" element={<ProfileLayout />}>
               <Route path="/profile/:id" element={<ViewProfilePage />} />

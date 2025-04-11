@@ -2,11 +2,13 @@ import { LoginForm } from "@/components/login-form";
 import Slideshow from "@/components/Slideshow";
 import { useMe } from "@hooks/auth.hooks";
 import { ClassNameValue } from "tailwind-merge";
+import { Skeleton } from "@/components/ui/skeleton";
 
 import disp1 from "@assets/disp1.jpg";
 import disp2 from "@assets/disp2.jpg";
 import disp3 from "@assets/disp3.jpg";
 import disp4 from "@assets/disp4.jpg";
+
 
 //TODO: create a proper set of slideshow items
 const SLIDESHOW_ITEMS = [
@@ -44,7 +46,11 @@ export default function LoginPage() {
   const { isLoading, error } = useMe();
 
   // TODO: improve loading and error states
-  if (isLoading) return "loading...";
+  if (isLoading) return (
+    <div>
+      <Skeleton className="h-16 w-16"/>
+    </div>
+  );
   if (error) return `Error: ${error.message}`;
 
   return (

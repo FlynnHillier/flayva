@@ -15,7 +15,7 @@ const client = axios.create({
  */
 export const request = async (config: AxiosRequestConfig) => {
   const onError = (error: AxiosError) => {
-    return Promise.reject(error.response?.data);
+    return Promise.reject(error);
   };
 
   const onSuccess = (response: AxiosResponse) => {

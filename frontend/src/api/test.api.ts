@@ -1,17 +1,19 @@
-export const echo = async (message: string) => {
-  const response = await fetch(`http://localhost:3000/api/test/echo`, {
-    method: "POST",
-    body: JSON.stringify({ message }),
-    headers: {
-      "content-type": "application/json",
-    },
+import { request } from "@/lib/network";
+import { devFileUploadSchema } from "@flayva-monorepo/shared/validation";
+import { z } from "zod";
+
+export const fileupload = async (data: z.infer<typeof devFileUploadSchema>) => {
+  const formData = new FormData();
+  formData.append("text", data.text);
+  data.files.forEach((file) => {
+    formData.append("files", file);
   });
-  return await response.text();
-};
 
-export const hello = async () => {
-  await new Promise((resolve) => setTimeout(resolve, 2000));
+  const res = await request({
+    url: "/api/t/fileupload",
+    method: "POST",
+    data: formData,
+  });
 
-  const response = await fetch(`${import.meta.env.VITE_SERVER_ORIGIN}/api/test/hello`);
-  return await response.text();
+  return res.data;
 };

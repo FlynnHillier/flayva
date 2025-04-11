@@ -1,4 +1,5 @@
 import { OAUTH_PROVIDERS, USER_ID_LENGTH } from "@/constants/auth.constants";
+import { followers } from "@/db/schema";
 import { relations } from "drizzle-orm";
 import {
   pgTable,
@@ -58,6 +59,8 @@ export const account_connections = pgTable(
 // ## Relationships ##
 export const userRelations = relations(users, ({ many }) => ({
   connections: many(account_connections),
+  followers: many(followers, { relationName: "follower" }),
+  following: many(followers, { relationName: "followed" }),
 }));
 
 export const account_connectionRelations = relations(account_connections, ({ one }) => ({

@@ -1,8 +1,7 @@
-import { User as PassportUser } from "passport";
-import { User as UserType } from "@flayva-monorepo/shared";
+import { User as UserType } from "@flayva-monorepo/shared/types";
 
 declare global {
   namespace Express {
-    interface User extends PassportUser, UserType {}
+    interface User extends UserType {}
   }
 }

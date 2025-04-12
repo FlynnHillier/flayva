@@ -26,21 +26,21 @@ function Description({
 }
 
 function Tags({
-  tagLinks,
+  tags,
   className,
 }: {
-  tagLinks: Post["recipe"]["tagLinks"] | undefined;
+  tags: Post["recipe"]["tags"] | undefined;
   className?: ClassNameValue;
 }) {
   //TODO: add icons for tags based on the group / category
 
   return (
     <section className={cn("flex flex-row gap-1 flex-wrap", className)}>
-      {tagLinks === undefined
+      {tags === undefined
         ? Array.from({ length: 3 }, (_, i) => (
             <Skeleton className="w-14 h-6 rounded-xl" key={i} />
           ))
-        : tagLinks.map(({ tag }) => (
+        : tags.map((tag) => (
             <Badge className="h-6 rounded-xl" variant={"outline"} key={tag.id}>
               {capitalizeFirstLetter(tag.name)}
             </Badge>
@@ -57,7 +57,7 @@ function Interactions({ className }: { className?: ClassNameValue }) {
     <section className={cn("flex flex-row gap-4 select-none", className)}>
       <div className="flex flex-row gap-1 items-center">
         <PostLikeButton postId={post?.id} />
-        <span className="text-base font-semibold">{post?.likeCount}</span>
+        <span className="text-base font-semibold">{post?.likes.count}</span>
       </div>
     </section>
   );
@@ -71,7 +71,7 @@ export function PostBody() {
       <PostImageCarousel />
       <Interactions />
       <Description description={post?.recipe.description} />
-      <Tags tagLinks={post?.recipe.tagLinks} />
+      <Tags tags={post?.recipe.tags} />
     </section>
   );
 }

@@ -2,7 +2,7 @@ import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { createConfigurableMutation } from "./util/configurableMutation";
 import { api } from "@/api/api";
 import { queries } from "@/queries";
-import { queryClient, setInfiniteQueryData, setQueryData } from "@/lib/query";
+import { setInfiniteQueryData, setQueryData } from "@/lib/query";
 import { infiniteQueries } from "@/queries/infinite.queries";
 
 /**
@@ -25,12 +25,46 @@ export const useAddRecipeRating = (recipeId: string) =>
     ["recipe", "interactions", "ratings", recipeId],
     {
       onSuccess: (rating) => {
-        // Invalidate the personal recipe ratings query to fetch the new rating
+        // Update the personal recipe rating in the cache
         setQueryData(
           queries.recipe.recipeRatingsFetchPersonal(rating.recipe_id),
           (_) => ({
             rating,
           })
+        );
+
+        // Update the post recipe ratings statistics in the cache
+        setQueryData(
+          queries.post.getPostById(rating.recipe.post.id),
+          (old) =>
+            old && {
+              post: {
+                ...old.post,
+                recipe: {
+                  ...old.post.recipe,
+
+                  ratings: {
+                    ...old.post.recipe.ratings,
+                    statiststics: {
+                      ...old.post.recipe.ratings.statiststics,
+                      count: old.post.recipe.ratings.statiststics.count + 1,
+                      average:
+                        (old.post.recipe.ratings.statiststics.count *
+                          old.post.recipe.ratings.statiststics.average +
+                          rating.rating) /
+                        (old.post.recipe.ratings.statiststics.count + 1),
+                      distribution: {
+                        ...old.post.recipe.ratings.statiststics.distribution,
+                        [rating.rating]:
+                          old.post.recipe.ratings.statiststics.distribution[
+                            rating.rating as keyof typeof old.post.recipe.ratings.statiststics.distribution
+                          ] + 1,
+                      },
+                    },
+                  },
+                },
+              },
+            }
         );
 
         // Update the recipe ratings statistics in the cache
@@ -134,6 +168,43 @@ export const useDeleteRecipeRating = (recipeId: string, ratingId: string) =>
               },
             }
         );
+
+        // Update the post recipe ratings statistics in the cache
+        setQueryData(
+          queries.post.getPostById(deleted.recipe.post.id),
+          (old) =>
+            old && {
+              post: {
+                ...old.post,
+                recipe: {
+                  ...old.post.recipe,
+
+                  ratings: {
+                    ...old.post.recipe.ratings,
+                    statiststics: {
+                      ...old.post.recipe.ratings.statiststics,
+                      count: old.post.recipe.ratings.statiststics.count - 1,
+                      average:
+                        old.post.recipe.ratings.statiststics.count > 1
+                          ? (old.post.recipe.ratings.statiststics.count *
+                              old.post.recipe.ratings.statiststics.average -
+                              deleted.rating) /
+                            (old.post.recipe.ratings.statiststics.count - 1)
+                          : 0,
+                      distribution: {
+                        ...old.post.recipe.ratings.statiststics.distribution,
+                        [deleted.rating]:
+                          old.post.recipe.ratings.statiststics.distribution[
+                            deleted.rating as keyof typeof old.post.recipe.ratings.statiststics.distribution
+                          ] - 1,
+                      },
+                    },
+                  },
+                },
+              },
+            }
+        );
+
         // Update the recipe ratings pagination in the cache
         setInfiniteQueryData(
           infiniteQueries.recipe.ratings.pagination(recipeId),

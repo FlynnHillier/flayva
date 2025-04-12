@@ -60,13 +60,7 @@ export function PostHeader() {
       </div>
       <div className="mt-4 flex flex-row flex-wrap items-center gap-x-4 max-w-full border-b-1 h-fit ">
         <Title title={post?.recipe.title} />
-        <PostRatingSummary
-          ratings={{
-            average: 2.5,
-            count: 5,
-          }}
-          className="my-2"
-        />
+        <PostRatingSummary className="my-2" />
       </div>
     </header>
   );

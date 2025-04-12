@@ -5,14 +5,12 @@ import {
   useLikePost,
   useUnlikePost,
 } from "@/hooks/post.hooks";
-import { useFetchRecipeRatingStatistics } from "@/hooks/recipe.hooks";
 import { cn } from "@/lib/utils";
 import { Heart } from "lucide-react";
 import React, { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 import { ClassNameValue } from "tailwind-merge";
 import { PostRating } from "../ratings/ratings-common";
-
 /**
  * A base component for post interaction icons.
  * It takes an icon as a prop and applies some default styles to it.
@@ -187,28 +185,11 @@ export const PostLikeButton = ({ postId }: { postId: string | undefined }) => {
 export const PostRatingSummary = ({
   className,
 }: {
-  ratings:
-    | {
-        average: number;
-        count: number;
-      }
-    | undefined;
   className?: ClassNameValue;
 }) => {
   const { post } = usePost();
-  const {
-    data: ratings,
-    error,
-    isLoading,
-  } = useFetchRecipeRatingStatistics(post?.recipe.id);
 
-  useEffect(() => {
-    if (error) toast.error("Failed to fetch rating statistics");
-  }, [error]);
-
-  if (isLoading) return <Skeleton className="h-6 w-48" />;
-
-  if (!ratings) return null;
+  if (!post) return <Skeleton className="h-6 w-48" />;
 
   return (
     <div
@@ -217,9 +198,14 @@ export const PostRatingSummary = ({
         className
       )}
     >
-      <PostRating rating={ratings.ratings.average} interactive={false} />
+      <PostRating
+        rating={post.recipe.ratings.statiststics.average}
+        interactive={false}
+      />
 
-      <span className="font-semibold">{ratings.ratings.count} Ratings</span>
+      <span className="font-semibold">
+        {post.recipe.ratings.statiststics.count} Ratings
+      </span>
     </div>
   );
 };

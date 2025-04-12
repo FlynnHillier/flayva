@@ -79,7 +79,10 @@ export const useLikePost = (postId: string) =>
                 ...post,
                 post: {
                   ...post.post,
-                  likeCount: Number(post.post.likeCount) + 1,
+                  likes: {
+                    ...post.post.likes,
+                    count: Number(post.post.likes.count) + 1,
+                  },
                 },
               }
           );
@@ -106,7 +109,10 @@ export const useUnlikePost = (postId: string) =>
                 ...post,
                 post: {
                   ...post.post,
-                  likeCount: Number(post.post.likeCount) - 1,
+                  likes: {
+                    ...post.post.likes,
+                    count: Number(post.post.likes.count) - 1,
+                  },
                 },
               }
           );

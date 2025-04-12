@@ -14,7 +14,7 @@ import { createNewPostSchema } from "@flayva-monorepo/shared/validation/post.val
 import { z } from "zod";
 import { UploadedFileData } from "uploadthing/types";
 import { DbFindManyParams } from "@/types/db.types";
-import { eq, and } from "drizzle-orm";
+import { eq, and, sql, gt, lte } from "drizzle-orm";
 import { NestedRepositoryObject } from "@/types/api.types";
 
 /**
@@ -204,90 +204,153 @@ export const getPostPreviewsByOwnerId = (
  *
  * @param options query options to dictate which posts to fetch
  */
-export const getPosts = (
+export const getPosts = async (
   options: Omit<DbFindManyParams<"posts">, "with" | "columns">
-) =>
-  db.query.posts
-    .findMany({
-      columns: {
-        id: true,
-        recipeId: true,
-        created_at: true,
+) => {
+  const posts = await db.query.posts.findMany({
+    columns: {
+      id: true,
+      recipeId: true,
+      created_at: true,
+    },
+    with: {
+      owner: {
+        columns: {
+          updatedAt: false,
+          createdAt: false,
+        },
       },
-      with: {
-        owner: {
-          columns: {
-            updatedAt: false,
-            createdAt: false,
+      images: {
+        columns: {
+          key: true,
+        },
+      },
+      recipe: {
+        with: {
+          tagLinks: {
+            with: {
+              tag: {
+                columns: {
+                  category: true,
+                  group: true,
+                  id: true,
+                  name: true,
+                },
+              },
+            },
+          },
+          instructions: {
+            columns: {
+              instruction: true,
+              stepNumber: true,
+            },
+          },
+          ingredients: {
+            columns: {
+              amount_fractional_denominator: true,
+              amount_fractional_numerator: true,
+              amount_whole: true,
+              unit: true,
+            },
+            with: {
+              ingredientItem: {
+                columns: {
+                  group: true,
+                  id: true,
+                  name: true,
+                  subgroup: true,
+                },
+              },
+            },
+          },
+          metaInfo: {
+            columns: {
+              estimatedCookTime: true,
+              estimatedPrepTime: true,
+              servings: true,
+            },
           },
         },
-        images: {
-          columns: {
-            key: true,
+      },
+    },
+    ...options,
+  });
+
+  const postsWithExtras = await Promise.all(
+    posts.map(async (post) => {
+      /**
+       * Get statistics for the recipe ratings
+       */
+      const ratingStatisticsPromise = db
+        .select({
+          average: sql<number>`avg(${recipe_ratings.rating})`.mapWith(Number),
+          count: sql<number>`count(${recipe_ratings.rating})`.mapWith(Number),
+          distribution: {
+            1: sql<number>`count(${recipe_ratings.rating}) filter (where ${recipe_ratings.rating} = 1)`.mapWith(
+              Number
+            ),
+            2: sql<number>`count(${recipe_ratings.rating}) filter (where ${recipe_ratings.rating} = 2)`.mapWith(
+              Number
+            ),
+            3: sql<number>`count(${recipe_ratings.rating}) filter (where ${recipe_ratings.rating} = 3)`.mapWith(
+              Number
+            ),
+            4: sql<number>`count(${recipe_ratings.rating}) filter (where ${recipe_ratings.rating} = 4)`.mapWith(
+              Number
+            ),
+            5: sql<number>`count(${recipe_ratings.rating}) filter (where ${recipe_ratings.rating} = 5)`.mapWith(
+              Number
+            ),
           },
+        })
+        .from(recipe_ratings)
+        .where(
+          and(
+            eq(recipe_ratings.recipe_id, post.recipeId),
+            gt(recipe_ratings.rating, 0),
+            lte(recipe_ratings.rating, 5)
+          )
+        );
+
+      /**
+       * Get statistics for the recipe likes
+       */
+      const likeStatisticPromise = db
+        .select({
+          count: sql<number>`count(${post_likes.postID})`.mapWith(Number),
+        })
+        .from(post_likes)
+        .where(eq(post_likes.postID, post.id));
+
+      /**
+       * Await for both promises to resolve
+       */
+      const [[ratingsStatistics], [likeStatistics]] = await Promise.all([
+        ratingStatisticsPromise,
+        likeStatisticPromise,
+      ]);
+
+      //TODO: refactor rest of codebase to use updated post format
+
+      return {
+        ...post,
+        likes: {
+          count: likeStatistics.count,
         },
         recipe: {
-          with: {
-            ratings: {
-              with: {},
-              columns: {
-                rating: true,
-                review: true,
-              },
-            },
-            tagLinks: {
-              with: {
-                tag: {
-                  columns: {
-                    category: true,
-                    group: true,
-                    id: true,
-                    name: true,
-                  },
-                },
-              },
-            },
-            instructions: {
-              columns: {
-                instruction: true,
-                stepNumber: true,
-              },
-            },
-            ingredients: {
-              columns: {
-                amount_fractional_denominator: true,
-                amount_fractional_numerator: true,
-                amount_whole: true,
-                unit: true,
-              },
-              with: {
-                ingredientItem: {
-                  columns: {
-                    group: true,
-                    id: true,
-                    name: true,
-                    subgroup: true,
-                  },
-                },
-              },
-            },
-            metaInfo: {
-              columns: {
-                estimatedCookTime: true,
-                estimatedPrepTime: true,
-                servings: true,
-              },
-            },
+          ...post.recipe,
+          ratings: {
+            statiststics: ratingsStatistics,
           },
+          tagLinks: undefined,
+          tags: post.recipe.tagLinks.map((tag) => tag.tag),
         },
-      },
-      ...options,
-      extras: {
-        ...options.extras,
-        likeCount: db.$count(post_likes).mapWith(Number).as("likeCount"), //TODO: mapwith is not working
-      },
+      };
     })
-    .execute();
+  );
+
+  return postsWithExtras;
+};
 
 /**
  * Get a post by its ID

@@ -82,6 +82,17 @@ const INTERACTIONS_BASIS = {
     get: (opts: Omit<DbFindManyParams<"recipe_ratings">, "with" | "columns">) =>
       db.query.recipe_ratings.findMany({
         with: {
+          recipe: {
+            columns: {},
+            with: {
+              post: {
+                columns: {
+                  id: true,
+                },
+              },
+            },
+          },
+
           user: {
             columns: {
               username: true,
@@ -114,28 +125,49 @@ export const interactions = {
        * Delete a rating by recipeId and userId
        */
       byRecipeIdAndUserId: async (recipeId: string, userId: string) => {
-        const [rating] = await db
-          .delete(recipe_ratings)
-          .where(
+        // TODO: this is hacky to maintain the same 'rating' type, we first fetch the rating and then delete it
+        // this is to avoid having to change the type of the function
+
+        const [fetchedRating] = await INTERACTIONS_BASIS.ratings.get({
+          where: (recipe_ratings, { eq, and }) =>
             and(
               eq(recipe_ratings.recipe_id, recipeId),
               eq(recipe_ratings.user_id, userId)
-            )
-          )
+            ),
+        });
+
+        if (!fetchedRating) return undefined;
+
+        const [deletedRating] = await db
+          .delete(recipe_ratings)
+          .where(eq(recipe_ratings.id, fetchedRating.id))
           .returning();
 
-        return rating as typeof rating | undefined;
+        if (!deletedRating) return undefined;
+
+        return fetchedRating;
       },
       /**
        * Delete a rating by ratingId
        */
       byRatingId: async (ratingId: string) => {
-        const [rating] = await db
+        // TODO: this is hacky to maintain the same 'rating' type, we first fetch the rating and then delete it
+        // this is to avoid having to change the type of the function
+
+        const [fetchedRating] = await INTERACTIONS_BASIS.ratings.get({
+          where: (recipe_ratings, { eq }) => eq(recipe_ratings.id, ratingId),
+        });
+
+        if (!fetchedRating) return undefined;
+
+        const [deletedRating] = await db
           .delete(recipe_ratings)
-          .where(eq(recipe_ratings.id, ratingId))
+          .where(eq(recipe_ratings.id, fetchedRating.id))
           .returning();
 
-        return rating as typeof rating | undefined;
+        if (!deletedRating) return undefined;
+
+        return fetchedRating;
       },
     },
 

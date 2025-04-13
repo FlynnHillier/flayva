@@ -19,7 +19,6 @@ import ProfileLayout from "@/pages/profile-pages/profile.layout";
 import CommentsPage from "./pages/Comments.page";
 
 import DevPage from "./pages/Dev.page";
-import ProfileLayout from "@/pages/profile-pages/profile.layout";
 import ViewDetailedPostPage from "./pages/post-pages/View-detailed-post.page";
 
 /**

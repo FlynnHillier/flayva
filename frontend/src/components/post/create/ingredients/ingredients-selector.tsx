@@ -14,18 +14,7 @@ import React from "react";
 import IngredientsList from "./ingredients-list";
 import { Card } from "@/components/ui/card";
 
-const ingredientUnits = [
-  "kg",
-  "ml",
-  "g",
-  "l",
-  "tbsp",
-  "tsp",
-  "cup",
-  "pinch",
-  "dash",
-  "whole",
-];
+import { RECIPE } from "@flayva-monorepo/shared/validation";
 
 const IngredientSelector = ({
   ingredientsList,
@@ -167,10 +156,8 @@ const IngredientSelector = ({
                   <SelectValue placeholder="Select Unit" />
                 </SelectTrigger>
                 <SelectContent>
-                  {ingredientUnits.map((unit) => (
-                    <SelectItem key={unit} value={unit}>
-                      {unit}
-                    </SelectItem>
+                  {RECIPE.ingredient_unit.options.map((unit) => (
+                    <SelectItem value={unit}>{unit}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>

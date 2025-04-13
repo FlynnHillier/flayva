@@ -10,7 +10,15 @@ export const querySuggestedSimilarTags = async (tagQuery: string) => {
 
   return data.tags as RecipeTag[];
 };
+export const querySuggestedIngredients = async (ingredientQuery: string) => {
+  if (ingredientQuery.length === 0) return { ingredients: [] };
 
+  const { data } = await request({
+    url: `/api/d/r/ingredients/q/${ingredientQuery}`,
+    method: "GET",
+  });
+  return data;
+};
 export const ratings = {
   add: async (recipeId: string, rating: number, review?: string) => {
     const { data } = await request({

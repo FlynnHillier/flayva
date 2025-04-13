@@ -46,7 +46,15 @@ export function NumberSelector({
 
   const handleNumeratorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-
+    setFractionError("");
+    if (
+      denominator != null &&
+      (Number(value) === denominator || Number(value) > denominator)
+    ) {
+      console.log("errror");
+      console.log(value, denominator);
+      setFractionError("Denominator must be larger than numerator. ");
+    }
     setNumerator(
       value === "" ? null : Math.max(0, parseInt(value, 10)) || null
     );
@@ -54,13 +62,11 @@ export function NumberSelector({
 
   const handleDenominatorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
+    setFractionError("");
     if (numerator === null) {
       setFractionError("Numerator must be selected first. ");
-      return;
-    }
-    if (Number(value) === numerator || Number(value) < numerator) {
+    } else if (Number(value) === numerator || Number(value) < numerator) {
       setFractionError("Denominator must be larger than numerator. ");
-      return;
     }
     const num = parseInt(value, 10);
     setDenominator(value === "" ? null : num >= 2 ? num : null);

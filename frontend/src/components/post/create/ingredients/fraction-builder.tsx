@@ -30,7 +30,7 @@ export function NumberSelector({
 }) {
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
   const currentIndexRef = useRef(0);
-
+  const [fractionError, setFractionError] = useState("");
   const hasFraction =
     numerator !== null &&
     denominator !== null &&
@@ -46,6 +46,7 @@ export function NumberSelector({
 
   const handleNumeratorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
+
     setNumerator(
       value === "" ? null : Math.max(0, parseInt(value, 10)) || null
     );
@@ -53,13 +54,25 @@ export function NumberSelector({
 
   const handleDenominatorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
+    if (numerator === null) {
+      setFractionError("Numerator must be selected first. ");
+      return;
+    }
+    if (Number(value) === numerator || Number(value) < numerator) {
+      setFractionError("Denominator must be larger than numerator. ");
+      return;
+    }
     const num = parseInt(value, 10);
     setDenominator(value === "" ? null : num >= 2 ? num : null);
   };
 
   const displayValue = [
     wholeNumber?.toString(),
-    hasFraction ? "& " + `${numerator}/${denominator}` : null,
+    hasFraction
+      ? wholeNumber
+        ? "& " + `${numerator}/${denominator}`
+        : `${numerator}/${denominator}`
+      : null,
   ]
     .filter(Boolean)
     .join(" ");
@@ -166,32 +179,36 @@ export function NumberSelector({
             />
           </div>
         </div>
-
-        <div className="flex gap-2">
-          <Button
-            variant="ghost"
-            size="sm"
-            className="text-xs w-full text-red-500 hover:text-red-600"
-            onClick={() => {
-              setNumerator(null);
-              setDenominator(null);
-            }}
-          >
-            Clear Fraction
-          </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            className="text-xs w-full text-red-500 hover:text-red-600"
-            onClick={() => {
-              setWholeNumber(null);
-              setNumerator(null);
-              setDenominator(null);
-              resetIndexRef();
-            }}
-          >
-            Clear All
-          </Button>
+        <div className="flex flex-col gap-3">
+          <div className="flex gap-2">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="text-xs w-full text-red-500 hover:text-red-600"
+              onClick={() => {
+                setNumerator(null);
+                setDenominator(null);
+              }}
+            >
+              Clear Fraction
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="text-xs w-full text-red-500 hover:text-red-600"
+              onClick={() => {
+                setWholeNumber(null);
+                setNumerator(null);
+                setDenominator(null);
+                resetIndexRef();
+              }}
+            >
+              Clear All
+            </Button>
+          </div>
+          <span className="text-red-600 text-xs flex justify-center">
+            {fractionError}
+          </span>
         </div>
       </DropdownMenuContent>
     </DropdownMenu>

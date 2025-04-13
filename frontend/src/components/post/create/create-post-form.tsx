@@ -13,7 +13,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { CloudUpload, Paperclip, Trash2 } from "lucide-react";
+import { CloudUpload, Paperclip, Plus, Trash2 } from "lucide-react";
 import {
   FileUploader,
   FileUploaderContent,
@@ -162,62 +162,86 @@ function ImageSection({
               </div>
             </FileInput>
           ) : (
-            <div className="relative w-full aspect-square mx-auto max-w-4xl">
-              {imagePreviews ? (
-                <div className="w-full h-full rounded-xl overflow-hidden">
-                  <Carousel className="w-full h-full relative">
-                    <CarouselContent>
-                      {imagePreviews.map((i, index) => (
-                        <CarouselItem key={index} className="relative">
-                          <div className="relative w-full h-full">
-                            <SlideshowItem Image={i} alt={i} />
-                          </div>
+            <div>
+              <div className="relative w-full aspect-square mx-auto max-w-4xl">
+                {imagePreviews ? (
+                  <div className="w-full h-full rounded-xl overflow-hidden">
+                    <Carousel className="w-full h-full relative">
+                      <CarouselContent>
+                        {imagePreviews.map((i, index) => (
+                          <CarouselItem key={index} className="relative">
+                            <div className="relative w-full h-full">
+                              <SlideshowItem Image={i} alt={i} />
+                            </div>
+                          </CarouselItem>
+                        ))}
+                        <CarouselItem>
+                          <FileInput id="fileInput" className="">
+                            <div className="relative w-full aspect-square mx-auto max-w-4xl">
+                              <div className="w-full h-full rounded-xl overflow-hidden bg-background/80 flex items-center justify-center">
+                                {" "}
+                                <div className="flex flex-col gap-3 items-center">
+                                  <CloudUpload className="text-gray-500 w-10 h-10" />
+                                  <p className="mb-1 text-sm text-gray-500 dark:text-gray-400">
+                                    <span className="font-semibold">
+                                      Click to upload more
+                                    </span>
+                                  </p>
+                                </div>
+                              </div>
+                            </div>
+                          </FileInput>
                         </CarouselItem>
-                      ))}
-                    </CarouselContent>
-                    <button
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        console.log(imagePreviews, images);
+                      </CarouselContent>
+                      {currentIndex < imagePreviews.length ? (
+                        <button
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            console.log(imagePreviews, images);
 
-                        const newFiles = images?.filter(
-                          (_, imgIndex) => imgIndex !== currentIndex
-                        );
-                        onValueChange(newFiles);
-                        if (newFiles) {
-                          if (currentIndex >= newFiles.length) {
-                            const newIndex = Math.max(newFiles.length - 1, 0);
-                            setCurrentIndex(newIndex);
-                          }
-                        }
-                        console.log(imagePreviews, images);
-                      }}
-                    >
-                      <Trash2 className="absolute bg-background/80 rounded-full p-1 right-2 top-2 w-6 h-6 hover:stroke-destructive cursor-pointer" />
-                    </button>
+                            const newFiles = images?.filter(
+                              (_, imgIndex) => imgIndex !== currentIndex
+                            );
+                            onValueChange(newFiles);
+                            if (newFiles) {
+                              if (currentIndex >= newFiles.length) {
+                                const newIndex = Math.max(
+                                  newFiles.length - 1,
+                                  0
+                                );
+                                setCurrentIndex(newIndex);
+                              }
+                            }
+                            console.log(imagePreviews, images);
+                          }}
+                        >
+                          <Trash2 className="absolute bg-background/80 rounded-full p-1 right-2 top-2 w-6 h-6 hover:stroke-destructive cursor-pointer" />
+                        </button>
+                      ) : null}
 
-                    <button
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        setCurrentIndex(currentIndex - 1);
-                      }}
-                    >
-                      <CarouselPrevious className="absolute left-2 top-1/2 -translate-y-1/2" />
-                    </button>
-                    <button
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        setCurrentIndex(currentIndex + 1);
-                      }}
-                    >
-                      <CarouselNext className="absolute right-2 top-1/2 -translate-y-1/2" />
-                    </button>
-                  </Carousel>
-                </div>
-              ) : null}
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          setCurrentIndex(currentIndex - 1);
+                        }}
+                      >
+                        <CarouselPrevious className="absolute left-2 top-1/2 -translate-y-1/2" />
+                      </button>
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          setCurrentIndex(currentIndex + 1);
+                        }}
+                      >
+                        <CarouselNext className="absolute right-2 top-1/2 -translate-y-1/2" />
+                      </button>
+                    </Carousel>
+                  </div>
+                ) : null}
+              </div>
             </div>
           )}
         </div>

@@ -7,6 +7,8 @@ import { ensureAuthenticated } from "@/server/middleware/auth.middleware";
 import postControllers from "@/server/controllers/post.controllers";
 import { validateRequestBody } from "zod-express-middleware";
 import { isRequestPostOwner } from "@/server/middleware/post.middleware";
+import { createRouter } from "@/server/routes/util/util";
+import { z } from "zod";
 const router: Router = Router();
 
 /**
@@ -48,6 +50,35 @@ router.get("/get/feed", postControllers.getFeed);
  *
  * @param ownerId - The ID of the owner to get post previews for
  */
-router.get("/owner/inf/:ownerId", postControllers.infiniteScrollProfilePostPreviews);
+router.get(
+  "/owner/inf/:ownerId",
+  postControllers.infiniteScrollProfilePostPreviews
+);
+
+router.use(
+  "/interactions",
+  ensureAuthenticated,
+  createRouter({
+    "/like": {
+      handlers: {
+        POST: [
+          validateRequestBody(z.object({ postId: z.string() })),
+          postControllers.interactions.like.add,
+        ],
+        DELETE: [
+          validateRequestBody(z.object({ postId: z.string() })),
+          postControllers.interactions.like.remove,
+        ],
+      },
+      router: createRouter({
+        "/status/:postId": {
+          handlers: {
+            GET: [postControllers.interactions.like.status],
+          },
+        },
+      }),
+    },
+  })
+);
 
 export default router;

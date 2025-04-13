@@ -9,7 +9,10 @@ import { z } from "zod";
  * Fetches the user's profile information from the server.
  */
 export async function fetchUserById(userID: string): Promise<{ user?: User }> {
-  const { status, data } = await request({ url: `/api/s/u/${userID}`, method: "GET" });
+  const { status, data } = await request({
+    url: `/api/s/u/${userID}`,
+    method: "GET",
+  });
 
   if (status === 404 || !data.user) {
     return { user: undefined };
@@ -86,10 +89,10 @@ export async function getOwnFollowingUserStatus(userId: string) {
   return { isFollowing: data.isFollowing } as { isFollowing: boolean };
 }
 
-export async function updateProfile(postData: z.infer<typeof updateProfileFormSchema>) {
+export async function updateProfile(
+  postData: z.infer<typeof updateProfileFormSchema>
+) {
   const fd = new FormData();
-
-  console.log("postData", postData);
 
   if (postData.avatar) {
     fd.append("avatar", postData.avatar);
@@ -103,7 +106,8 @@ export async function updateProfile(postData: z.infer<typeof updateProfileFormSc
     fd.append("bio", postData.bio);
   }
 
-  if (Array.from(fd.keys()).length === 0) throw new NoRetryQueryError("No data to update");
+  if (Array.from(fd.keys()).length === 0)
+    throw new NoRetryQueryError("No data to update");
 
   const { data } = await request({
     url: "/api/s/profile/update",
@@ -111,7 +115,8 @@ export async function updateProfile(postData: z.infer<typeof updateProfileFormSc
     data: fd,
   });
 
-  if (!data.user) throw new UnexpectedResponseFormatError("updateProfile", data);
+  if (!data.user)
+    throw new UnexpectedResponseFormatError("updateProfile", data);
 
   return {
     user: data.user as User,

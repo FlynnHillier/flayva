@@ -8,14 +8,15 @@ import { toast } from "sonner";
 import { useInView } from "react-intersection-observer";
 import { FourSquare } from "react-loading-indicators";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 const PostPreviewElement = ({ preview }: { preview: PostPreview }) => {
   const imagePreviewUrl = preview.images.at(0)?.key;
 
   return (
     <Link
-      to="/p/test-123"
-      className="rounded-sm overflow-hidden aspect-square w-full border-1 relative flex justify-center items-center"
+      to={`/p/${preview.id}`}
+      className={cn("rounded-sm overflow-hidden aspect-square w-full border-1 relative flex justify-center items-center")}
     >
       <span className="absolute bottom-2 left-2 text-white text-md font-bold bg-black/50 bg-opacity-50 py-1 px-1.5 z-20 rounded-sm max-w-4/5 truncate">
         {preview.recipe.title}

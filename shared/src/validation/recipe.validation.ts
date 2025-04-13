@@ -21,6 +21,10 @@ import {
   RECIPE_INGREDIENT_FRACTIONAL_DENOMINATOR_MAX,
   TAG_CATEGORIES,
   TAG_GROUPS,
+  RECIPE_RATING_MIN,
+  RECIPE_RATING_MAX,
+  RECIPE_RATING_REVIEW_MIN_LENGTH,
+  RECIPE_RATING_REVIEW_MAX_LENGTH,
 } from "../constants/recipes.constants";
 import { z } from "zod";
 
@@ -118,4 +122,14 @@ export const recipe = z.object({
   ingredients: ingredients,
   tags: tagReferences,
   metaInfo: metaInfo.optional(),
+});
+
+// ## FORMS / REQUEST ##
+export const createNewRatingSchema = z.object({
+  rating: z.number().min(RECIPE_RATING_MIN).max(RECIPE_RATING_MAX),
+  review: z
+    .string()
+    .min(RECIPE_RATING_REVIEW_MIN_LENGTH)
+    .max(RECIPE_RATING_REVIEW_MAX_LENGTH)
+    .optional(),
 });

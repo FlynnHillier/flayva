@@ -70,7 +70,6 @@ const IngredientSelector = ({
 
   const handleSave = useCallback(async () => {
     if (!selectedIngredient || !selectedUnit) return;
-
     const ingredient = JSON.parse(selectedIngredient);
     const isEditing = !!editingIngredient;
     setOpen(false);

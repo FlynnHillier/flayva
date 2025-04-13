@@ -4,7 +4,7 @@ import { Pen, Trash2, GripVertical } from "lucide-react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { Input } from "../../../ui/input";
-import { useState, useRef } from "react";
+import { useState, useRef, useCallback } from "react";
 import { cn } from "@/lib/utils";
 type instructionSchema = { id: number; instruction: string };
 
@@ -31,6 +31,18 @@ const InstructionItem = ({
     setEditingInstruction({ instruction: tempInstruction, id: instruction.id });
     setIsEditingInstruction(false);
   };
+  const handleKeyDown = useCallback(
+    async (e: React.KeyboardEvent<HTMLInputElement>) => {
+      switch (e.key) {
+        case "Escape":
+        case "Enter":
+          e.preventDefault();
+          handleEdit();
+          break;
+      }
+    },
+    [instruction]
+  );
   const [isEditingInstruction, setIsEditingInstruction] = useState(false);
   return (
     <Card ref={setNodeRef} style={style} className="p-1 hover:bg-accent/50">
@@ -45,6 +57,7 @@ const InstructionItem = ({
           <span className="font-medium ml-2">{instruction.id}</span>
         </div>
         <Input
+          onKeyDown={handleKeyDown}
           ref={inputRef}
           value={tempInstruction}
           onChange={(e) => setTempInstruction(e.target.value)}
@@ -60,9 +73,9 @@ const InstructionItem = ({
             <Button
               variant="ghost"
               className="size-8 hover:bg-background"
-              onClick={() => {
-                console.log(inputRef);
+              onClick={(e) => {
                 inputRef?.current?.focus();
+                inputRef?.current?.setSelectionRange(5, 5);
                 setIsEditingInstruction(true);
               }}
             >

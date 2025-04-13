@@ -319,7 +319,9 @@ export default function CreateNewPostForm() {
         (item) => item.instruction === newInstruction.instruction
       )
     ) {
-      setInstructionError("Duplicate found");
+      if (!editing) {
+        setInstructionError("Duplicate found");
+      }
       return;
     }
     if (editing) {

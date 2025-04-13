@@ -5,7 +5,7 @@ import {
   DropdownMenuTrigger,
   DropdownMenuContent,
 } from "@/components/ui/dropdown-menu";
-import React from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 
 export function NumberSelector({
   wholeNumber,
@@ -28,6 +28,9 @@ export function NumberSelector({
   setDenominator: React.Dispatch<React.SetStateAction<number | null>>;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
+  const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
+  const currentIndexRef = useRef(0);
+
   const hasFraction =
     numerator !== null &&
     denominator !== null &&
@@ -61,6 +64,47 @@ export function NumberSelector({
     .filter(Boolean)
     .join(" ");
 
+  const handleKeyDown = useCallback(
+    async (e: React.KeyboardEvent<HTMLInputElement>) => {
+      switch (e.key) {
+        case "Escape":
+        case "Tab":
+          e.preventDefault();
+          const direction = e.shiftKey ? -1 : 1;
+          const newIndex = (currentIndexRef.current + direction + 3) % 3;
+
+          // Update the ref immediately
+          currentIndexRef.current = newIndex;
+
+          // Focus the next input
+          inputRefs.current[newIndex]?.focus();
+          break;
+        case "Enter":
+          e.preventDefault();
+          break;
+      }
+    },
+    []
+  );
+
+  const addToRefs = useCallback(
+    (el: HTMLInputElement | null, index: number) => {
+      inputRefs.current[index] = el;
+    },
+    []
+  );
+
+  const resetIndexRef = () => {
+    currentIndexRef.current = 0;
+  };
+
+  useEffect(() => {
+    console.log(open);
+    if (open != null && open === false) {
+      resetIndexRef();
+    }
+  }, [open]);
+
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>
@@ -80,6 +124,9 @@ export function NumberSelector({
         <div>
           <p className="text-xs text-muted-foreground mb-1">Whole Number</p>
           <Input
+            ref={(el) => addToRefs(el, 0)}
+            onKeyDown={handleKeyDown}
+            autoFocus={true}
             type="number"
             min="0"
             value={wholeNumber?.toString() || ""}
@@ -92,6 +139,8 @@ export function NumberSelector({
           <p className="text-xs text-muted-foreground">Fraction</p>
           <div className="grid grid-cols-2 gap-2">
             <Input
+              ref={(el) => addToRefs(el, 1)}
+              onKeyDown={handleKeyDown}
               type="number"
               min="1"
               value={
@@ -103,6 +152,8 @@ export function NumberSelector({
               placeholder="Numerator"
             />
             <Input
+              ref={(el) => addToRefs(el, 2)}
+              onKeyDown={handleKeyDown}
               type="number"
               min="2"
               value={
@@ -136,6 +187,7 @@ export function NumberSelector({
               setWholeNumber(null);
               setNumerator(null);
               setDenominator(null);
+              resetIndexRef();
             }}
           >
             Clear All

@@ -106,15 +106,6 @@ export default function Tags({
     <div className={containerClasses}>
       <div className="text-center mb-2 text-gray-500 font-medium">Filters</div>
 
-      {/* Apply Last Filters Button */}
-      {showApplyLastFilters && Object.keys(lastFilters).length > 0 && (
-        <button
-          onClick={applyLastFilters}
-          className="w-full py-2 px-4 bg-gray-100 text-gray-700 rounded-md text-center mb-4"
-        >
-          + Apply Last Filters
-        </button>
-      )}
 
       {/* Filter Categories */}
       <div className="flex-grow overflow-auto space-y-4">
@@ -134,14 +125,6 @@ export default function Tags({
           </div>
         ))}
       </div>
-
-      {/* Apply Button */}
-      <button
-        onClick={applyFilters}
-        className="w-full py-3 bg-green-500 text-white rounded-md text-center font-medium mt-4"
-      >
-        Apply
-      </button>
     </div>
   );
 }

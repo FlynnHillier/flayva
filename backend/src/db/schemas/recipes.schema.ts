@@ -54,7 +54,9 @@ export const recipe_meta_infos = pgTable("recipe_meta_infos", {
 export const recipe_instruction_steps = pgTable(
   "recipe_instruction_steps",
   {
-    recipeId: varchar("recipe_id").notNull().references(() => recipes.id, { onDelete: "cascade" }),
+    recipeId: varchar("recipe_id")
+      .notNull()
+      .references(() => recipes.id, { onDelete: "cascade" }),
     stepNumber: integer("step_number").notNull(),
     instruction: varchar("instruction").notNull(),
   },

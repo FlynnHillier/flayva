@@ -1,6 +1,10 @@
 import { request } from "@/lib/network";
 import { ApiObject } from "@/types/util/api";
-import { RecipeRating, RecipeTag } from "@flayva-monorepo/shared/types";
+import {
+  RecipeIngredientItem,
+  RecipeRating,
+  RecipeTag,
+} from "@flayva-monorepo/shared/types";
 
 export const querySuggestedSimilarTags = async (tagQuery: string) => {
   const { data } = await request({
@@ -11,13 +15,12 @@ export const querySuggestedSimilarTags = async (tagQuery: string) => {
   return data.tags as RecipeTag[];
 };
 export const querySuggestedIngredients = async (ingredientQuery: string) => {
-  if (ingredientQuery.length === 0) return { ingredients: [] };
-
   const { data } = await request({
     url: `/api/d/r/ingredients/q/${ingredientQuery}`,
     method: "GET",
   });
-  return data;
+
+  return data.ingredients as RecipeIngredientItem[];
 };
 export const ratings = {
   add: async (recipeId: string, rating: number, review?: string) => {

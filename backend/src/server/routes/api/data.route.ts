@@ -4,7 +4,7 @@ import { ingredient_items } from "@/db/schema";
 import { db } from "@/db";
 import { sql, asc } from "drizzle-orm";
 import { RECIPE_TAGS_SEARCH_QUERY_RETURN_LIMIT } from "@/constants/posts.constants";
-import { RecipeTag } from "@flayva-monorepo/shared/types";
+import { RecipeIngredientItem, RecipeTag } from "@flayva-monorepo/shared/types";
 
 const router: Router = Router();
 
@@ -18,10 +18,11 @@ router.get(
   recipeControllers.searchSimilarValidRecipeTag
 );
 
+//TODO: use controller, repo and service pattern for this route
 router.get("/r/ingredients/q/:search", async (req, res) => {
   const searchTerm = req.params.search;
 
-  const results = await db
+  const results: RecipeIngredientItem[] = await db
     .select()
     .from(ingredient_items)
     .where(
@@ -39,16 +40,10 @@ router.get("/r/ingredients/q/:search", async (req, res) => {
       ELSE 3
     END`
     )
-    .limit(5);
+    .limit(5); //TODO: make this a constant
 
-  const formattedIngredients = results.map((ingredient) => ({
-    id: ingredient.id,
-    name: ingredient.name,
-    group: ingredient.group,
-    subgroup: ingredient.subgroup,
-  }));
-
-  res.status(200).json({ ingredients: formattedIngredients });
+  // TODO: ensure the returned type satisties the RecipeIngredient type
+  res.status(200).json({ ingredients: results });
 });
 
 export default router;

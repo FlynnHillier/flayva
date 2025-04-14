@@ -67,6 +67,7 @@ const ingredient_amount = z.object({
 export const ingredient_unit = z.enum(INGREDIENT_UNITS);
 
 export const ingredient = z.object({
+  name: z.string().min(1),
   id: z.number().min(RECIPE_INGREDIENT_MIN_ID).max(RECIPE_INGREDIENT_MAX_ID),
   amount: ingredient_amount,
   unit: ingredient_unit,

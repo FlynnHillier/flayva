@@ -4,48 +4,87 @@ import { Pen, Trash2, GripVertical } from "lucide-react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { Input } from "../../../ui/input";
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useMemo } from "react";
 import { cn } from "@/lib/utils";
-type instructionSchema = { id: number; instruction: string };
+import { type InstructionItem as InstructionItemType } from "./instructions";
+import { RECIPE } from "@flayva-monorepo/shared/constants";
 
-const InstructionItem = ({
+/**
+ * A component to view and manage a single instruction item in the recipe creation process.
+ */
+export const InstructionItem = ({
+  instrucionNumber,
+  handleDeleteSelf,
+  handleEditSelf,
   instruction,
-  deleteInstructionFromList,
-  setEditingInstruction,
 }: {
-  instruction: { id: number; instruction: string };
-  deleteInstructionFromList: (stepNumber: number) => void;
-  setEditingInstruction: (instruction: instructionSchema) => void;
+  instrucionNumber: number;
+  handleDeleteSelf: () => void;
+  handleEditSelf: (
+    editedInstruction: InstructionItemType["instruction"]
+  ) => void;
+  instruction: InstructionItemType;
 }) => {
-  const { attributes, listeners, setNodeRef, transform, transition } =
-    useSortable({ id: instruction.id });
-  const inputRef = useRef<HTMLInputElement>(null);
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-  };
-  const [tempInstruction, setTempInstruction] = useState<string>(
+  const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [instructionTextPreview, setInstructionTextPreview] = useState<string>(
     instruction.instruction
   );
+  const inputRef = useRef<HTMLInputElement>(null);
+  const { attributes, listeners, setNodeRef, transform, transition } =
+    useSortable({ id: instruction.id });
+
+  const isValidEdit = useMemo(
+    () =>
+      instructionTextPreview.length >=
+        RECIPE.RECIPE_INSTRUCTION_MIN_STEP_LENGTH &&
+      instructionTextPreview.length <=
+        RECIPE.RECIPE_INSTRUCTION_MAX_STEP_LENGTH,
+    [instructionTextPreview]
+  );
+
   const handleEdit = () => {
-    setEditingInstruction({ instruction: tempInstruction, id: instruction.id });
-    setIsEditingInstruction(false);
+    setIsEditing(false);
+    handleEditSelf(instructionTextPreview);
   };
-  const handleKeyDown = useCallback(
+
+  const onCancelEdit = useCallback(() => {
+    setIsEditing(false);
+    setInstructionTextPreview(instruction.instruction);
+  }, [inputRef, instruction.instruction]);
+
+  const onEditButtonClick = useCallback(() => {
+    setIsEditing(true);
+    handleEditSelf(instructionTextPreview);
+  }, [inputRef, instructionTextPreview, handleEdit]);
+
+  const onDeleteButtonClick = useCallback(() => {
+    handleDeleteSelf();
+  }, [handleDeleteSelf]);
+
+  const handleInputKeyDown = useCallback(
     async (e: React.KeyboardEvent<HTMLInputElement>) => {
       switch (e.key) {
         case "Escape":
+          if (isEditing) onCancelEdit();
+          break;
         case "Enter":
           e.preventDefault();
-          handleEdit();
+          if (isEditing) handleEdit();
           break;
       }
     },
-    [instruction]
+    [instruction, isEditing, handleEdit, onCancelEdit]
   );
-  const [isEditingInstruction, setIsEditingInstruction] = useState(false);
+
   return (
-    <Card ref={setNodeRef} style={style} className="p-1 hover:bg-accent/50">
+    <Card
+      ref={setNodeRef}
+      style={{
+        transform: CSS.Transform.toString(transform),
+        transition,
+      }}
+      className="p-1 hover:bg-accent/50"
+    >
       <div className="p-1 flex items-center justify-between gap-3">
         <div className="flex flex-row gap-3 items-center">
           <GripVertical
@@ -53,47 +92,53 @@ const InstructionItem = ({
             className="cursor-pointer align-middle"
             {...attributes}
             {...listeners}
-          ></GripVertical>
-          <span className="font-medium ml-2">{instruction.id}</span>
+          />
+          <span className="font-medium ml-2">{instrucionNumber}</span>
         </div>
         <Input
-          onKeyDown={handleKeyDown}
+          onKeyDown={handleInputKeyDown}
           ref={inputRef}
-          value={tempInstruction}
-          onChange={(e) => setTempInstruction(e.target.value)}
+          value={instructionTextPreview}
+          onChange={(e) => setInstructionTextPreview(e.target.value)}
           placeholder="Enter New Instruction"
-          className={cn("w-full shadow-none border-0 text-sm", {
-            "border-2": isEditingInstruction,
-          })}
-          type="text"
-          disabled={!isEditingInstruction}
+          className={cn(
+            "w-full shadow-none border-0 text-sm resize-none field-sizing-content",
+            {
+              "border-2": isEditing,
+            }
+          )}
+          disabled={!isEditing}
         />
-        {!isEditingInstruction ? (
+        {isEditing ? (
+          <div className="flex flex-row gap-2">
+            <Button type="button" variant="outline" onClick={onCancelEdit}>
+              Cancel
+            </Button>
+            <Button type="button" onClick={handleEdit} disabled={!isValidEdit}>
+              Confirm
+            </Button>
+          </div>
+        ) : (
           <div className="flex gap-2">
             <Button
+              type="button"
               variant="ghost"
-              className="size-8 hover:bg-background"
-              onClick={(e) => {
-                inputRef?.current?.focus();
-                inputRef?.current?.setSelectionRange(5, 5);
-                setIsEditingInstruction(true);
-              }}
+              className="size-8 hover:bg-background hover:cursor-pointer"
+              onClick={onEditButtonClick}
             >
               <Pen className="size-4" />
             </Button>
             <Button
+              type="button"
               variant="ghost"
-              className="size-8 hover:bg-background"
-              onClick={() => deleteInstructionFromList(instruction.id)}
+              className="size-8 hover:bg-background hover:cursor-pointer"
+              onClick={onDeleteButtonClick}
             >
               <Trash2 className="size-4" />
             </Button>
           </div>
-        ) : (
-          <Button onClick={handleEdit}>Confirm</Button>
         )}
       </div>
     </Card>
   );
 };
-export default InstructionItem;

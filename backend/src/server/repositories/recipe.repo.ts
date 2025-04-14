@@ -28,6 +28,33 @@ export const querySimilarValidTagOptions = async (searchQuery: string) =>
     .limit(RECIPE_TAGS_SEARCH_QUERY_RETURN_LIMIT);
 
 /**
+ * DATA REPOSITORY
+ * fetch static data from the database
+ */
+const DATA_BASIS = {
+  ingredients: {
+    get: (
+      opts: Omit<DbFindManyParams<"ingredient_items">, "with" | "columns">
+    ) =>
+      db.query.ingredient_items.findMany({
+        columns: {
+          group: true,
+          subgroup: true,
+          id: true,
+          name: true,
+        },
+        with: {},
+      }),
+  },
+};
+
+export const data = {
+  ingredients: {
+    get: DATA_BASIS.ingredients.get,
+  },
+} satisfies NestedRepositoryObject;
+
+/**
  *
  *
  * INTERACTIONS
@@ -263,4 +290,5 @@ export const interactions = {
 export default {
   querySimilarValidTagOptions,
   interactions,
+  data,
 };

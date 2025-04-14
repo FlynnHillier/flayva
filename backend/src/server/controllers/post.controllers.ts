@@ -77,6 +77,18 @@ export const infiniteScrollTitlePostPreviews: RequestHandler = async (
   });
 };
 
+// Get the list of tags
+export const getTagList: RequestHandler = async (
+  req: Request,
+  res: Response
+) => {
+  const result = await postServices.getTagList();
+
+  res.status(200).send({
+    ...result
+  });
+};
+
 export default {
   deletePost,
   createPost,
@@ -84,4 +96,5 @@ export default {
   getFeed,
   infiniteScrollProfilePostPreviews,
   infiniteScrollTitlePostPreviews,
+  getTagList,
 };

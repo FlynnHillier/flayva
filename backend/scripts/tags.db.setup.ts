@@ -1,36 +1,23 @@
-import { db } from "@/db";
-import { tags } from "@/db/schema";
+import { db } from '@/db';
+import { tags } from '@/db/schema';
+import { RECIPE_TAGS } from '@flayva-monorepo/shared/constants/recipes.constants';
 
-//TODO: Add more tags (& make them meaningful) & move to seperate file
-const tagsForInsert: Omit<typeof tags.$inferSelect, "id">[] = [
-  {
-    name: "vegan",
-    category: "health",
-    group: "spice",
-  },
-  {
-    name: "vegetarian",
-    category: "health",
-    group: "spice",
-  },
-  {
-    name: "carnivore",
-    category: "health",
-    group: "spice",
-  },
-  {
-    name: "peanut-free",
-    category: "health",
-    group: "spice",
-  },
-];
+const tagsForInsert: Omit<typeof tags.$inferSelect, 'id'>[] = RECIPE_TAGS;
+
 
 /**
  * Insert recipe tags into the database
  */
 export async function dbInsertRecipeTags() {
-  await db
-    .insert(tags)
-    .values(tagsForInsert.map((tag, i) => ({ category: tag.category, name: tag.name, id: i + 1 })))
-    .onConflictDoNothing();
+	await db
+		.insert(tags)
+		.values(
+			tagsForInsert.map((tag, i) => ({
+				category: tag.category,
+				name: tag.name,
+				id: i + 1,
+				emoji: tag.emoji
+			}))
+		)
+		.onConflictDoNothing();
 }

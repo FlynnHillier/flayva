@@ -27,7 +27,7 @@ function SelectedTag({
   return (
     <Badge
       // tabIndex={activeIndex !== -1 ? 0 : activeIndex}
-      key={tag.tagId}
+      key={tag.id}
       aria-disabled={disabled}
       data-active={active}
       className={cn(
@@ -45,7 +45,7 @@ function SelectedTag({
         onClick={onRemove}
         className="disabled:cursor-not-allowed"
       >
-        <span className="sr-only">Remove {tag.tagId} option</span>
+        <span className="sr-only">Remove {tag.id} option</span>
         <RemoveIcon className="h-4 w-4 hover:stroke-destructive" />
       </button>
     </Badge>
@@ -63,7 +63,7 @@ function SuggestionTag({
 }) {
   return (
     <button
-      key={suggestion.tagId}
+      key={suggestion.id}
       onClick={onClick}
       className={cn("block w-full p-2 text-left", {
         "font-semibold bg-gray-200": isActive,
@@ -171,7 +171,7 @@ export function TagsInput({
 
   useEffect(() => {
     setSuggestions((prev) =>
-      prev.filter((suggestion) => !tags.some((tag) => tag.tagId === suggestion.tagId))
+      prev.filter((suggestion) => !tags.some((tag) => tag.id === suggestion.id))
     );
   }, [tags]);
 
@@ -179,7 +179,7 @@ export function TagsInput({
     if (!suggestionsQueryData) return clearSuggestions();
     setSuggestions(
       suggestionsQueryData.filter(
-        (suggestion) => !tags.some((tag) => tag.tagId === suggestion.tagId)
+        (suggestion) => !tags.some((tag) => tag.id === suggestion.id)
       )
     );
   }, [suggestionsQueryData]);
@@ -358,7 +358,7 @@ export function TagsInput({
               removeSelectedTag(tag);
             }}
             tag={tag}
-            key={tag.tagId}
+            key={tag.id}
           />
         ))}
         <Input
@@ -390,7 +390,7 @@ export function TagsInput({
             isActive={activeSuggestionIndex === index}
             suggestion={suggestion}
             onClick={() => handleTagSuggestionSelected(suggestion)}
-            key={suggestion.tagId}
+            key={suggestion.id}
           />
         ))}
       </div>

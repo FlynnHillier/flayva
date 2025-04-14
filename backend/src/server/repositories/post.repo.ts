@@ -7,6 +7,7 @@ import {
   recipe_meta_infos,
   recipe_tags,
   recipes,
+  tags,
 } from "@/db/schema";
 import { createNewPostSchema } from "@flayva-monorepo/shared/validation/post.validation";
 import { z } from "zod";
@@ -68,7 +69,7 @@ export const saveNewPost = (
         : tx.insert(recipe_tags).values(
             recipeData.tags.map((tag) => ({
               recipeID: recipe.id,
-              tagID: tag.tagId,
+              tagID: tag.id,
             }))
           );
 
@@ -123,6 +124,11 @@ export const deleteExistingPost = async (postId: string) => {
 
   return !!deleted;
 };
+
+// Get the list of tags
+export const getTagList = async () => {
+  return await db.select().from(tags);
+}
 
 /**
  * POST PREVIEWS
@@ -341,5 +347,6 @@ export default {
   deleteExistingPost,
   getPostsByOwnerId,
   getPostPreviewsByOwnerId,
-  getPostByRecipeId
+  getPostByRecipeId,
+  getTagList
 };

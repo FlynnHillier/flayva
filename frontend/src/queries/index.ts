@@ -6,5 +6,6 @@ import { auth } from "@/queries/auth.queries";
 import { social } from "@/queries/social.queries";
 import { recipe } from "@/queries/recipe.queries";
 import { post } from "@/queries/post.queries";
+import { tags } from "@queries/tags.queries"
 
-export const queries = mergeQueryKeys(test, auth, social, recipe, post);
+export const queries = mergeQueryKeys(test, auth, social, recipe, post, tags);

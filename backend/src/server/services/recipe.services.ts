@@ -10,10 +10,10 @@ export const searchSimilarValidRecipeTag = async (searchTerm: string) => {
   const results = await recipeRepo.querySimilarValidTagOptions(searchTerm);
 
   const formattedTags: RecipeTag[] = results.map((tag) => ({
-    tagId: tag.id,
+    id: tag.id,
     tagName: tag.name,
     category: tag.category,
-    group: tag.group,
+    emoji: tag.emoji,
   }));
 
   return formattedTags;

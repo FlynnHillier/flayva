@@ -111,6 +111,14 @@ export const infiniteScrollTitlePostPreviews = async (
   };
 };
 
+// Get the list of tags
+export const getTagList = async () => {
+  const posts = await postRepo.getTagList();
+
+  return posts;
+};
+
+
 export default {
   createNewPost,
   getPostById,
@@ -118,4 +126,5 @@ export default {
   deletePost,
   infiniteScrollProfilePostPreviews,
   infiniteScrollTitlePostPreviews,
+  getTagList
 };

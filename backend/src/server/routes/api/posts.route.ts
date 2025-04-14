@@ -57,4 +57,7 @@ router.get("/owner/inf/:ownerId", postControllers.infiniteScrollProfilePostPrevi
  */
 router.get("/title/inf/:title", postControllers.infiniteScrollTitlePostPreviews);
 
+router.get("/getTagList", postControllers.getTagList);
+
+
 export default router;

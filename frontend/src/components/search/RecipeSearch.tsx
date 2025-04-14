@@ -1,4 +1,4 @@
-import { useInfiniteScrollTitlePostPreviews } from '@/hooks/post.hooks';
+import { useInfiniteScrollTitleAndTagsPostPreviews } from '@/hooks/post.hooks';
 import { type PostPreview } from '@flayva-monorepo/shared/types';
 import { useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
@@ -11,7 +11,8 @@ import { Skeleton } from '../ui/skeleton';
 // Component to display a preview of a recipe
 const PostPreviewElement = ({ preview }: { preview: PostPreview }) => {
 	// Either uses the first image of the recipe preview or a random image (more for testing purposes)
-	const imagePreviewUrl = preview.images[0] || 'https://loremflickr.com/280/280?random=1';
+	const imagePreviewUrl =
+		preview.images[0] || 'https://loremflickr.com/280/280?random=1';
 
 	return (
 		// Link to the full recipe/post
@@ -26,14 +27,14 @@ const PostPreviewElement = ({ preview }: { preview: PostPreview }) => {
 		>
 			{/* User info at top */}
 			<div className="absolute inset-x-0 top-0 flex items-center gap-2 bg-gradient-to-b from-black/60 to-transparent p-3">
-        <span className="text-sm lg:text-lg text-white font-semibold backdrop-blur-xs p-1">
+				<span className="text-sm lg:text-lg text-white font-semibold backdrop-blur-xs p-1">
 					{preview.recipe.title}
 				</span>
 			</div>
 
 			{/* Recipe title at bottom */}
 			<div className="absolute bottom-3 left-3 max-w-[85%] flex items-center gap-2">
-      <img
+				<img
 					src={preview.owner.profile_picture_url}
 					className="h-8 w-8 rounded-full object-cover"
 					alt=""
@@ -53,27 +54,34 @@ const PostPreviewElement = ({ preview }: { preview: PostPreview }) => {
 
 // Skeleton component that mimics the PostPreviewElement
 const PostPreviewSkeleton = () => {
-  return (
-    <div className="relative aspect-square w-full overflow-hidden rounded-lg shadow-sm bg-gray-200">
-      {/* Top title skeleton */}
-      <div className="absolute inset-x-0 top-0 flex items-center gap-2  from-black/60 to-transparent p-3">
-        <Skeleton className="h-6 w-32 rounded-md" />
-      </div>
+	return (
+		<div className="relative aspect-square w-full overflow-hidden rounded-lg shadow-sm bg-gray-200">
+			{/* Top title skeleton */}
+			<div className="absolute inset-x-0 top-0 flex items-center gap-2  from-black/60 to-transparent p-3">
+				<Skeleton className="h-6 w-32 rounded-md" />
+			</div>
 
-      {/* Bottom user info skeleton */}
-      <div className="absolute bottom-3 left-3 max-w-[85%] flex items-center gap-2">
-        <Skeleton className="h-8 w-8 rounded-full" />
-        <Skeleton className="h-4 w-24 rounded-md" />
-      </div>
-    </div>
-  );
+			{/* Bottom user info skeleton */}
+			<div className="absolute bottom-3 left-3 max-w-[85%] flex items-center gap-2">
+				<Skeleton className="h-8 w-8 rounded-full" />
+				<Skeleton className="h-4 w-24 rounded-md" />
+			</div>
+		</div>
+	);
 };
 
 // Main component
-export default function RecipeSearchResults({ input }: { input: string }) {
-  const debouncedInput = useDebounce(input, 500); // Uses a debounced input to save many searches
+export default function RecipeSearchResults({
+	input,
+	selectedTags = {},
+}: {
+	input: string;
+	selectedTags?: Record<string, string[]>;
+}) {
+	const debouncedInput = useDebounce(input, 500);
+	const debouncedTags = useDebounce(selectedTags, 500);
 
-	// Main hook call for infinite scrolling
+	// Main hook call for infinite scrolling with title and tags
 	const {
 		data,
 		fetchNextPage,
@@ -82,9 +90,13 @@ export default function RecipeSearchResults({ input }: { input: string }) {
 		isFetchingNextPage,
 		isFetching,
 		isFetched,
-	} = useInfiniteScrollTitlePostPreviews(debouncedInput);
+	} = useInfiniteScrollTitleAndTagsPostPreviews(debouncedInput, debouncedTags);
 
-	// Maps the results to a better formatted array
+	useEffect(() => {
+		console.log({data})
+	}, [data])
+
+
 	const previews = useMemo(
 		() => (data ? data.pages.flatMap((page) => page.previews) : []),
 		[data, data?.pages]
@@ -92,18 +104,13 @@ export default function RecipeSearchResults({ input }: { input: string }) {
 
 	const { ref, inView } = useInView();
 
-	// Error message 
+	// Error message
 	useEffect(() => {
 		if (error)
 			toast.error(
 				error.message ?? 'Something went wrong while attempting to load posts'
 			);
 	}, [error]);
-
-	useEffect(() => {
-		(previews)
-	}, [previews])
-
 
 	useEffect(() => {
 		if (inView && hasNextPage && !isFetching) fetchNextPage();

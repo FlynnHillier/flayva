@@ -46,16 +46,38 @@ export const useInfiniteScrollProfilePostPreviews = (ownerId: string) =>
     getNextPageParam: ({ nextCursor }) => nextCursor,
   });
  
-  /**
- * infinite scroll for post previews by the post title
+/**
+ * infinite scroll for post previews by title and tags
  *
- * @param ownerId - The Id of the owner of the posts
+ * @param title - The title to search for
+ * @param selectedTags - The selected tags to filter by
  */
-// TODO: perhaps add this to query-key-store
-export const useInfiniteScrollTitlePostPreviews = (title: string) =>
-useInfiniteQuery({
-  queryKey: ["posts-preview", "title", title],
-  queryFn: ({ pageParam }) => api.post.getInfiniteScrollPostPreviewsByTitle(title, pageParam),
-  initialPageParam: 0,
-  getNextPageParam: ({ nextCursor }) => nextCursor,
-});
+export const useInfiniteScrollTitleAndTagsPostPreviews = (
+  title: string,
+  selectedTags: Record<string, string[]>
+) =>
+  useInfiniteQuery({
+    queryKey: ["posts-preview", "title-tags", title, selectedTags],
+    queryFn: ({ pageParam }) => 
+      api.post.getInfiniteScrollPostPreviewsByTitleAndTags(title, selectedTags, pageParam),
+    initialPageParam: 0,
+    getNextPageParam: ({ nextCursor }) => nextCursor,
+  });
+
+/**
+ * infinite scroll for user posts filtered by tags
+ *
+ * @param ownerId - The ID of the user
+ * @param selectedTags - The selected tags to filter by
+ */
+export const useUserPostsWithTagFilters = (
+  ownerId: string,
+  selectedTags: Record<string, string[]>
+) =>
+  useInfiniteQuery({
+    queryKey: ["posts-preview", "user-tags", ownerId, selectedTags],
+    queryFn: ({ pageParam }) => 
+      api.post.getUserPostsWithTagFilters(ownerId, selectedTags, pageParam),
+    initialPageParam: 0,
+    getNextPageParam: ({ nextCursor }) => nextCursor,
+  });

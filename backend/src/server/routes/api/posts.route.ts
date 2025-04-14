@@ -51,13 +51,22 @@ router.get("/get/feed", postControllers.getFeed);
 router.get("/owner/inf/:ownerId", postControllers.infiniteScrollProfilePostPreviews);
 
 /**
- * Get post previews by title with infinte scrolling
+ * Get post previews by title and tags with infinite scrolling
  *
- * @param title - The ID of the owner to get post previews for
+ * @param title - The title to search for
+ * @query tags - JSON string of selected tags by category
  */
-router.get("/title/inf/:title", postControllers.infiniteScrollTitlePostPreviews);
+router.get("/search/inf/:title", postControllers.infiniteScrollTitleAndTagsPostPreviews);
 
 router.get("/getTagList", postControllers.getTagList);
+
+/**
+ * Get post previews by user with tags filtering
+ *
+ * @param ownerId - The ID of the user
+ * @query tags - JSON string of selected tags by category
+ */
+// router.get("/user/tags/:ownerId", postControllers.getUserPostsWithTagFilters);
 
 
 export default router;

@@ -88,20 +88,55 @@ export async function getInfiniteScrollPostPreviewsByOwnerId(ownerId: string, cu
   };
 }
 
-export async function getInfiniteScrollPostPreviewsByTitle(title: string, cursor: number) {
+export async function getInfiniteScrollPostPreviewsByTitleAndTags(
+  title: string, 
+  selectedTags: Record<string, string[]>, 
+  cursor: number
+) {
+
+  console.log({title, selectedTags, cursor})
   const { data } = await request({
-    url: `/api/p/title/inf/${title}`,
+    url: `/api/p/search/inf/${title}`,
     method: "GET",
-    params: { cursor },
+    params: { 
+      cursor,
+      tags: JSON.stringify(selectedTags)
+    },
   });
 
   const { previews, nextCursor } = data;
 
+  if (previews === undefined || nextCursor === undefined)
+    throw new UnexpectedResponseFormatError(
+      "getInfiniteScrollPostPreviewsByTitleAndTags",
+      "previews or nextCursor is missing in the response"
+    );
 
+  return { previews, nextCursor } as {
+    previews: PostPreview[];
+    nextCursor: number | null;
+  };
+}
+
+export async function getUserPostsWithTagFilters(
+  ownerId: string,
+  selectedTags: Record<string, string[]>,
+  cursor: number
+) {
+  const { data } = await request({
+    url: `/api/p/user/tags/${ownerId}`,
+    method: "GET",
+    params: { 
+      cursor,
+      tags: JSON.stringify(selectedTags)
+    },
+  });
+
+  const { previews, nextCursor } = data;
 
   if (previews === undefined || nextCursor === undefined)
     throw new UnexpectedResponseFormatError(
-      "getInfiniteScrollPostPreviewsByTitle",
+      "getUserPostsWithTagFilters",
       "previews or nextCursor is missing in the response"
     );
 

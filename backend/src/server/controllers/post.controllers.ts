@@ -61,21 +61,26 @@ export const infiniteScrollProfilePostPreviews: RequestHandler = async (
   });
 };
 
-export const infiniteScrollTitlePostPreviews: RequestHandler = async (
-  req: Request,
+export const infiniteScrollTitleAndTagsPostPreviews: RequestHandler = async (
+  req: Request, 
   res: Response
 ) => {
   const { title } = req.params;
   const cursor = req.query.cursor ? Number(req.query.cursor) : 0;
+  const selectedTags = req.query.tags ? JSON.parse(req.query.tags as string) : {};
 
-  const result = await postServices.infiniteScrollTitlePostPreviews(title, cursor);
-
+  const result = await postServices.infiniteScrollTitleAndTagsPostPreviews(
+    title, 
+    selectedTags, 
+    cursor
+  );
 
   res.status(200).send({
     previews: result.previews,
     nextCursor: result.nextCursor,
   });
 };
+
 
 // Get the list of tags
 export const getTagList: RequestHandler = async (
@@ -95,6 +100,6 @@ export default {
   getPostById,
   getFeed,
   infiniteScrollProfilePostPreviews,
-  infiniteScrollTitlePostPreviews,
+  infiniteScrollTitleAndTagsPostPreviews,
   getTagList,
 };

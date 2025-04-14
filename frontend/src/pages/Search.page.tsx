@@ -5,24 +5,25 @@ import UserSearchResults from '@/components/search/UserSearch';
 import { Search, CookingPot, Users } from 'lucide-react';
 import { Switch } from '@radix-ui/react-switch';
 
-// Main page for searching
 export default function SearchComponent() {
   const [input, setInput] = useState('');
   const [current, setCurrent] = useState(true); // Toggle between user and recipe search
-  const [showFilters, setShowFilters] = useState(true); // Default to showing filters
+  const [visible, setVisible] = useState(true); // Control visibility of Tags component
 
-  // Simple function to switch between current search type
+  // Lift state up from Tags component
+  const [selectedTags, setSelectedTags] = useState<Record<string, string[]>>({});
+  const [lastFilters, setLastFilters] = useState<Record<string, string[]>>({});
+  const [showApplyLastFilters, setShowApplyLastFilters] = useState(true);
+
   function switchCurrent() {
     setCurrent(!current);
     setInput(''); // Clear input when switching
   }
 
-  // Toggle filters visibility
   function toggleFilters() {
-    setShowFilters(!showFilters);
+    setVisible(!visible);
   }
 
-  // Component for a search bar
   function SearchBar() {
     return (
       <div className="w-9/12 border-2 p-2 rounded-lg flex items-center">
@@ -49,7 +50,6 @@ export default function SearchComponent() {
     );
   }
 
-  // Component for a switch bar, to switch between user/recipe search
   function SwitchBar() {
     return (
       <div className="flex items-center gap-3 p-2 justify-center">
@@ -71,29 +71,35 @@ export default function SearchComponent() {
     );
   }
 
-  // Main component
   return (
-    <>
-      <div className="w-screen h-screen flex justify-center items-start gap-5 pt-16">
-        <div className="w-6/12 lg:w-6/12 h-9/12 border-2 border-[#e5e5e5] rounded-md p-4 overflow-hidden flex flex-col">
-          <div className="w-full flex items-center justify-center gap-5 flex-col md:flex-row ">
-            <SwitchBar />
-            <SearchBar />
-          </div>
-
-          {/* Dynamically chooses whether to display user/recipe search based on user input */}
-          <div className="flex-grow overflow-auto mt-5">
-            {current ? (
-              <RecipeSearchResults input={input || 'a'} /> // Pass input to RecipeSearch
-            ) : (
-              <UserSearchResults input={input || 'a'} /> // Pass input to UserSearch
-            )}
-          </div>
+    <div className="w-screen h-screen flex justify-center items-start gap-5 pt-16">
+      <div className="w-6/12 lg:w-6/12 h-9/12 border-2 border-[#e5e5e5] rounded-md p-4 overflow-hidden flex flex-col">
+        <div className="w-full flex items-center justify-center gap-5 flex-col md:flex-row">
+          <SwitchBar />
+          <SearchBar />
         </div>
-        
-        {/* Show filters when in recipe search mode and filters are toggled on */}
-        {current && showFilters && <Tags />}
+
+        <div className="flex-grow overflow-auto mt-5">
+          {current ? (
+            <RecipeSearchResults input={input || 'a'} selectedTags={selectedTags} />
+          ) : (
+            <UserSearchResults input={input || 'a'} />
+          )}
+        </div>
       </div>
-    </>
+
+      {/* Only render Tags when in recipe search mode */}
+      {current && (
+        <Tags 
+          visible={visible}
+          selectedTags={selectedTags}
+          setSelectedTags={setSelectedTags}
+          lastFilters={lastFilters}
+          setLastFilters={setLastFilters}
+          showApplyLastFilters={showApplyLastFilters}
+          setShowApplyLastFilters={setShowApplyLastFilters}
+        />
+      )}
+    </div>
   );
 }

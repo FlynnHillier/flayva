@@ -25,12 +25,13 @@ import {
   InstructionItem,
   InstructionsHandler,
 } from "./instructions/instructions";
-const { createNewPostSchema } = POST_VALIDATOR;
+import { useNavigate } from "react-router-dom";
 
-// TODO: use constants instaed of hard code
+const { createNewPostSchema } = POST_VALIDATOR;
 
 export default function CreateNewPostForm() {
   const [isDisabled, setIsDisabled] = useState<boolean>(false);
+  const navigate = useNavigate();
   const form = useForm<z.infer<typeof createNewPostSchema>>({
     resolver: zodResolver(createNewPostSchema),
     defaultValues: {
@@ -61,15 +62,15 @@ export default function CreateNewPostForm() {
       console.error(error);
       toast.error("Something went wrong!");
     },
-    onSuccess() {
+    onSuccess({ postId }) {
       toast.success("Post created successfully!");
+      navigate(`/p/${postId}`);
     },
   });
 
   const handleSubmit = useCallback(
     (values: z.infer<typeof createNewPostSchema>) => {
       mutate(values);
-      form.reset();
     },
     [mutate]
   );
@@ -155,9 +156,7 @@ export default function CreateNewPostForm() {
                     <FormControl>
                       <ImageUploadAndPreview
                         images={field.value}
-                        onValueChange={(files) =>
-                          files && form.setValue("images", files)
-                        }
+                        setImages={(images) => form.setValue("images", images)}
                       />
                     </FormControl>
                   </FormItem>
@@ -245,13 +244,14 @@ export default function CreateNewPostForm() {
                   </FormItem>
                 )}
               />
-
               <Button
                 type="submit"
+                variant={"default"}
+                size={"lg"}
                 disabled={isDisabled}
-                onClick={() => console.log(form.getValues())}
+                className="ml-auto"
               >
-                Submit
+                Post
               </Button>
             </CardContent>
           </Card>

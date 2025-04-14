@@ -212,8 +212,15 @@ export const AddIngredient = ({
     () =>
       selectedIngredient !== null &&
       selectedUnit !== undefined &&
-      amount !== null,
-    [selectedIngredient, selectedUnit]
+      amount !== null &&
+      !(amount.whole === 0 && amount.fractional === undefined),
+    [
+      selectedIngredient,
+      selectedUnit,
+      amount,
+      amount?.whole,
+      amount?.fractional,
+    ]
   );
 
   const clearValues = useCallback(() => {

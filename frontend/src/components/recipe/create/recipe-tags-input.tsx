@@ -95,11 +95,14 @@ export function TagsInput({
   const [inputValue, setInputValue] = useState("");
   const [debouncedInputValue] = useDebounce(inputValue, 500);
 
-  const [activeSelectedTagIndex, setActiveSelectedTagIndex] = useState<number>(-1);
-  const [selectedInputTextValue, setSelectedInputTextValue] = useState<string>("");
+  const [activeSelectedTagIndex, setActiveSelectedTagIndex] =
+    useState<number>(-1);
+  const [selectedInputTextValue, setSelectedInputTextValue] =
+    useState<string>("");
 
   const [suggestions, setSuggestions] = useState<RecipeTag[]>([]);
-  const [activeSuggestionIndex, setActiveSuggestionIndex] = useState<number>(-1);
+  const [activeSuggestionIndex, setActiveSuggestionIndex] =
+    useState<number>(-1);
 
   const [disableInput, setDisableInput] = useState(false);
   const [disableButton, setDisableButton] = useState(false);
@@ -151,10 +154,6 @@ export function TagsInput({
     [tags]
   );
 
-  const clearTags = () => {
-    onTagsChange([]);
-  };
-
   // ## Manage Suggestions ##
   const clearSuggestions = useCallback(() => {
     setSuggestions([]);
@@ -168,7 +167,9 @@ export function TagsInput({
 
   useEffect(() => {
     setSuggestions((prev) =>
-      prev.filter((suggestion) => !tags.some((tag) => tag.tagId === suggestion.tagId))
+      prev.filter(
+        (suggestion) => !tags.some((tag) => tag.tagId === suggestion.tagId)
+      )
     );
   }, [tags]);
 
@@ -182,7 +183,8 @@ export function TagsInput({
   }, [suggestionsQueryData]);
 
   useEffect(() => {
-    if (!suggestions || suggestions.length === 0) return setActiveSuggestionIndex(-1);
+    if (!suggestions || suggestions.length === 0)
+      return setActiveSuggestionIndex(-1);
     setActiveSuggestionIndex(0);
   }, [suggestions]);
 
@@ -212,13 +214,17 @@ export function TagsInput({
       // ## Selected Tag Interaction ##
       const moveSelectedTagNext = () => {
         const nextIndex =
-          activeSelectedTagIndex + 1 > tags.length - 1 ? -1 : activeSelectedTagIndex + 1;
+          activeSelectedTagIndex + 1 > tags.length - 1
+            ? -1
+            : activeSelectedTagIndex + 1;
         setActiveSelectedTagIndex(nextIndex);
       };
 
       const moveSelectedTagPrev = () => {
         const prevIndex =
-          activeSelectedTagIndex - 1 < 0 ? tags.length - 1 : activeSelectedTagIndex - 1;
+          activeSelectedTagIndex - 1 < 0
+            ? tags.length - 1
+            : activeSelectedTagIndex - 1;
         setActiveSelectedTagIndex(prevIndex);
       };
 
@@ -236,7 +242,9 @@ export function TagsInput({
       const moveSuggestionNext = () => {
         if (!suggestions || activeSuggestionIndex === -1) return;
         const nextIndex =
-          activeSuggestionIndex + 1 < suggestions.length ? activeSuggestionIndex + 1 : 0;
+          activeSuggestionIndex + 1 < suggestions.length
+            ? activeSuggestionIndex + 1
+            : 0;
         setActiveSuggestionIndex(nextIndex);
       };
 
@@ -244,7 +252,9 @@ export function TagsInput({
         if (!suggestions || activeSuggestionIndex === -1) return;
 
         const prevIndex =
-          activeSuggestionIndex - 1 < 0 ? suggestions.length - 1 : activeSuggestionIndex - 1;
+          activeSuggestionIndex - 1 < 0
+            ? suggestions.length - 1
+            : activeSuggestionIndex - 1;
         setActiveSuggestionIndex(prevIndex);
       };
 
@@ -278,7 +288,10 @@ export function TagsInput({
         case "Backspace":
         case "Delete":
           if (tags.length > 0) {
-            if (activeSelectedTagIndex !== -1 && activeSelectedTagIndex < tags.length) {
+            if (
+              activeSelectedTagIndex !== -1 &&
+              activeSelectedTagIndex < tags.length
+            ) {
               removeSelectedTag(tags[activeSelectedTagIndex]);
               moveSelectedTagCurrent();
             } else {
@@ -324,9 +337,12 @@ export function TagsInput({
     ]
   );
 
-  const handleInputValueChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(e.currentTarget.value);
-  }, []);
+  const handleInputValueChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setInputValue(e.currentTarget.value);
+    },
+    []
+  );
 
   return (
     <>
@@ -334,7 +350,7 @@ export function TagsInput({
         {...props}
         dir={dir}
         className={cn(
-          "flex items-center flex-wrap gap-2 p-2 rounded-lg bg-background overflow-hidden ring-1 ring-muted w-full max-w-[380px]",
+          "flex items-center flex-wrap gap-2 p-2 rounded-lg bg-background overflow-hidden ring-1 ring-muted w-full",
           {
             "focus-within:ring-ring": activeSelectedTagIndex === -1,
           },
@@ -359,7 +375,9 @@ export function TagsInput({
           onKeyDown={handleKeyDown}
           value={inputValue}
           onSelect={handleInputTextSelection}
-          onChange={activeSelectedTagIndex === -1 ? handleInputValueChange : undefined}
+          onChange={
+            activeSelectedTagIndex === -1 ? handleInputValueChange : undefined
+          }
           placeholder={placeholder}
           onClick={() => setActiveSelectedTagIndex(-1)}
           className={cn(
@@ -385,14 +403,6 @@ export function TagsInput({
           />
         ))}
       </div>
-      <button
-        onClick={clearTags}
-        className="ml-2 mt-2 p-2 text-xs text-red-500 bg-transparent hover:border rounded hover:bg-red-500 hover:text-white"
-        aria-label="Clear all tags"
-        style={{ display: tags.length > 0 ? 'inline-block' : 'none' }}
-      >
-        Clear Tags
-      </button>
     </>
   );
 }

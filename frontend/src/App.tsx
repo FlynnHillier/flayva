@@ -10,7 +10,6 @@ import FeedPage from "./pages/Feed.page";
 import LoginPage from "./pages/Login.page";
 import CreatePostPage from "./pages/Create-post.page";
 import RecipePage from "./pages/Recipe.page";
-import EditProfile from "./pages/profile-pages/Edit-profile.page";
 import ViewProfilePage from "./pages/profile-pages/Profile.page";
 import DevPage from "./pages/Dev.page";
 import { Toaster } from "sonner";
@@ -55,7 +54,10 @@ function UnauthenticatedRouter() {
 function App() {
   const { pathname } = useLocation();
 
-  const shouldShowSidebar = useMemo(() => !HIDE_SIDEBAR_ROUTES.includes(pathname), [pathname]);
+  const shouldShowSidebar = useMemo(
+    () => !HIDE_SIDEBAR_ROUTES.includes(pathname),
+    [pathname]
+  );
 
   return (
     <div className="w-screen h-screen flex flex-row flex-nowrap justify-start">
@@ -69,10 +71,6 @@ function App() {
             <Route path="/profile" element={<ProfileLayout />}>
               <Route path="/profile/:id" element={<ViewProfilePage />} />
             </Route>
-            {
-              //TODO: change the location of profile edit
-            }
-            <Route path="/p/edit" element={<EditProfile />} />
           </Route>
           <Route element={<UnauthenticatedRouter />}>
             <Route path="/login" element={<LoginPage />} />

@@ -12,8 +12,7 @@ export default function SearchComponent() {
 
   // Lift state up from Tags component
   const [selectedTags, setSelectedTags] = useState<Record<string, string[]>>({});
-  const [lastFilters, setLastFilters] = useState<Record<string, string[]>>({});
-  const [showApplyLastFilters, setShowApplyLastFilters] = useState(true);
+
 
   function switchCurrent() {
     setCurrent(!current);
@@ -94,10 +93,6 @@ export default function SearchComponent() {
           visible={visible}
           selectedTags={selectedTags}
           setSelectedTags={setSelectedTags}
-          lastFilters={lastFilters}
-          setLastFilters={setLastFilters}
-          showApplyLastFilters={showApplyLastFilters}
-          setShowApplyLastFilters={setShowApplyLastFilters}
         />
       )}
     </div>

@@ -217,7 +217,7 @@ export const getPosts = (options: Omit<DbFindManyParams<"posts">, "with" | "colu
                 tag: {
                   columns: {
                     category: true,
-                    group: true,
+                    emoji: true,
                     id: true,
                     name: true,
                   },

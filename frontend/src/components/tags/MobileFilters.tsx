@@ -8,13 +8,7 @@ interface MobileFiltersProps {
   setSelectedTags: React.Dispatch<React.SetStateAction<Record<string, string[]>>>;
 }
 
-/**
- * MobileFilters component - Displays a full-screen filter overlay on mobile devices
- * 
- * This component renders a modal-like interface that takes up the entire screen
- * and displays filter options. It includes a header with a close button and
- * the main content area with filter tags.
- */
+// Mobile filters component
 export default function MobileFilters({
   isOpen,
   onClose,

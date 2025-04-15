@@ -60,7 +60,6 @@ export default function PostPreviewTags({
     <div className="flex -space-x-3 items-center">
       {displayTags.map((tag, index) => (
         <div key={index} className="scale-75 origin-left">
-          {/* Make sure tag has the required properties */}
           <Tag tag={tag.tag} transparent={true} />
         </div>
       ))}

@@ -30,7 +30,7 @@ export default function Tag({
   return (
     <button
       onClick={onClick}
-      className={`flex items-center space-x-1 py-1 px-3 rounded-full text-sm ${bgClass} ${textClass} border`}
+      className={`flex items-center space-x-1 py-1 px-3 rounded-full text-sm ${bgClass} ${textClass} border text-nowrap`}
     >
       <span>{tag.emoji}</span>
       <span>{tag.name || tag.tagName}</span>

@@ -5,8 +5,8 @@ import { pgTable, primaryKey, varchar } from "drizzle-orm/pg-core";
 export const followers = pgTable(
   "followers",
   {
-    followedId: varchar().references(() => users.id, { onDelete: "cascade" }),
-    followerId: varchar().references(() => users.id, { onDelete: "cascade" }),
+    followedId: varchar("followed_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+    followerId: varchar("follower_id").notNull().references(() => users.id, { onDelete: "cascade" }),
   },
   (table) => [primaryKey({ columns: [table.followedId, table.followerId] })]
 );

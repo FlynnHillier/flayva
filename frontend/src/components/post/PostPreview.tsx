@@ -77,7 +77,7 @@ export default function PostPreview({
 			<div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent pt-8 pb-3 px-3">
 				{/* Recipe title first */}
 				<div className="max-w-[85%] mb-2">
-					<span className="text-sm lg:text-lg text-white font-semibold">
+					<span className="text-sm lg:text-lg text-white font-semibold backdrop-blur-md">
 						{preview.recipe.title}
 					</span>
 				</div>

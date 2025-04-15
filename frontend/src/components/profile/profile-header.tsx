@@ -1,8 +1,7 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useProfile } from "@/contexts/profile.context";
-import { useMe } from "@/hooks/auth.hooks";
+import { useLogout, useMe } from "@/hooks/auth.hooks";
 import {
   useFetchOwnFollowingUserStatus,
   useFollowUser,
@@ -39,7 +38,13 @@ function Username() {
 const SocialMetrics = ({ className }: { className?: ClassNameValue }) => {
   const { profile } = useProfile();
 
-  const MetricView = ({ value, name }: { value?: number; name: string }): ReactNode => {
+  const MetricView = ({
+    value,
+    name,
+  }: {
+    value?: number;
+    name: string;
+  }): ReactNode => {
     if (value === undefined) return <Skeleton className="w-8 h-10 " />;
 
     return (
@@ -77,7 +82,12 @@ const ShareProfileButton = () => {
   const handleShareProfile = () => {
     if (profile)
       navigator.clipboard
-        .writeText(new URL(`/profile/${profile.user.id}`, window.location.origin).toString())
+        .writeText(
+          new URL(
+            `/profile/${profile.user.id}`,
+            window.location.origin
+          ).toString()
+        )
         .then(() => {
           // TODO: possibly set false after x seconds
           setIsShareLinkCopied(true);
@@ -86,14 +96,27 @@ const ShareProfileButton = () => {
   };
 
   return (
-    <Button variant="outline" onClick={handleShareProfile} className="cursor-pointer">
-      {isShareLinkCopied ? <CopyCheck className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+    <Button
+      variant="outline"
+      onClick={handleShareProfile}
+      className="cursor-pointer"
+    >
+      {isShareLinkCopied ? (
+        <CopyCheck className="h-4 w-4" />
+      ) : (
+        <Copy className="h-4 w-4" />
+      )}
       <span className="ml-1">Share </span>
     </Button>
   );
 };
 
-const FollowButton = ({ className, disabled, onClick, ...props }: ComponentProps<"button">) => {
+const FollowButton = ({
+  className,
+  disabled,
+  onClick,
+  ...props
+}: ComponentProps<"button">) => {
   const { profile } = useProfile();
 
   if (!profile) return null;
@@ -126,7 +149,12 @@ const FollowButton = ({ className, disabled, onClick, ...props }: ComponentProps
   );
 };
 
-const UnfollowButton = ({ className, disabled, onClick, ...props }: ComponentProps<"button">) => {
+const UnfollowButton = ({
+  className,
+  disabled,
+  onClick,
+  ...props
+}: ComponentProps<"button">) => {
   const { profile } = useProfile();
 
   if (!profile) return null;
@@ -164,7 +192,9 @@ const FollowToggleButton = () => {
 
   if (!profile) return null;
 
-  const { data, error, isPending } = useFetchOwnFollowingUserStatus(profile.user.id);
+  const { data, error, isPending } = useFetchOwnFollowingUserStatus(
+    profile.user.id
+  );
 
   // TODO: possible handle erorr?
 
@@ -172,6 +202,21 @@ const FollowToggleButton = () => {
     <UnfollowButton disabled={isPending} />
   ) : (
     <FollowButton disabled={isPending} />
+  );
+};
+
+const LogoutButton = () => {
+  const { isPending, mutate } = useLogout({
+    onError: () => toast.error("failed to log out!"),
+    onSuccess: () => {
+      toast.success("Logged out!");
+    },
+  });
+
+  return (
+    <Button disabled={isPending} onClick={() => mutate(undefined)}>
+      Logout
+    </Button>
   );
 };
 
@@ -192,6 +237,11 @@ const ProfileButtons = () => {
         me?.user && me?.user?.id !== profile.user.id && <FollowToggleButton />
       }
       <ShareProfileButton />
+
+      {
+        // Only show logout button if the profile is the current user's profile
+        profile.user.id === me?.user?.id && <LogoutButton /> //TODO: add confirm choice modal
+      }
     </div>
   );
 };

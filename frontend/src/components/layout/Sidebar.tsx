@@ -141,7 +141,7 @@ function SidebarItemFooter() {
 
 const AppSidebar = () => {
   return (
-    <div className="border-r-2 border-neutral-500 w-fit box-border h-full lg:px-3 xl:px-6 lg:items-start items-center bg-background flex flex-col justify-between py-8 text-yellow-950 px-4">
+    <div className="border-r-2 border-neutral-500 w-fit box-border h-full lg:px-3 xl:px-6 lg:items-start items-center bg-background flex flex-col justify-between py-8 text-yellow-950 px-4 shrink-0">
       <div className="flex items-center">
         <span className="lg:size-9 xl:size-10 size-8 shrink-0">
           <img src={logo} alt="logo" />

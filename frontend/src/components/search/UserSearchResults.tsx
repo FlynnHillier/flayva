@@ -64,7 +64,7 @@ export default function UserSearchResults() {
   }, [inView, fetchNextPage, hasNextPage, isFetchingNextPage]);
 
   return (
-    <div className="h-full overflow-y-auto grid grid-cols-1 gap-3 xl:grid-cols-2">
+    <div className="h-fit max-h-full overflow-y-auto grid grid-cols-1 gap-3 xl:grid-cols-2 ">
       {/* Each user as a mini component */}
       {users?.map((user: User) => (
         <UserSearchResultCard key={user.id} user={user} />

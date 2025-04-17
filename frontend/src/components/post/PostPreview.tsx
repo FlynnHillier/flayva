@@ -18,7 +18,7 @@ export default function PostPreview({
   const [previewWidth, setPreviewWidth] = useState(0);
 
   // Get the image URL
-  const imagePreviewUrl = uploadThingFileUrlFromKey(preview.images[0].key);
+  const imagePreviewUrl = uploadThingFileUrlFromKey(preview.image.key);
 
   // Function to get the width of the post preview
   function getWidthPostPreview(): number {

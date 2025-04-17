@@ -58,10 +58,10 @@ export default function PostPreviewTags({
     tags.length > visibleTagCount ? tags.length - visibleTagCount : 0;
 
   return (
-    <div className="flex -space-x-3 items-center">
+    <div className="flex space-x-3 items-center">
       {displayTags.map((tag, index) => (
-        <div key={index} className="scale-75 origin-left">
-          <Tag tag={tag} transparent={true} />
+        <div key={index} className="origin-left">
+          <Tag tag={tag} transparent={true} className="@xl:text-lg" />
         </div>
       ))}
       {extraTags > 0 && (

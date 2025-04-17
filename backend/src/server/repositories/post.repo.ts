@@ -15,8 +15,6 @@ import { UploadedFileData } from "uploadthing/types";
 import { DbFindManyParams } from "@/types/db.types";
 import { and, asc, eq, inArray, or, sql } from "drizzle-orm";
 import { RecipeTag } from "@flayva-monorepo/shared/types";
-import { NestedRepositoryObject } from "../../../dist/src/types/api.types";
-import { tag } from "@flayva-monorepo/shared/validation/recipe.validation";
 
 /**
  * MANAGING POSTS
@@ -181,6 +179,7 @@ export const getPostPreviews = async (
         columns: {
           key: true,
         },
+        limit: 1,
       },
       recipe: {
         columns: {
@@ -217,6 +216,8 @@ export const getPostPreviews = async (
 
   return unformattedPostPreviews.map((postPreview) => ({
     ...postPreview,
+    image: postPreview.images[0],
+    images: undefined,
     recipe: {
       ...postPreview.recipe,
       // Remove the tagLinks property and replace it with a tags property

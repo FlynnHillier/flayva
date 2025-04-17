@@ -13,7 +13,7 @@ import CreatePostPage from "./pages/Create-post.page";
 import RecipePage from "./pages/Recipe.page";
 import EditProfile from "./pages/profile-pages/Edit-profile.page";
 import ViewProfilePage from "./pages/profile-pages/Profile.page";
-import SearchPage from './pages/Search.page'
+import SearchPage from "./pages/Search.page";
 import DevPage from "./pages/Dev.page";
 import { Toaster } from "sonner";
 import ProfileLayout from "@/pages/profile-pages/profile.layout";
@@ -57,12 +57,15 @@ function UnauthenticatedRouter() {
 function App() {
   const { pathname } = useLocation();
 
-  const shouldShowSidebar = useMemo(() => !HIDE_SIDEBAR_ROUTES.includes(pathname), [pathname]);
+  const shouldShowSidebar = useMemo(
+    () => !HIDE_SIDEBAR_ROUTES.includes(pathname),
+    [pathname]
+  );
 
   return (
     <div className="w-screen h-screen flex flex-row flex-nowrap justify-start">
       {shouldShowSidebar && <AppSidebar />}
-      <main className="grow h-screen flex flex-col flex-nowrap overflow-x-hidden overflow-y-auto relative items-center">
+      <main className="grow h-screen flex flex-col flex-nowrap overflow-x-hidden overflow-y-auto relative items-center box-border">
         <Routes>
           <Route index element={<HomePage />} />
           <Route element={<AuthenticatedRouter />}>

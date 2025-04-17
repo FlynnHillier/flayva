@@ -1,38 +1,21 @@
-import { useInfiniteScrollTitleAndTagsPostPreviews } from "@/hooks/post.hooks";
-import { useEffect, useMemo } from "react";
+import { useEffect } from "react";
 import { toast } from "sonner";
 import { useInView } from "react-intersection-observer";
 import { Button } from "@/components/ui/button";
-import { useDebounce } from "@/hooks/useDebounce.hooks";
 import PostPreview from "../post/PostPreview";
 import { PostPreviewSkeleton } from "../post/PostPreview";
+import { usePostSearchResult } from "./context/postSearchResults.context";
 
 // Main component
-export default function RecipeSearchResults({
-  input,
-  selectedTagIds,
-}: {
-  input: string;
-  selectedTagIds: number[];
-}) {
-  const debouncedInput = useDebounce(input, 500);
-  const debouncedTags = useDebounce(selectedTagIds, 500);
-
-  // Main hook call for infinite scrolling with title and tags
+export default function PostSearchResults() {
   const {
-    data,
-    fetchNextPage,
     error,
+    fetchNextPage,
     hasNextPage,
-    isFetchingNextPage,
     isFetching,
-    isFetched,
-  } = useInfiniteScrollTitleAndTagsPostPreviews(debouncedInput, debouncedTags);
-
-  const previews = useMemo(
-    () => (data ? data.pages.flatMap((page) => page.previews) : []),
-    [data, data?.pages]
-  );
+    isFetchingNextPage,
+    results,
+  } = usePostSearchResult();
 
   const { ref, inView } = useInView();
 
@@ -49,14 +32,14 @@ export default function RecipeSearchResults({
   }, [inView, hasNextPage, isFetching]);
 
   return (
-    <div className="w-full max-w-7xl p-3 grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-5 place-items-center">
-      {previews.map((preview) => (
+    <div className="w-full max-w-7xl p-3 grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-5 place-items-center">
+      {results.map((preview) => (
         <PostPreview key={preview.id} preview={preview} showUser={true} />
       ))}
 
       {
         // If there are no posts and not fetching, show a message
-        previews.length === 0 && !isFetching && !error && (
+        results.length === 0 && !isFetching && !error && (
           <div className="col-span-full text-center text-gray-500">
             No posts available.
           </div>
@@ -64,7 +47,7 @@ export default function RecipeSearchResults({
       }
       {
         // If fetching, show skeleton loading indicators
-        (isFetchingNextPage || !isFetched) && (
+        (isFetchingNextPage || isFetching) && (
           <>
             {Array.from({ length: 6 }).map((_, index) => (
               <PostPreviewSkeleton key={`skeleton-${index}`} showUser={true} />

@@ -432,7 +432,6 @@ export const getPostIdsByTagsAndSimilarTitle = (
   db
     .select({
       postId: posts.id,
-      tags: recipe_tags.tagID,
     })
     .from(posts)
     .leftJoin(recipes, eq(posts.recipeId, recipes.id))
@@ -440,10 +439,10 @@ export const getPostIdsByTagsAndSimilarTitle = (
     .where(
       and(
         sql`${recipes.title} ILIKE ${"%" + recipeTitle + "%"}`,
+        // TODO: change to match where all tags are selected, not just one
         tagIds.length > 0
           ? or(...tagIds.map((id) => eq(recipe_tags.tagID, id)))
           : sql`TRUE`
-        // tagIds.length > 0 ? inArray(recipe_tags.tagID, tagIds) : sql`TRUE`
       )
     )
     .orderBy(
@@ -454,7 +453,7 @@ export const getPostIdsByTagsAndSimilarTitle = (
         END`,
       asc(recipes.id)
     )
-    .groupBy(posts.id, recipes.title, recipes.id, recipe_tags.tagID);
+    .groupBy(posts.id, recipes.title, recipes.id);
 
 /**
  * Default export including all functions from this file

@@ -13,6 +13,7 @@ import { Badge } from "@components/ui/badge";
 import { SlideshowItem } from "@components/Slideshow";
 import { useContext } from "react";
 import { PostContext } from "@/contexts/posts.context";
+import { Button } from "../ui/button";
 interface Recipe {
   title: string;
   photos: string[];
@@ -52,10 +53,10 @@ function RecipeMain() {
       {posts?.map((post, index) => (
         <div
           key={post.title}
-          className="w-full h-screen snap-start relative pt-13"
+          className="w-full h-screen snap-start relative pt-6"
         >
           <div className="w-full h-[calc(100%-6rem)] flex items-center justify-center">
-            <div className="relative w-10/12 aspect-square mx-auto max-w-4xl">
+            <div className="relative w-19/24 aspect-square mx-auto max-w-4xl">
               <div className="w-full h-full rounded-xl overflow-hidden">
                 <Carousel className="w-full h-full">
                   <CarouselContent>
@@ -79,25 +80,39 @@ function RecipeMain() {
                   <CarouselNext className="absolute right-2 top-1/2 -translate-y-1/2" />
                 </Carousel>
               </div>
+
               <div className="absolute top-[calc(100%+0.3rem)] left-0 w-full">
-                <div className="w-full">
-                  <span className="font-bold">{data?.user?.username}</span> -{" "}
-                  {post.title}
-                  <div className="mt-2 flex space-x-2">
-                    {post.tags.slice(0, 3).map((tag, index) => (
-                      <Badge
-                        key={index}
-                        variant="secondary"
-                        className={`rounded-full ${
-                          index === 0 ? "outline" : ""
-                        }`}
-                      >
-                        {tag}
-                      </Badge>
-                    ))}
+                <div className="flex flex-row gap-3">
+                  <div>
+                    <img
+                      className="rounded-full"
+                      src={data?.user?.profile_picture_url}
+                      alt=""
+                    ></img>
+                  </div>
+
+                  <div className="w-full flex flex-col gap-0">
+                    <span className="font-bold">{post.title}</span>
+                    <div>{data?.user?.username}</div>
+                    <div className="flex space-x-2">
+                      {post.tags.slice(0, 3).map((tag, index) => (
+                        <Badge
+                          key={index}
+                          variant="secondary"
+                          className={`rounded-full ${
+                            index === 0 ? "outline" : ""
+                          }`}
+                        >
+                          {tag}
+                        </Badge>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
+              <Button className="absolute right-5 bottom-5 hover: cursor-pointer">
+                Veiw More
+              </Button>
             </div>
           </div>
           <ArrowUp
@@ -117,9 +132,16 @@ function RecipeMain() {
 export default function Recipe() {
   return (
     <>
-      <div className="flex flex-row w-full h-screen">
-        <RecipeMain />
-        <RecipeSidebar />
+      <div className="hidden md:block">
+        <div className="flex flex-row w-full h-screen ">
+          <RecipeMain />
+          <RecipeSidebar />
+        </div>
+      </div>
+      <div className="block md:hidden">
+        <div className="flex flex-row w-full h-screen ">
+          <RecipeMain />
+        </div>
       </div>
     </>
   );

@@ -5,7 +5,6 @@ import { RecipeTag } from "@flayva-monorepo/shared/types";
 import { useSearchBar } from "./context/searchBar.context";
 import Tag from "../tags/Tag";
 import { cn } from "@/lib/utils";
-import { useEffect } from "react";
 
 /**
  * A component that displays a list of tags for filtering recipes.

@@ -65,19 +65,22 @@ export function SearchBar() {
         className="w-full p-2 rounded-md outline-none"
       />
       {/* Only show filter button when in recipe search mode */}
-      {mode === "recipe" && (
-        <button
-          onClick={toggleShowFilter}
-          className="ml-2 p-1 rounded-md group hover:cursor-pointer"
-          aria-label="Toggle filters"
-        >
-          <Filter
-            className={cn("text-muted-foreground group-hover:text-primary ", {
-              "text-primary": showFilters,
-            })}
-          />
-        </button>
-      )}
+      <button
+        onClick={toggleShowFilter}
+        className={cn(
+          "ml-2 p-1 rounded-md group hover:cursor-pointer transition-opacity duration-300",
+          {
+            "opacity-0 pointer-events-none": mode !== "recipe",
+          }
+        )}
+        aria-label="Toggle filters"
+      >
+        <Filter
+          className={cn("text-muted-foreground group-hover:text-primary ", {
+            "text-primary": showFilters,
+          })}
+        />
+      </button>
     </div>
   );
 }

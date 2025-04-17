@@ -4,7 +4,9 @@ import { Post, PostPreview } from "@flayva-monorepo/shared/types";
 import { createNewPostSchema } from "@flayva-monorepo/shared/validation/post.validation";
 import { z } from "zod";
 
-export async function createNewPost(postData: z.infer<typeof createNewPostSchema>) {
+export async function createNewPost(
+  postData: z.infer<typeof createNewPostSchema>
+) {
   const fd = new FormData();
 
   postData.images.forEach((image) => {
@@ -67,7 +69,10 @@ export async function getPostPreviewsByOwnerId(ownerId: string) {
   return { previews: data } as { previews: PostPreview[] };
 }
 
-export async function getInfiniteScrollPostPreviewsByOwnerId(ownerId: string, cursor: number) {
+export async function getInfiniteScrollPostPreviewsByOwnerId(
+  ownerId: string,
+  cursor: number
+) {
   const { data } = await request({
     url: `/api/p/owner/inf/${ownerId}`,
     method: "GET",
@@ -89,18 +94,17 @@ export async function getInfiniteScrollPostPreviewsByOwnerId(ownerId: string, cu
 }
 
 export async function getInfiniteScrollPostPreviewsByTitleAndTags(
-  title: string, 
-  selectedTags: Record<string, string[]>, 
+  title: string,
+  selectedTagIds: number[],
   cursor: number
 ) {
-
-  console.log({title, selectedTags, cursor})
   const { data } = await request({
-    url: `/api/p/search/inf/${title}`,
+    url: `/api/p/search/preview`,
     method: "GET",
-    params: { 
+    params: {
       cursor,
-      tags: JSON.stringify(selectedTags)
+      tag: selectedTagIds,
+      title: title,
     },
   });
 
@@ -126,9 +130,9 @@ export async function getUserPostsWithTagFilters(
   const { data } = await request({
     url: `/api/p/user/tags/${ownerId}`,
     method: "GET",
-    params: { 
+    params: {
       cursor,
-      tags: JSON.stringify(selectedTags)
+      tags: JSON.stringify(selectedTags),
     },
   });
 

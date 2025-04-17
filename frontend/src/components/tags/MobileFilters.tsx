@@ -1,19 +1,19 @@
-import { X } from 'lucide-react';
-import Tags from '@/components/search/common/Tags';
+import { X } from "lucide-react";
+import Tags from "@/components/search/common/Tags";
 
 interface MobileFiltersProps {
   isOpen: boolean;
   onClose: () => void;
-  selectedTags: Record<string, string[]>;
-  setSelectedTags: React.Dispatch<React.SetStateAction<Record<string, string[]>>>;
+  selectedTagIds: number[];
+  setSelectedTagIds: React.Dispatch<React.SetStateAction<number[]>>;
 }
 
 // Mobile filters component
 export default function MobileFilters({
   isOpen,
   onClose,
-  selectedTags,
-  setSelectedTags
+  selectedTagIds,
+  setSelectedTagIds,
 }: MobileFiltersProps) {
   // Don't render anything if the filter is not open
   if (!isOpen) return null;
@@ -24,7 +24,7 @@ export default function MobileFilters({
       {/* Header with title and close button */}
       <div className="flex justify-between items-center p-4 border-b">
         <h2 className="text-lg font-medium">Filters</h2>
-        <button 
+        <button
           onClick={onClose}
           className="p-1 rounded-full hover:bg-gray-100"
           aria-label="Close filters"
@@ -32,13 +32,13 @@ export default function MobileFilters({
           <X size={24} />
         </button>
       </div>
-      
+
       {/* Main content area with scrollable filter options */}
       <div className="flex-1 overflow-auto p-4">
         <Tags
           visible={true}
-          selectedTags={selectedTags}
-          setSelectedTags={setSelectedTags}
+          selectedTagIds={selectedTagIds}
+          setSelectedTagIds={setSelectedTagIds}
           isMobile={true} // Pass isMobile flag to adapt the Tags component for mobile view
         />
       </div>

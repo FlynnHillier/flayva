@@ -35,7 +35,7 @@ function SelectedTag({
       )}
       variant={"secondary"}
     >
-      <span className="text-xs">{tag.tagName}</span>
+      <span className="text-xs">{tag.name}</span>
       <button
         type="button"
         aria-label={`Remove ${tag} option`}
@@ -69,7 +69,7 @@ function SuggestionTag({
         "font-semibold bg-gray-200": isActive,
       })}
     >
-      {suggestion.tagName}
+      {suggestion.name}
     </button>
   );
 }
@@ -101,11 +101,14 @@ export function TagsInput({
   const [inputValue, setInputValue] = useState("");
   const [debouncedInputValue] = useDebounce(inputValue, 500);
 
-  const [activeSelectedTagIndex, setActiveSelectedTagIndex] = useState<number>(-1);
-  const [selectedInputTextValue, setSelectedInputTextValue] = useState<string>("");
+  const [activeSelectedTagIndex, setActiveSelectedTagIndex] =
+    useState<number>(-1);
+  const [selectedInputTextValue, setSelectedInputTextValue] =
+    useState<string>("");
 
   const [suggestions, setSuggestions] = useState<RecipeTag[]>([]);
-  const [activeSuggestionIndex, setActiveSuggestionIndex] = useState<number>(-1);
+  const [activeSuggestionIndex, setActiveSuggestionIndex] =
+    useState<number>(-1);
 
   const [disableInput, setDisableInput] = useState(false);
   const [disableButton, setDisableButton] = useState(false);
@@ -186,7 +189,8 @@ export function TagsInput({
 
   useEffect(() => {
     // Clear the suggestion index when the suggestions become empty
-    if (!suggestions || suggestions.length === 0) return setActiveSuggestionIndex(-1);
+    if (!suggestions || suggestions.length === 0)
+      return setActiveSuggestionIndex(-1);
 
     // Reset the suggestion index when the suggestions change
     setActiveSuggestionIndex(0);
@@ -218,13 +222,17 @@ export function TagsInput({
       // ## Selected Tag Interaction ##
       const moveSelectedTagNext = () => {
         const nextIndex =
-          activeSelectedTagIndex + 1 > tags.length - 1 ? -1 : activeSelectedTagIndex + 1;
+          activeSelectedTagIndex + 1 > tags.length - 1
+            ? -1
+            : activeSelectedTagIndex + 1;
         setActiveSelectedTagIndex(nextIndex);
       };
 
       const moveSelectedTagPrev = () => {
         const prevIndex =
-          activeSelectedTagIndex - 1 < 0 ? tags.length - 1 : activeSelectedTagIndex - 1;
+          activeSelectedTagIndex - 1 < 0
+            ? tags.length - 1
+            : activeSelectedTagIndex - 1;
         setActiveSelectedTagIndex(prevIndex);
       };
 
@@ -242,7 +250,9 @@ export function TagsInput({
       const moveSuggestionNext = () => {
         if (!suggestions || activeSuggestionIndex === -1) return;
         const nextIndex =
-          activeSuggestionIndex + 1 < suggestions.length ? activeSuggestionIndex + 1 : 0;
+          activeSuggestionIndex + 1 < suggestions.length
+            ? activeSuggestionIndex + 1
+            : 0;
         setActiveSuggestionIndex(nextIndex);
       };
 
@@ -250,7 +260,9 @@ export function TagsInput({
         if (!suggestions || activeSuggestionIndex === -1) return;
 
         const prevIndex =
-          activeSuggestionIndex - 1 < 0 ? suggestions.length - 1 : activeSuggestionIndex - 1;
+          activeSuggestionIndex - 1 < 0
+            ? suggestions.length - 1
+            : activeSuggestionIndex - 1;
         setActiveSuggestionIndex(prevIndex);
       };
 
@@ -285,7 +297,10 @@ export function TagsInput({
         case "Backspace":
         case "Delete":
           if (tags.length > 0) {
-            if (activeSelectedTagIndex !== -1 && activeSelectedTagIndex < tags.length) {
+            if (
+              activeSelectedTagIndex !== -1 &&
+              activeSelectedTagIndex < tags.length
+            ) {
               removeSelectedTag(tags[activeSelectedTagIndex]);
               moveSelectedTagCurrent();
             } else {
@@ -332,9 +347,12 @@ export function TagsInput({
     ]
   );
 
-  const handleInputValueChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(e.currentTarget.value);
-  }, []);
+  const handleInputValueChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setInputValue(e.currentTarget.value);
+    },
+    []
+  );
 
   return (
     <>
@@ -368,7 +386,9 @@ export function TagsInput({
           onKeyDown={handleKeyDown}
           value={inputValue}
           onSelect={handleInputTextSelection}
-          onChange={activeSelectedTagIndex === -1 ? handleInputValueChange : undefined}
+          onChange={
+            activeSelectedTagIndex === -1 ? handleInputValueChange : undefined
+          }
           placeholder={placeholder}
           onClick={() => setActiveSelectedTagIndex(-1)}
           className={cn(

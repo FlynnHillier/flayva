@@ -182,395 +182,96 @@ export const RECIPE_DESCRIPTION_LENGTH_MAX = 180;
 export const RECIPE_ID_LENGTH = 7;
 
 export const RECIPE_TAGS = [
-	// European Cuisines
-	{
-		name: 'Italian',
-		category: 'Cuisine',
-		emoji: '🇮🇹',
-	},
-	{
-		name: 'French',
-		category: 'Cuisine',
-		emoji: '🇫🇷',
-	},
-	{
-		name: 'Spanish',
-		category: 'Cuisine',
-		emoji: '🇪🇸',
-	},
-	{
-		name: 'Greek',
-		category: 'Cuisine',
-		emoji: '🇬🇷',
-	},
-	{
-		name: 'German',
-		category: 'Cuisine',
-		emoji: '🇩🇪',
-	},
-	{
-		name: 'British',
-		category: 'Cuisine',
-		emoji: '🇬🇧',
-	},
-	{
-		name: 'Portuguese',
-		category: 'Cuisine',
-		emoji: '🇵🇹',
-	},
-	{
-		name: 'Mediterranean',
-		category: 'Cuisine',
-		emoji: '🫒',
-	},
-	{
-		name: 'Scandinavian',
-		category: 'Cuisine',
-		emoji: '🇸🇪',
-	},
-	{
-		name: 'Eastern European',
-		category: 'Cuisine',
-		emoji: '🥟',
-	},
+  // European Cuisines
+  { name: "Italian", category: "Cuisine", emoji: "🇮🇹", id: 1 },
+  { name: "French", category: "Cuisine", emoji: "🇫🇷", id: 2 },
+  { name: "Spanish", category: "Cuisine", emoji: "🇪🇸", id: 3 },
+  { name: "Greek", category: "Cuisine", emoji: "🇬🇷", id: 4 },
+  { name: "German", category: "Cuisine", emoji: "🇩🇪", id: 5 },
+  { name: "British", category: "Cuisine", emoji: "🇬🇧", id: 6 },
+  { name: "Portuguese", category: "Cuisine", emoji: "🇵🇹", id: 7 },
+  { name: "Mediterranean", category: "Cuisine", emoji: "🫒", id: 8 },
+  { name: "Scandinavian", category: "Cuisine", emoji: "🇸🇪", id: 9 },
+  { name: "Eastern European", category: "Cuisine", emoji: "🥟", id: 10 },
 
-	// Asian Cuisines
-	{
-		name: 'Chinese',
-		category: 'Cuisine',
-		emoji: '🇨🇳',
-	},
-	{
-		name: 'Japanese',
-		category: 'Cuisine',
-		emoji: '🇯🇵',
-	},
-	{
-		name: 'Thai',
-		category: 'Cuisine',
-		emoji: '🇹🇭',
-	},
-	{
-		name: 'Korean',
-		category: 'Cuisine',
-		emoji: '🇰🇷',
-	},
-	{
-		name: 'Vietnamese',
-		category: 'Cuisine',
-		emoji: '🇻🇳',
-	},
-	{
-		name: 'Indian',
-		category: 'Cuisine',
-		emoji: '🇮🇳',
-	},
-	{
-		name: 'Malaysian',
-		category: 'Cuisine',
-		emoji: '🇲🇾',
-	},
-	{
-		name: 'Filipino',
-		category: 'Cuisine',
-		emoji: '🇵🇭',
-	},
-	{
-		name: 'Indonesian',
-		category: 'Cuisine',
-		emoji: '🇮🇩',
-	},
-	{
-		name: 'Singaporean',
-		category: 'Cuisine',
-		emoji: '🇸🇬',
-	},
+  // Asian Cuisines
+  { name: "Chinese", category: "Cuisine", emoji: "🇨🇳", id: 11 },
+  { name: "Japanese", category: "Cuisine", emoji: "🇯🇵", id: 12 },
+  { name: "Thai", category: "Cuisine", emoji: "🇹🇭", id: 13 },
+  { name: "Korean", category: "Cuisine", emoji: "🇰🇷", id: 14 },
+  { name: "Vietnamese", category: "Cuisine", emoji: "🇻🇳", id: 15 },
+  { name: "Indian", category: "Cuisine", emoji: "🇮🇳", id: 16 },
+  { name: "Malaysian", category: "Cuisine", emoji: "🇲🇾", id: 17 },
+  { name: "Filipino", category: "Cuisine", emoji: "🇵🇭", id: 18 },
+  { name: "Indonesian", category: "Cuisine", emoji: "🇮🇩", id: 19 },
+  { name: "Singaporean", category: "Cuisine", emoji: "🇸🇬", id: 20 },
 
-	// Americas Cuisines
-	{
-		name: 'American',
-		category: 'Cuisine',
-		emoji: '🇺🇸',
-	},
-	{
-		name: 'Mexican',
-		category: 'Cuisine',
-		emoji: '🇲🇽',
-	},
-	{
-		name: 'Brazilian',
-		category: 'Cuisine',
-		emoji: '🇧🇷',
-	},
-	{
-		name: 'Peruvian',
-		category: 'Cuisine',
-		emoji: '🇵🇪',
-	},
-	{
-		name: 'Argentine',
-		category: 'Cuisine',
-		emoji: '🇦🇷',
-	},
-	{
-		name: 'Canadian',
-		category: 'Cuisine',
-		emoji: '🇨🇦',
-	},
-	{
-		name: 'Caribbean',
-		category: 'Cuisine',
-		emoji: '🌶️',
-	},
-	{
-		name: 'Cuban',
-		category: 'Cuisine',
-		emoji: '🇨🇺',
-	},
-	{
-		name: 'Jamaican',
-		category: 'Cuisine',
-		emoji: '🇯🇲',
-	},
-	{
-		name: 'Colombian',
-		category: 'Cuisine',
-		emoji: '🇨🇴',
-	},
+  // Americas Cuisines
+  { name: "American", category: "Cuisine", emoji: "🇺🇸", id: 21 },
+  { name: "Mexican", category: "Cuisine", emoji: "🇲🇽", id: 22 },
+  { name: "Brazilian", category: "Cuisine", emoji: "🇧🇷", id: 23 },
+  { name: "Peruvian", category: "Cuisine", emoji: "🇵🇪", id: 24 },
+  { name: "Argentine", category: "Cuisine", emoji: "🇦🇷", id: 25 },
+  { name: "Canadian", category: "Cuisine", emoji: "🇨🇦", id: 26 },
+  { name: "Caribbean", category: "Cuisine", emoji: "🌶️", id: 27 },
+  { name: "Cuban", category: "Cuisine", emoji: "🇨🇺", id: 28 },
+  { name: "Jamaican", category: "Cuisine", emoji: "🇯🇲", id: 29 },
+  { name: "Colombian", category: "Cuisine", emoji: "🇨🇴", id: 30 },
 
-	// Middle Eastern & African Cuisines
-	{
-		name: 'Arabic',
-		category: 'Cuisine',
-		emoji: '🧆',
-	},
-	{
-		name: 'Lebanese',
-		category: 'Cuisine',
-		emoji: '🇱🇧',
-	},
-	{
-		name: 'Turkish',
-		category: 'Cuisine',
-		emoji: '🇹🇷',
-	},
-	{
-		name: 'Moroccan',
-		category: 'Cuisine',
-		emoji: '🇲🇦',
-	},
-	{
-		name: 'Ethiopian',
-		category: 'Cuisine',
-		emoji: '🇪🇹',
-	},
-	{
-		name: 'Egyptian',
-		category: 'Cuisine',
-		emoji: '🇪🇬',
-	},
-	{
-		name: 'Israeli',
-		category: 'Cuisine',
-		emoji: '🇮🇱',
-	},
-	{
-		name: 'Nigerian',
-		category: 'Cuisine',
-		emoji: '🇳🇬',
-	},
-	{
-		name: 'South African',
-		category: 'Cuisine',
-		emoji: '🇿🇦',
-	},
-	{
-		name: 'Tunisian',
-		category: 'Cuisine',
-		emoji: '🇹🇳',
-	},
+  // Middle Eastern & African Cuisines
+  { name: "Arabic", category: "Cuisine", emoji: "🧆", id: 31 },
+  { name: "Lebanese", category: "Cuisine", emoji: "🇱🇧", id: 32 },
+  { name: "Turkish", category: "Cuisine", emoji: "🇹🇷", id: 33 },
+  { name: "Moroccan", category: "Cuisine", emoji: "🇲🇦", id: 34 },
+  { name: "Ethiopian", category: "Cuisine", emoji: "🇪🇹", id: 35 },
+  { name: "Egyptian", category: "Cuisine", emoji: "🇪🇬", id: 36 },
+  { name: "Israeli", category: "Cuisine", emoji: "🇮🇱", id: 37 },
+  { name: "Nigerian", category: "Cuisine", emoji: "🇳🇬", id: 38 },
+  { name: "South African", category: "Cuisine", emoji: "🇿🇦", id: 39 },
+  { name: "Tunisian", category: "Cuisine", emoji: "🇹🇳", id: 40 },
 
-	// Spice Level
-	{
-		name: 'Mild',
-		category: 'Spice',
-		emoji: '😌',
-	},
-	{
-		name: 'Medium Spicy',
-		category: 'Spice',
-		emoji: '🌶️',
-	},
-	{
-		name: 'Medium',
-		category: 'Spice',
-		emoji: '🔥',
-	},
-	{
-		name: 'Hot',
-		category: 'Spice',
-		emoji: '🥵',
-	},
-	{
-		name: 'Extra Hot',
-		category: 'Spice',
-		emoji: '🧯',
-	},
-	{
-		name: 'No Spice',
-		category: 'Spice',
-		emoji: '🧊',
-	},
-	{
-		name: 'Sweet & Spicy',
-		category: 'Spice',
-		emoji: '🍯',
-	},
-	{
-		name: 'Tangy',
-		category: 'Spice',
-		emoji: '🍋',
-	},
+  // Spice Level
+  { name: "Mild", category: "Spice", emoji: "😌", id: 41 },
+  { name: "Medium Spicy", category: "Spice", emoji: "🌶️", id: 42 },
+  { name: "Medium", category: "Spice", emoji: "🔥", id: 43 },
+  { name: "Hot", category: "Spice", emoji: "🥵", id: 44 },
+  { name: "Extra Hot", category: "Spice", emoji: "🧯", id: 45 },
+  { name: "No Spice", category: "Spice", emoji: "🧊", id: 46 },
+  { name: "Sweet & Spicy", category: "Spice", emoji: "🍯", id: 47 },
+  { name: "Tangy", category: "Spice", emoji: "🍋", id: 48 },
 
-	// Food Categories
-	{
-		name: 'Pizza',
-		category: 'Category',
-		emoji: '🍕',
-	},
-	{
-		name: 'Sandwiches',
-		category: 'Category',
-		emoji: '🥪',
-	},
-	{
-		name: 'Pasta',
-		category: 'Category',
-		emoji: '🍝',
-	},
-	{
-		name: 'Vegetarian',
-		category: 'Diet',
-		emoji: '🥗',
-	},
-	{
-		name: 'Vegan',
-		category: 'Diet',
-		emoji: '🌱',
-	},
-  {
-		name: 'Halal',
-		category: 'Diet',
-		emoji: '☪️',
-	},
-	{
-		name: 'Seafood',
-		category: 'Category',
-		emoji: '🐟',
-	},
-	{
-		name: 'Desserts',
-		category: 'Category',
-		emoji: '🍰',
-	},
-	{
-		name: 'Breakfast',
-		category: 'Category',
-		emoji: '🍳',
-	},
-	{
-		name: 'Street Food',
-		category: 'Category',
-		emoji: '🌭',
-	},
-	{
-		name: 'Fast Food',
-		category: 'Category',
-		emoji: '🍔',
-	},
-	{
-		name: 'Soups',
-		category: 'Category',
-		emoji: '🥣',
-	},
-	{
-		name: 'Salads',
-		category: 'Category',
-		emoji: '🥬',
-	},
-	{
-		name: 'Grilled',
-		category: 'Category',
-		emoji: '🔥',
-	},
-	{
-		name: 'Baked',
-		category: 'Category',
-		emoji: '🍞',
-	},
-	{
-		name: 'Fried',
-		category: 'Category',
-		emoji: '🍟',
-	},
-	{
-		name: 'Steamed',
-		category: 'Category',
-		emoji: '♨️',
-	},
-	{
-		name: 'BBQ',
-		category: 'Category',
-		emoji: '🍖',
-	},
-	{
-		name: 'Slow Cooked',
-		category: 'Category',
-		emoji: '⏱️',
-	},
-	{
-		name: 'Fusion',
-		category: 'Category',
-		emoji: '🔄',
-	},
-	{
-		name: 'Appetizers',
-		category: 'Category',
-		emoji: '🧀',
-	},
-	{
-		name: 'Main Course',
-		category: 'Category',
-		emoji: '🍽️',
-	},
-	{
-		name: 'Sides',
-		category: 'Category',
-		emoji: '🥄',
-	},
-	{
-		name: 'Beverages',
-		category: 'Category',
-		emoji: '🥤',
-	},
-	{
-		name: 'Snacks',
-		category: 'Category',
-		emoji: '🍿',
-	},
-	{
-		name: 'Healthy',
-		category: 'Category',
-		emoji: '💪',
-	},
-	{
-		name: 'Gluten Free',
-		category: 'Category',
-		emoji: '🌾',
-	},
-	{
-		name: 'Organic',
-		category: 'Category',
-		emoji: '🌿',
-	},
-]
+  // Food Categories
+  { name: "Pizza", category: "Category", emoji: "🍕", id: 49 },
+  { name: "Sandwiches", category: "Category", emoji: "🥪", id: 50 },
+  { name: "Pasta", category: "Category", emoji: "🍝", id: 51 },
+  { name: "Vegetarian", category: "Diet", emoji: "🥗", id: 52 },
+  { name: "Vegan", category: "Diet", emoji: "🌱", id: 53 },
+  { name: "Halal", category: "Diet", emoji: "☪️", id: 54 },
+  { name: "Seafood", category: "Category", emoji: "🐟", id: 55 },
+  { name: "Desserts", category: "Category", emoji: "🍰", id: 56 },
+  { name: "Breakfast", category: "Category", emoji: "🍳", id: 57 },
+  { name: "Street Food", category: "Category", emoji: "🌭", id: 58 },
+  { name: "Fast Food", category: "Category", emoji: "🍔", id: 59 },
+  { name: "Soups", category: "Category", emoji: "🥣", id: 60 },
+  { name: "Salads", category: "Category", emoji: "🥬", id: 61 },
+  { name: "Grilled", category: "Category", emoji: "🔥", id: 62 },
+  { name: "Baked", category: "Category", emoji: "🍞", id: 63 },
+  { name: "Fried", category: "Category", emoji: "🍟", id: 64 },
+  { name: "Steamed", category: "Category", emoji: "♨️", id: 65 },
+  { name: "BBQ", category: "Category", emoji: "🍖", id: 66 },
+  { name: "Slow Cooked", category: "Category", emoji: "⏱️", id: 67 },
+  { name: "Fusion", category: "Category", emoji: "🔄", id: 68 },
+  { name: "Appetizers", category: "Category", emoji: "🧀", id: 69 },
+  { name: "Main Course", category: "Category", emoji: "🍽️", id: 70 },
+  { name: "Sides", category: "Category", emoji: "🥄", id: 71 },
+  { name: "Beverages", category: "Category", emoji: "🥤", id: 72 },
+  { name: "Snacks", category: "Category", emoji: "🍿", id: 73 },
+  { name: "Healthy", category: "Category", emoji: "💪", id: 74 },
+  { name: "Gluten Free", category: "Category", emoji: "🌾", id: 75 },
+  { name: "Organic", category: "Category", emoji: "🌿", id: 76 },
+] as const satisfies {
+  name: string;
+  category: string;
+  emoji: string;
+  id: number;
+}[];

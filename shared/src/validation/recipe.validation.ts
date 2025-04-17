@@ -74,19 +74,22 @@ export const ingredients = z
 // ## TAGS ##
 export const tag = z.object({
   id: z.number().min(RECIPE_TAG_ID_MIN).max(RECIPE_TAG_ID_MAX),
-  tagName: z.string(),
-  category:  z.string(),
-  emoji:  z.string(),
+  name: z.string(),
+  category: z.string(),
+  emoji: z.string(),
 });
 
-export const tagReference = tag.pick({ id: true, tagName: true });
+export const tagReference = tag.pick({ id: true, name: true });
 
 export const tagReferences = z
   .array(tagReference)
   .min(RECIPE_TAG_COUNT_MIN)
   .max(RECIPE_TAG_COUNT_MAX);
 
-export const tags = z.array(tag).min(RECIPE_TAG_COUNT_MIN).max(RECIPE_TAG_COUNT_MAX);
+export const tags = z
+  .array(tag)
+  .min(RECIPE_TAG_COUNT_MIN)
+  .max(RECIPE_TAG_COUNT_MAX);
 
 // ## META INFO ##
 export const metaInfo = z.object({
@@ -97,7 +100,10 @@ export const metaInfo = z.object({
 
 // ## RECIPE ##
 
-export const title = z.string().min(RECIPE_TITLE_LENGTH_MIN).max(RECIPE_TITLE_LENGTH_MAX);
+export const title = z
+  .string()
+  .min(RECIPE_TITLE_LENGTH_MIN)
+  .max(RECIPE_TITLE_LENGTH_MAX);
 export const description = z
   .string()
   .min(RECIPE_DESCRIPTION_LENGTH_MIN)
@@ -108,6 +114,6 @@ export const recipe = z.object({
   description: description,
   instructions: instructions,
   ingredients: ingredients,
-  tags: tagReferences,
+  tags: tags,
   metaInfo: metaInfo.optional(),
 });

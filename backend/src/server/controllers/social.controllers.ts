@@ -1,6 +1,6 @@
 import socialServices from "@/server/services/social.services";
 import { updateProfileFormSchema } from "@flayva-monorepo/shared/validation/social.validation";
-import { RequestHandler } from "express";
+import { RequestHandler, Request, Response } from "express";
 import { z } from "zod";
 
 export const getUserById: RequestHandler = async (req, res) => {
@@ -43,7 +43,10 @@ export const followUser: RequestHandler = async (req, res) => {
     return;
   }
 
-  const { success } = await socialServices.followUser(req.user!.id, targetUserId);
+  const { success } = await socialServices.followUser(
+    req.user!.id,
+    targetUserId
+  );
 
   if (success) res.status(204).send();
   else res.status(404).send({ message: "user not found" });
@@ -52,7 +55,10 @@ export const followUser: RequestHandler = async (req, res) => {
 export const unfollowUser: RequestHandler = async (req, res) => {
   const { targetUserId } = req.body as { targetUserId: string };
 
-  const { success } = await socialServices.unfollowUser(req.user!.id, targetUserId);
+  const { success } = await socialServices.unfollowUser(
+    req.user!.id,
+    targetUserId
+  );
 
   if (success) res.status(204).send();
   else res.status(409).send({ message: "you do not follow this user" });
@@ -66,7 +72,10 @@ export const getFollowStatus: RequestHandler = async (req, res) => {
     return;
   }
 
-  const { isFollowing } = await socialServices.isFollowingUser(req.user!.id, targetUserId);
+  const { isFollowing } = await socialServices.isFollowingUser(
+    req.user!.id,
+    targetUserId
+  );
 
   res.status(200).send({ isFollowing });
 };
@@ -87,24 +96,22 @@ export const updateOwnUserProfile: RequestHandler = async (req, res) => {
 };
 
 export const getUsersByUsername = async (req: Request, res: Response) => {
-	const { username, pageSize, pageNumber } = req.query;
-	(username, pageSize, pageNumber)
-	if (!username || !pageSize || !pageNumber) {
-		res.status(400).send({
-			message:
-				'Missing required query parameters: username, pageSize, and pageNumber',
-		});
-		return;
-	}
+  const { username, pageSize, pageNumber } = req.query;
+  if (!username || !pageSize || !pageNumber) {
+    res.status(400).send({
+      message:
+        "Missing required query parameters: username, pageSize, and pageNumber",
+    });
+    return;
+  }
 
-	const users = await socialServices.getUsersByUsername(
-		username.toString(),
-		parseInt(pageSize.toString()),
-		parseInt(pageNumber.toString())
-	);
+  const users = await socialServices.getUsersByUsername(
+    username.toString(),
+    parseInt(pageSize.toString()),
+    parseInt(pageNumber.toString())
+  );
 
-	(users.pagination)
-	res.status(200).send({ users });
+  res.status(200).send({ users });
 };
 
 export default {
@@ -114,5 +121,5 @@ export default {
   unfollowUser,
   getFollowStatus,
   updateOwnUserProfile,
-  getUsersByUsername
+  getUsersByUsername,
 };

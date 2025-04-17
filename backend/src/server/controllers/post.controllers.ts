@@ -3,15 +3,24 @@ import { createNewPostSchema } from "@flayva-monorepo/shared/validation/post.val
 import { RequestHandler, Request, Response } from "express";
 import { z } from "zod";
 
-export const createPost: RequestHandler = async (req: Request, res: Response) => {
+export const createPost: RequestHandler = async (
+  req: Request,
+  res: Response
+) => {
   const { recipe, images } = req.body as z.infer<typeof createNewPostSchema>;
 
-  const { postId, recipeId } = await postServices.createNewPost(req.user!.id, { recipe, images });
+  const { postId, recipeId } = await postServices.createNewPost(req.user!.id, {
+    recipe,
+    images,
+  });
 
   res.status(201).send({ postId, recipeId });
 };
 
-export const deletePost: RequestHandler = async (req: Request, res: Response) => {
+export const deletePost: RequestHandler = async (
+  req: Request,
+  res: Response
+) => {
   const postId = req.body.postId;
 
   const { deleted } = await postServices.deletePost(postId);
@@ -30,7 +39,10 @@ export const deletePost: RequestHandler = async (req: Request, res: Response) =>
   });
 };
 
-export const getPostById: RequestHandler = async (req: Request, res: Response) => {
+export const getPostById: RequestHandler = async (
+  req: Request,
+  res: Response
+) => {
   const postId = req.params.id;
 
   const post = await postServices.getPostById(postId);
@@ -53,25 +65,8 @@ export const infiniteScrollProfilePostPreviews: RequestHandler = async (
   const { ownerId } = req.params;
   const cursor = req.query.cursor ? Number(req.query.cursor) : 0;
 
-  const result = await postServices.infiniteScrollProfilePostPreviews(ownerId, cursor);
-
-  res.status(200).send({
-    previews: result.previews,
-    nextCursor: result.nextCursor,
-  });
-};
-
-export const infiniteScrollTitleAndTagsPostPreviews: RequestHandler = async (
-  req: Request, 
-  res: Response
-) => {
-  const { title } = req.params;
-  const cursor = req.query.cursor ? Number(req.query.cursor) : 0;
-  const selectedTags = req.query.tags ? JSON.parse(req.query.tags as string) : {};
-
-  const result = await postServices.infiniteScrollTitleAndTagsPostPreviews(
-    title, 
-    selectedTags, 
+  const result = await postServices.infiniteScrollProfilePostPreviews(
+    ownerId,
     cursor
   );
 
@@ -81,6 +76,30 @@ export const infiniteScrollTitleAndTagsPostPreviews: RequestHandler = async (
   });
 };
 
+export const infiniteScrollTagAndSimilarTitlePostPreviews: RequestHandler =
+  async (req: Request, res: Response) => {
+    // tag is an array of tag IDs, title is a string
+    // cursor is a number for pagination
+    const { title, tag, cursor } = req.query;
+
+    // parse and validate the parameters
+    const parsedCursor = !isNaN(Number(cursor)) ? Number(cursor) : 0;
+    const tagsAsArray =
+      tag === undefined ? [] : Array.isArray(tag) ? tag : [tag];
+    const parsedTags = tagsAsArray
+      .map((tag) => Number(tag))
+      .filter((tag) => !isNaN(tag));
+    const parsedTitle = title ? String(title) : "";
+
+    const searchResult =
+      await postServices.infiniteSrollTitleAndTagsSearchPostPreviews(
+        parsedTitle,
+        parsedTags,
+        parsedCursor
+      );
+
+    res.status(200).send(searchResult);
+  };
 
 // Get the list of tags
 export const getTagList: RequestHandler = async (
@@ -90,7 +109,7 @@ export const getTagList: RequestHandler = async (
   const result = await postServices.getTagList();
 
   res.status(200).send({
-    ...result
+    ...result,
   });
 };
 
@@ -100,6 +119,6 @@ export default {
   getPostById,
   getFeed,
   infiniteScrollProfilePostPreviews,
-  infiniteScrollTitleAndTagsPostPreviews,
+  infiniteScrollTagAndSimilarTitlePostPreviews,
   getTagList,
 };

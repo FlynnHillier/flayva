@@ -1,9 +1,12 @@
-import { POST_PREVIEW_INFINITE_SCROLL_BATCH_SIZE } from "@/constants/posts.constants";
+import {
+  POST_PREVIEW_PROFILE_INFINITE_SCROLL_BATCH_SIZE,
+  POST_PREVIEW_SEARCH_INFINITE_SCROLL_BATCH_SIZE,
+} from "@/constants/posts.constants";
 import postRepo from "@/server/repositories/post.repo";
-import recipeRepo from "../repositories/recipe.repo";
 import { uploadPostImages } from "@/server/services/images.services";
 import { createNewPostSchema } from "@flayva-monorepo/shared/validation/post.validation";
 import { z } from "zod";
+import { PostPreview } from "@flayva-monorepo/shared/types";
 
 /**
  * Create a new post
@@ -16,7 +19,9 @@ export const createNewPost = async (
   newPostData: z.infer<typeof createNewPostSchema>
 ) => {
   // TODO: handle upload image failures
-  const { successes: imageUploads } = await uploadPostImages(newPostData.images);
+  const { successes: imageUploads } = await uploadPostImages(
+    newPostData.images
+  );
 
   const { postId, recipeId } = await postRepo.saveNewPost(ownerId, {
     imageUploads: imageUploads,
@@ -53,9 +58,12 @@ export const getPostById = async (postId: string) => {
  * @param cursor - The cursor for pagination
  * @return A list of post previews and the next cursor for pagination
  */
-export const infiniteScrollProfilePostPreviews = async (ownerId: string, cursor: number) => {
+export const infiniteScrollProfilePostPreviews = async (
+  ownerId: string,
+  cursor: number
+) => {
   const results = await postRepo.getPostPreviewsByOwnerId(ownerId, {
-    limit: POST_PREVIEW_INFINITE_SCROLL_BATCH_SIZE,
+    limit: POST_PREVIEW_PROFILE_INFINITE_SCROLL_BATCH_SIZE,
     offset: cursor,
     orderBy: ({ created_at }, { desc }) => desc(created_at),
   });
@@ -63,13 +71,14 @@ export const infiniteScrollProfilePostPreviews = async (ownerId: string, cursor:
   return {
     previews: results,
     nextCursor:
-      results.length < POST_PREVIEW_INFINITE_SCROLL_BATCH_SIZE
+      results.length < POST_PREVIEW_PROFILE_INFINITE_SCROLL_BATCH_SIZE
         ? null
-        : cursor + POST_PREVIEW_INFINITE_SCROLL_BATCH_SIZE,
+        : cursor + POST_PREVIEW_PROFILE_INFINITE_SCROLL_BATCH_SIZE,
   };
 };
 
-export const getPostsByOwnerId = (ownerId: string) => postRepo.getPostsByOwnerId(ownerId);
+export const getPostsByOwnerId = (ownerId: string) =>
+  postRepo.getPostsByOwnerId(ownerId);
 
 /**
  * Get a feed of posts
@@ -82,36 +91,41 @@ export const getFeed = async () => {
 };
 
 /**
- * Get a list of post previews by the title and tags with infinite scroll
- * @param recipeTitle - The search query
- * @param selectedTags - Object containing selected tags by category
- * @param cursor - The cursor for pagination
- * @return A list of post previews and the next cursor for pagination
+ * Get a list of post previews by title and tags with infinite scroll
+ * * @param recipeTitle - The title of the recipe to search for
+ * * @param tagsIds - The IDs of the tags to search for
+ * * @param cursor - The cursor for pagination
+ * * @returns A list of post previews and the next cursor for pagination
  */
-export const infiniteScrollTitleAndTagsPostPreviews = async (
+export const infiniteSrollTitleAndTagsSearchPostPreviews = async (
   recipeTitle: string,
-  selectedTags: Record<string, string[]>,
-  cursor: number
-) => {
-  const recipes = await recipeRepo.searchRecipesByTitleAndTags(
-    recipeTitle,
-    selectedTags,
-    cursor
-  );
+  tagsIds: number[],
+  cursor: number = 0
+): Promise<{
+  previews: PostPreview[];
+  nextCursor: number | null;
+}> => {
+  const searchResults = await postRepo
+    .getPostIdsByTagsAndSimilarTitle(recipeTitle, tagsIds)
+    .$dynamic()
+    .limit(POST_PREVIEW_SEARCH_INFINITE_SCROLL_BATCH_SIZE)
+    .offset(cursor);
 
-  if (recipes.previews.length === 0) return {
-    previews: [],
-    nextCursor: null
-  };
+  const hasMore =
+    searchResults.length === POST_PREVIEW_SEARCH_INFINITE_SCROLL_BATCH_SIZE;
+  const nextCursor = hasMore
+    ? cursor + POST_PREVIEW_SEARCH_INFINITE_SCROLL_BATCH_SIZE
+    : null;
 
-  const posts = await postRepo.getPostsById(recipes.previews.map(obj => obj.id));
+  const postIds = searchResults.map(({ postId }) => postId);
+
+  const postPreviews = await postRepo.getPostPreviewsByPostIds(postIds, {});
 
   return {
-    previews: posts,
-    nextCursor: recipes.nextCursor
+    previews: postPreviews,
+    nextCursor,
   };
 };
-
 
 // Get the list of tags
 export const getTagList = async () => {
@@ -120,13 +134,12 @@ export const getTagList = async () => {
   return posts;
 };
 
-
 export default {
   createNewPost,
   getPostById,
   getFeed,
   deletePost,
   infiniteScrollProfilePostPreviews,
-  infiniteScrollTitleAndTagsPostPreviews,
-  getTagList
+  infiniteSrollTitleAndTagsSearchPostPreviews,
+  getTagList,
 };

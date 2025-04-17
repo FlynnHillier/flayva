@@ -30,7 +30,8 @@ export const useDeleteExistingPost = (postId: string) =>
  * @param postId - The Id of the post to fetch
  * @returns The post with the given Id
  */
-export const useGetPostById = (postId: string) => useQuery(queries.post.getPostById(postId));
+export const useGetPostById = (postId: string) =>
+  useQuery(queries.post.getPostById(postId));
 
 /**
  * infinite scroll for post previews by the owner Id
@@ -41,25 +42,31 @@ export const useGetPostById = (postId: string) => useQuery(queries.post.getPostB
 export const useInfiniteScrollProfilePostPreviews = (ownerId: string) =>
   useInfiniteQuery({
     queryKey: ["posts-preview", "profile", ownerId],
-    queryFn: ({ pageParam }) => api.post.getInfiniteScrollPostPreviewsByOwnerId(ownerId, pageParam),
+    queryFn: ({ pageParam }) =>
+      api.post.getInfiniteScrollPostPreviewsByOwnerId(ownerId, pageParam),
     initialPageParam: 0,
     getNextPageParam: ({ nextCursor }) => nextCursor,
   });
- 
+
 /**
  * infinite scroll for post previews by title and tags
  *
  * @param title - The title to search for
  * @param selectedTags - The selected tags to filter by
  */
+// TODO: perhaps add this to query-key-store
 export const useInfiniteScrollTitleAndTagsPostPreviews = (
   title: string,
-  selectedTags: Record<string, string[]>
+  tagIds: number[]
 ) =>
   useInfiniteQuery({
-    queryKey: ["posts-preview", "title-tags", title, selectedTags],
-    queryFn: ({ pageParam }) => 
-      api.post.getInfiniteScrollPostPreviewsByTitleAndTags(title, selectedTags, pageParam),
+    queryKey: ["posts-preview", "title-tags", title, tagIds],
+    queryFn: ({ pageParam }) =>
+      api.post.getInfiniteScrollPostPreviewsByTitleAndTags(
+        title,
+        tagIds,
+        pageParam
+      ),
     initialPageParam: 0,
     getNextPageParam: ({ nextCursor }) => nextCursor,
   });
@@ -76,7 +83,7 @@ export const useUserPostsWithTagFilters = (
 ) =>
   useInfiniteQuery({
     queryKey: ["posts-preview", "user-tags", ownerId, selectedTags],
-    queryFn: ({ pageParam }) => 
+    queryFn: ({ pageParam }) =>
       api.post.getUserPostsWithTagFilters(ownerId, selectedTags, pageParam),
     initialPageParam: 0,
     getNextPageParam: ({ nextCursor }) => nextCursor,

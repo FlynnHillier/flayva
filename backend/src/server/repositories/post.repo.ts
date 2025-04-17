@@ -7,13 +7,16 @@ import {
   recipe_meta_infos,
   recipe_tags,
   recipes,
-  tags,
+  tags as tagsTable,
 } from "@/db/schema";
 import { createNewPostSchema } from "@flayva-monorepo/shared/validation/post.validation";
 import { z } from "zod";
 import { UploadedFileData } from "uploadthing/types";
 import { DbFindManyParams } from "@/types/db.types";
-import { eq } from "drizzle-orm";
+import { and, asc, eq, inArray, or, sql } from "drizzle-orm";
+import { RecipeTag } from "@flayva-monorepo/shared/types";
+import { NestedRepositoryObject } from "../../../dist/src/types/api.types";
+import { tag } from "@flayva-monorepo/shared/validation/recipe.validation";
 
 /**
  * MANAGING POSTS
@@ -30,7 +33,10 @@ export const saveNewPost = (
   {
     imageUploads,
     recipe: recipeData,
-  }: { imageUploads: UploadedFileData[]; recipe: z.infer<typeof createNewPostSchema>["recipe"] }
+  }: {
+    imageUploads: UploadedFileData[];
+    recipe: z.infer<typeof createNewPostSchema>["recipe"];
+  }
 ) =>
   db.transaction(async (tx) => {
     const [recipe] = await tx
@@ -57,8 +63,10 @@ export const saveNewPost = (
               recipe_id: recipe.id,
               ingredient_id: ingredient.id,
               amount_whole: ingredient.amount.whole,
-              amount_fractional_numerator: ingredient.amount.fractional?.numerator,
-              amount_fractional_denominator: ingredient.amount.fractional?.denominator,
+              amount_fractional_numerator:
+                ingredient.amount.fractional?.numerator,
+              amount_fractional_denominator:
+                ingredient.amount.fractional?.denominator,
               unit: ingredient.unit,
             }))
           );
@@ -96,7 +104,9 @@ export const saveNewPost = (
         ? Promise.resolve()
         : tx
             .insert(post_images)
-            .values(imageUploads.map((image) => ({ key: image.key, postID: post.id })));
+            .values(
+              imageUploads.map((image) => ({ key: image.key, postID: post.id }))
+            );
 
     await Promise.all([
       insertIngredientsPromise,
@@ -120,18 +130,35 @@ export const saveNewPost = (
 export const deleteExistingPost = async (postId: string) => {
   //TODO: currently recipes are not deleted when a post is deleted - revisit this when we decide if we are implementing forking or not
 
-  const [deleted] = await db.delete(posts).where(eq(posts.id, postId)).returning().execute();
+  const [deleted] = await db
+    .delete(posts)
+    .where(eq(posts.id, postId))
+    .returning()
+    .execute();
 
   return !!deleted;
 };
 
-// Get the list of tags
-export const getTagList = async () => {
-  return await db.select().from(tags);
-}
+/**
+ *
+ *
+ * Tags
+ *
+ *
+ */
 
 /**
+ * Get a list of all tags from the database
+ */
+export const getTagList = (): Promise<RecipeTag[]> =>
+  db.select().from(tagsTable);
+
+/**
+ *
+ *
  * POST PREVIEWS
+ *
+ *
  */
 
 /**
@@ -140,8 +167,10 @@ export const getTagList = async () => {
  * @param options query options to dictate which posts to fetch
  * @returns post previews
  */
-export const getPostPreviews = (options: Omit<DbFindManyParams<"posts">, "with" | "columns">) =>
-  db.query.posts.findMany({
+export const getPostPreviews = async (
+  options: Omit<DbFindManyParams<"posts">, "with" | "columns">
+) => {
+  const unformattedPostPreviews = await db.query.posts.findMany({
     columns: {
       id: true,
       recipeId: true,
@@ -159,17 +188,43 @@ export const getPostPreviews = (options: Omit<DbFindManyParams<"posts">, "with" 
           title: true,
           description: true,
         },
+        with: {
+          tagLinks: {
+            with: {
+              tag: {
+                columns: {
+                  category: true,
+                  emoji: true,
+                  id: true,
+                  name: true,
+                },
+              },
+            },
+          },
+        },
       },
       owner: {
         columns: {
           id: true,
           username: true,
           profile_picture_url: true,
+          bio: true,
         },
       },
     },
     ...options,
   });
+
+  return unformattedPostPreviews.map((postPreview) => ({
+    ...postPreview,
+    recipe: {
+      ...postPreview.recipe,
+      // Remove the tagLinks property and replace it with a tags property
+      tags: postPreview.recipe.tagLinks.map((tagLink) => tagLink.tag),
+      tagLinks: undefined,
+    },
+  }));
+};
 
 /**
  * Get post previews by owner ID
@@ -179,10 +234,37 @@ export const getPostPreviews = (options: Omit<DbFindManyParams<"posts">, "with" 
 export const getPostPreviewsByOwnerId = (
   ownerId: string,
   options: Omit<Parameters<typeof getPostPreviews>[0], "where">
-) => getPostPreviews({ where: (posts, { eq }) => eq(posts.ownerId, ownerId), ...options });
+) =>
+  getPostPreviews({
+    where: (posts, { eq }) => eq(posts.ownerId, ownerId),
+    ...options,
+  });
 
 /**
+ * Get post previews by post IDs
+ * @param postIds - The IDs of the post previews to fetch
+ * @param options - query options to dictate which posts to fetch
+ */
+export const getPostPreviewsByPostIds = (
+  postIds: string[],
+  options: Omit<Parameters<typeof getPostPreviews>[0], "where">
+) =>
+  getPostPreviews({
+    where: (posts, { inArray }) => inArray(posts.id, postIds),
+    ...options,
+  });
+
+/**
+ *
+ *
+ *
+ *
  * GETTING POSTS
+ *
+ *
+ *
+ *
+ *
  */
 
 /**
@@ -190,7 +272,9 @@ export const getPostPreviewsByOwnerId = (
  *
  * @param options query options to dictate which posts to fetch
  */
-export const getPosts = (options: Omit<DbFindManyParams<"posts">, "with" | "columns">) =>
+export const getPosts = (
+  options: Omit<DbFindManyParams<"posts">, "with" | "columns">
+) =>
   db.query.posts
     .findMany({
       columns: {
@@ -263,27 +347,18 @@ export const getPosts = (options: Omit<DbFindManyParams<"posts">, "with" | "colu
     .execute();
 
 /**
- * Get post(s) by ID(s)
- * @param postId - The ID of the post or array of post IDs to fetch
+ * Get posts by IDs
+ * @param postIds - The IDs of the posts to fetch
  * @param options - query options to dictate which posts to fetch
  */
 export const getPostsById = (
-  postId: string | string[],
+  postIds: string[],
   options: Omit<Parameters<typeof getPosts>[0], "where"> = {}
-) => {
-  if (Array.isArray(postId)) {
-    return getPosts({ 
-      ...options, 
-      where: (posts, { eq, or }) => or(...postId.map(id => eq(posts.id, id)))
-    });
-  }
-  
-  return getPosts({ 
-    ...options, 
-    where: (posts, { eq }) => eq(posts.id, postId) 
+) =>
+  getPosts({
+    where: (posts, { eq, or }) => or(...postIds.map((id) => eq(posts.id, id))),
+    ...options,
   });
-}
-
 
 /**
  * Get a post by its ID
@@ -294,7 +369,7 @@ export const getPostById = async (
   postId: string,
   options: Omit<Parameters<typeof getPostsById>[1], "limit"> = {}
 ) => {
-  const posts = await getPostsById(postId, { limit: 1, ...options });
+  const posts = await getPostsById([postId], { limit: 1, ...options });
 
   if (posts.length === 0) return null;
 
@@ -309,7 +384,11 @@ export const getPostById = async (
 export const getPostByRecipeId = (
   recipeId: string,
   options: Omit<Parameters<typeof getPosts>[0], "where"> = {}
-) => getPosts({ ...options, where: (posts, { eq }) => eq(posts.recipeId, recipeId) });
+) =>
+  getPosts({
+    ...options,
+    where: (posts, { eq }) => eq(posts.recipeId, recipeId),
+  });
 
 /**
  * Get the most recent posts
@@ -333,7 +412,49 @@ export const getRecentPosts = async (limit: number) => {
 export const getPostsByOwnerId = (
   ownerId: string,
   options: Omit<Parameters<typeof getPosts>[0], "where"> = {}
-) => getPosts({ where: (posts, { eq }) => eq(posts.ownerId, ownerId), ...options });
+) =>
+  getPosts({
+    where: (posts, { eq }) => eq(posts.ownerId, ownerId),
+    ...options,
+  });
+
+/**
+ *
+ *
+ * SEARCH
+ *
+ *
+ */
+export const getPostIdsByTagsAndSimilarTitle = (
+  recipeTitle: string,
+  tagIds: number[]
+) =>
+  db
+    .select({
+      postId: posts.id,
+      tags: recipe_tags.tagID,
+    })
+    .from(posts)
+    .leftJoin(recipes, eq(posts.recipeId, recipes.id))
+    .leftJoin(recipe_tags, eq(posts.recipeId, recipe_tags.recipeID))
+    .where(
+      and(
+        sql`${recipes.title} ILIKE ${"%" + recipeTitle + "%"}`,
+        tagIds.length > 0
+          ? or(...tagIds.map((id) => eq(recipe_tags.tagID, id)))
+          : sql`TRUE`
+        // tagIds.length > 0 ? inArray(recipe_tags.tagID, tagIds) : sql`TRUE`
+      )
+    )
+    .orderBy(
+      sql`CASE
+          WHEN ${recipes.title} ILIKE ${recipeTitle.toLowerCase()} THEN 1 
+          WHEN ${recipes.title} ILIKE ${`${recipeTitle.toLowerCase()}%`} THEN 2
+          ELSE 3
+        END`,
+      asc(recipes.id)
+    )
+    .groupBy(posts.id, recipes.title, recipes.id, recipe_tags.tagID);
 
 /**
  * Default export including all functions from this file
@@ -347,6 +468,8 @@ export default {
   deleteExistingPost,
   getPostsByOwnerId,
   getPostPreviewsByOwnerId,
+  getPostPreviewsByPostIds,
   getPostByRecipeId,
-  getTagList
+  getTagList,
+  getPostIdsByTagsAndSimilarTitle,
 };

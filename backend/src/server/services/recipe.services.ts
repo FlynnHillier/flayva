@@ -7,16 +7,11 @@ import { RecipeTag } from "@flayva-monorepo/shared/types";
  * @returns a list of tags that are similar to the search term
  */
 export const searchSimilarValidRecipeTag = async (searchTerm: string) => {
-  const results = await recipeRepo.querySimilarValidTagOptions(searchTerm);
+  const results: RecipeTag[] = await recipeRepo.querySimilarValidTagOptions(
+    searchTerm
+  );
 
-  const formattedTags: RecipeTag[] = results.map((tag) => ({
-    id: tag.id,
-    tagName: tag.name,
-    category: tag.category,
-    emoji: tag.emoji,
-  }));
-
-  return formattedTags;
+  return results;
 };
 
 export default {

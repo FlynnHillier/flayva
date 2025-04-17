@@ -48,7 +48,7 @@ export default function PostPreview({
     <Link
       ref={previewRef}
       to={"/p/" + preview.id}
-      className="relative aspect-square w-full overflow-hidden rounded-lg shadow-md flex flex-col"
+      className="relative aspect-square w-full overflow-hidden rounded-lg shadow-md flex flex-col @container"
       style={{
         backgroundImage: `url(${imagePreviewUrl})`,
         backgroundSize: "cover",
@@ -64,9 +64,9 @@ export default function PostPreview({
               profile_picture_url:
                 preview.owner.profile_picture_url ?? undefined,
             }}
-            className="h-8 w-8"
+            className="size-10 @xl:size-16 @md:size-12"
           />
-          <span className="text-sm font-medium text-white">
+          <span className="text-base @xl:text-2xl @md:text-xl font-medium text-white">
             {preview.owner.username}
           </span>
         </div>
@@ -75,8 +75,8 @@ export default function PostPreview({
       {/* Bottom content container with gradient background */}
       <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent pt-8 pb-3 px-3">
         {/* Recipe title first */}
-        <div className="max-w-[85%] mb-2">
-          <span className="text-sm lg:text-lg text-white font-semibold backdrop-blur-md">
+        <div className="max-w-[85%] mb-2 truncate @xl:pb-1">
+          <span className="text-lg lg:text-lg text-white font-semibold backdrop-blur-md @xl:text-3xl @md:text-2xl">
             {preview.recipe.title}
           </span>
         </div>

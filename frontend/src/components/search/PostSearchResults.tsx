@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import PostPreview from "../post/PostPreview";
 import { PostPreviewSkeleton } from "../post/PostPreview";
 import { usePostSearchResult } from "./context/postSearchResults.context";
+import { useSearchBar } from "./context/searchBar.context";
+import { cn } from "@/lib/utils";
 
 // Main component
 export default function PostSearchResults() {
@@ -16,6 +18,8 @@ export default function PostSearchResults() {
     isFetchingNextPage,
     results,
   } = usePostSearchResult();
+
+  const { showFilters } = useSearchBar();
 
   const { ref, inView } = useInView();
 
@@ -32,7 +36,14 @@ export default function PostSearchResults() {
   }, [inView, hasNextPage, isFetching]);
 
   return (
-    <div className="w-full max-w-7xl p-3 grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-5 place-items-center">
+    <div
+      className={cn(
+        "w-full max-w-7xl p-3 grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-5 place-items-center",
+        {
+          "lg:grid-cols-1 xl:grid-cols-2": showFilters,
+        }
+      )}
+    >
       {results.map((preview) => (
         <PostPreview key={preview.id} preview={preview} showUser={true} />
       ))}

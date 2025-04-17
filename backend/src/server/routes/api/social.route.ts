@@ -47,12 +47,15 @@ router.post(
   socialControllers.unfollowUser
 );
 
-router.get("/isfollowing/:targetUserId", ensureAuthenticated, socialControllers.getFollowStatus);
+router.get(
+  "/isfollowing/:targetUserId",
+  ensureAuthenticated,
+  socialControllers.getFollowStatus
+);
 
-/** 
+/**
  * Get users by username
  */
-router.get("/usernameSearch", ensureAuthenticated, socialControllers.getUsersByUsername);
-
+router.get("/search/u", socialControllers.searchUsersByUsername);
 
 export default router;

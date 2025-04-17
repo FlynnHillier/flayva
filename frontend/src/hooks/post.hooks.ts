@@ -57,7 +57,8 @@ export const useInfiniteScrollProfilePostPreviews = (ownerId: string) =>
 // TODO: perhaps add this to query-key-store
 export const useInfiniteScrollTitleAndTagsPostPreviews = (
   title: string,
-  tagIds: number[]
+  tagIds: number[],
+  { enabled = true }: { enabled?: boolean } = {}
 ) =>
   useInfiniteQuery({
     queryKey: ["posts-preview", "title-tags", title, tagIds],
@@ -69,22 +70,5 @@ export const useInfiniteScrollTitleAndTagsPostPreviews = (
       ),
     initialPageParam: 0,
     getNextPageParam: ({ nextCursor }) => nextCursor,
-  });
-
-/**
- * infinite scroll for user posts filtered by tags
- *
- * @param ownerId - The ID of the user
- * @param selectedTags - The selected tags to filter by
- */
-export const useUserPostsWithTagFilters = (
-  ownerId: string,
-  selectedTags: Record<string, string[]>
-) =>
-  useInfiniteQuery({
-    queryKey: ["posts-preview", "user-tags", ownerId, selectedTags],
-    queryFn: ({ pageParam }) =>
-      api.post.getUserPostsWithTagFilters(ownerId, selectedTags, pageParam),
-    initialPageParam: 0,
-    getNextPageParam: ({ nextCursor }) => nextCursor,
+    enabled: enabled,
   });

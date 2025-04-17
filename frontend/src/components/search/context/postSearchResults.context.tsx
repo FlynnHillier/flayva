@@ -11,6 +11,7 @@ type PostSearchResultsContextType = {
   isFetching: boolean;
   hasNextPage: boolean;
   error: Error | null;
+  isLoading: boolean;
 };
 
 const PostSearchResultsContext =
@@ -37,7 +38,7 @@ export const PostSearchResultsProvider = ({
 }: {
   children?: ReactNode;
 }) => {
-  const { filterTagIds, searchQuery } = useSearchBar();
+  const { filterTagIds, searchQuery, mode } = useSearchBar();
 
   const [debouncedSearchQuery] = useDebounce(searchQuery, 500);
   const [debouncedFilterTagIds] = useDebounce(filterTagIds, 500);
@@ -49,9 +50,13 @@ export const PostSearchResultsProvider = ({
     hasNextPage,
     isFetchingNextPage,
     isFetching,
+    isLoading,
   } = useInfiniteScrollTitleAndTagsPostPreviews(
     debouncedSearchQuery,
-    debouncedFilterTagIds
+    debouncedFilterTagIds,
+    {
+      enabled: mode === "recipe",
+    }
   );
 
   const results = useMemo(
@@ -68,6 +73,7 @@ export const PostSearchResultsProvider = ({
         hasNextPage,
         isFetchingNextPage,
         error,
+        isLoading,
       }}
     >
       {children}

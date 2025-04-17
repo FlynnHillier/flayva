@@ -61,7 +61,7 @@ export function SearchBar() {
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
         autoFocus
-        //   placeholder={`Search for ${current ? "recipes" : "users"}...`}
+        placeholder={`Search for ${mode === "recipe" ? "recipes" : "users"}...`}
         className="w-full p-2 rounded-md outline-none"
       />
       {/* Only show filter button when in recipe search mode */}

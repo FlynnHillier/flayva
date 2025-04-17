@@ -1,4 +1,5 @@
 import socialServices from "@/server/services/social.services";
+import { User } from "@flayva-monorepo/shared/types";
 import { updateProfileFormSchema } from "@flayva-monorepo/shared/validation/social.validation";
 import { RequestHandler, Request, Response } from "express";
 import { z } from "zod";
@@ -95,23 +96,28 @@ export const updateOwnUserProfile: RequestHandler = async (req, res) => {
   else res.status(500).send({ message: "Failed to update profile" });
 };
 
-export const getUsersByUsername = async (req: Request, res: Response) => {
-  const { username, pageSize, pageNumber } = req.query;
-  if (!username || !pageSize || !pageNumber) {
-    res.status(400).send({
-      message:
-        "Missing required query parameters: username, pageSize, and pageNumber",
-    });
-    return;
-  }
+export const searchUsersByUsername = async (req: Request, res: Response) => {
+  const { username, cursor } = req.query;
 
-  const users = await socialServices.getUsersByUsername(
-    username.toString(),
-    parseInt(pageSize.toString()),
-    parseInt(pageNumber.toString())
+  const parsedUsername = username?.toString() || "";
+  const parsedCuror = isNaN(Number(cursor)) ? 0 : Number(cursor);
+
+  const { users, nextCursor } = await socialServices.searchUsersByUsername(
+    parsedUsername,
+    parsedCuror
   );
 
-  res.status(200).send({ users });
+  const parsedUsers: User[] = users.map((user) => ({
+    id: user.id,
+    username: user.username,
+    profile_picture_url: user.profile_picture_url ?? undefined,
+    bio: user.bio,
+  }));
+
+  res.status(200).send({
+    users: parsedUsers,
+    nextCursor,
+  });
 };
 
 export default {
@@ -121,5 +127,5 @@ export default {
   unfollowUser,
   getFollowStatus,
   updateOwnUserProfile,
-  getUsersByUsername,
+  searchUsersByUsername,
 };

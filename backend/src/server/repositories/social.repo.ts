@@ -29,7 +29,10 @@ export const getUserProfileSocialStats = async (userId: string) => {
     })
     .from(users)
     .leftJoin(posts, eq(users.id, posts.ownerId))
-    .leftJoin(followers, or(eq(users.id, followers.followerId), eq(users.id, followers.followedId)))
+    .leftJoin(
+      followers,
+      or(eq(users.id, followers.followerId), eq(users.id, followers.followedId))
+    )
     .where(eq(users.id, userId))
     .groupBy(users.id);
 
@@ -48,17 +51,26 @@ export const createFollower = async (followerId: string, followedId: string) =>
     .onConflictDoNothing()
     .returning();
 
-export const deleteFollower = async (followerId: string, followedId: string) => {
+export const deleteFollower = async (
+  followerId: string,
+  followedId: string
+) => {
   const [result] = await db
     .delete(followers)
-    .where(and(eq(followers.followedId, followedId), eq(followers.followerId, followerId)))
+    .where(
+      and(
+        eq(followers.followedId, followedId),
+        eq(followers.followerId, followerId)
+      )
+    )
     .returning();
 
   return result as typeof result | null;
 };
 export const isFollowing = async (followerId: string, followedId: string) => {
   const follower = await db.query.followers.findFirst({
-    where: (f, { eq, and }) => and(eq(f.followerId, followerId), eq(f.followedId, followedId)),
+    where: (f, { eq, and }) =>
+      and(eq(f.followerId, followerId), eq(f.followedId, followedId)),
   });
 
   return !!follower;
@@ -70,8 +82,15 @@ export const getUserAvatarCloudFileKey = async (userId: string) => {
   return result && result.profile_picture_url;
 };
 
-export const updateUser = async (userId: string, data: Partial<Omit<User, "id">>) => {
-  const [result] = await db.update(users).set(data).where(eq(users.id, userId)).returning();
+export const updateUser = async (
+  userId: string,
+  data: Partial<Omit<User, "id">>
+) => {
+  const [result] = await db
+    .update(users)
+    .set(data)
+    .where(eq(users.id, userId))
+    .returning();
 
   return result as typeof result | null;
 };
@@ -83,51 +102,19 @@ export const updateUser = async (userId: string, data: Partial<Omit<User, "id">>
  * @param pageNumber - The page number for the results to be returned (for pagination)
  *
  */
-export const getUsersByUsername = async (
-	username: string,
-	pageSize: number,
-	pageNumber: number
-) => {
-	if (!username) {
-		return false;
-	}
-
-	const usersList = await db
-		.select()
-		.from(users)
-		.where(sql`${users.username} ILIKE ${'%' + username + '%'}`)
-		.orderBy(
-			sql`CASE
-      WHEN ${users.username} ILIKE ${username.toLowerCase()} THEN 1 
-      WHEN ${users.username} ILIKE ${`${username.toLowerCase()}%`} THEN 2
-      ELSE 3
-    END`,
-			asc(users.id)
-		)
-		.limit(pageSize)
-		.offset((pageNumber - 1) * pageSize);
-
-	if (usersList.length === 0) return null;
-
-	const totalCount = await db
-		.select({ count: sql<number>`count(*)` })
-		.from(users)
-		.where(sql`${users.username} ILIKE ${'%' + username + '%'}`)
-		.then((result) => result[0].count);
-
-	const totalPages = Math.ceil(totalCount / pageSize);
-
-	return {
-		exists: true,
-		users: usersList,
-		pagination: {
-			currentPage: pageNumber,
-			totalPages: totalPages,
-			pageSize: pageSize,
-			totalCount: totalCount,
-		},
-	};
-};
+export const getUsersBySimilarUsername = (username: string) =>
+  db
+    .select()
+    .from(users)
+    .where(sql`${users.username} ILIKE ${"%" + username + "%"}`)
+    .orderBy(
+      sql`CASE
+  WHEN ${users.username} ILIKE ${username.toLowerCase()} THEN 1 
+  WHEN ${users.username} ILIKE ${`${username.toLowerCase()}%`} THEN 2
+  ELSE 3
+END`,
+      asc(users.id)
+    );
 
 export default {
   getUserById,
@@ -137,5 +124,5 @@ export default {
   isFollowing,
   getUserAvatarCloudFileKey,
   updateUser,
-  getUsersByUsername
+  getUsersBySimilarUsername,
 };

@@ -17,6 +17,7 @@ export default function PostSearchResults() {
     isFetching,
     isFetchingNextPage,
     results,
+    isLoading,
   } = usePostSearchResult();
 
   const { showFilters } = useSearchBar();
@@ -58,10 +59,10 @@ export default function PostSearchResults() {
       }
       {
         // If fetching, show skeleton loading indicators
-        (isFetchingNextPage || isFetching) && (
+        isLoading && (
           <>
-            {Array.from({ length: 6 }).map((_, index) => (
-              <PostPreviewSkeleton key={`skeleton-${index}`} showUser={true} />
+            {Array.from({ length: 3 }).map((_, index) => (
+              <PostPreviewSkeleton key={index} showUser={true} />
             ))}
           </>
         )

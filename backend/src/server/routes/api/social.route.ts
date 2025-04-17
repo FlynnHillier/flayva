@@ -1,35 +1,56 @@
-import { db } from "@/db";
-import { users as usersTable } from "@/db/schema";
-import { eq } from "drizzle-orm";
-import { Router, Request, Response } from "express";
-import { User } from "@flayva-monorepo/shared";
+import { Router } from "express";
+import socialControllers from "@/server/controllers/social.controllers";
+import { validateRequestBody } from "zod-express-middleware";
+import { z } from "zod";
+import { ensureAuthenticated } from "@/server/middleware/auth.middleware";
+import { updateProfileFormSchema } from "@flayva-monorepo/shared/validation/social.validation";
+import { validateMultiPartFormData } from "@/server/middleware/validation.middleware";
 
 const router: Router = Router();
 
 /**
  * Get a user's profile
  */
-router.get("/u/:userID", async (req: Request, res: Response) => {
-  const users = await db.select().from(usersTable).where(eq(usersTable.id, req.params.userID));
-  const user = users[0];
+router.get("/u/:userId", socialControllers.getUserById);
 
-  if (!user)
-    res.status(404).send({
-      exists: false,
-      message: "Profile not found",
-    });
+router.get("/profile/preview/:userId", socialControllers.getProfilePreview);
 
-  const structuredUser: User = {
-    bio: user.bio,
-    id: user.id,
-    username: user.username,
-    profile_picture_url: user.profile_picture_url ?? undefined,
-  };
+router.post(
+  "/profile/update",
+  ensureAuthenticated,
+  validateMultiPartFormData(updateProfileFormSchema, {
+    files: [{ key: "avatar", maxCount: 1, single: true }],
+    json: [],
+  }),
+  socialControllers.updateOwnUserProfile
+);
 
-  res.status(200).send({
-    exists: true,
-    user: structuredUser,
-  });
-});
+router.post(
+  "/follow",
+  ensureAuthenticated,
+  validateRequestBody(
+    z.object({
+      targetUserId: z.string(),
+    })
+  ),
+  socialControllers.followUser
+);
+
+router.post(
+  "/unfollow",
+  ensureAuthenticated,
+  validateRequestBody(
+    z.object({
+      targetUserId: z.string(),
+    })
+  ),
+  socialControllers.unfollowUser
+);
+
+router.get(
+  "/isfollowing/:targetUserId",
+  ensureAuthenticated,
+  socialControllers.getFollowStatus
+);
 
 export default router;

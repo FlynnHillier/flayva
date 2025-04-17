@@ -2,16 +2,25 @@ import { Routes, Route, useLocation } from "react-router-dom";
 import { Outlet, Navigate } from "react-router-dom";
 import { useMemo } from "react";
 import { useMe } from "./hooks/auth.hooks";
+import { Toaster } from "sonner";
 
 /* Pages */
-import HomePage from "@/pages/Home.page";
-import AppSidebar from "@/components/layout/Sidebar";
+import HomePage from "./pages/Home.page";
+import AppSidebar from "./components/layout/Sidebar";
 import FeedPage from "./pages/Feed.page";
 import LoginPage from "./pages/Login.page";
 import LogoutPage from "./pages/Logout.page";
 import CreatePostPage from "./pages/Create-post.page";
+import RecipePage from "./pages/Recipe.page";
 import EditProfile from "./pages/profile-pages/Edit-profile.page";
+import ViewProfilePage from "./pages/profile-pages/Profile.page";
 import ProfilePage from "./pages/profile-pages/Profile.page";
+import ProfileLayout from "@/pages/profile-pages/profile.layout";
+import CommentsPage from "./pages/Comments.page";
+
+import DevPage from "./pages/Dev.page";
+import ViewDetailedPostPage from "./pages/post-pages/View-detailed-post.page";
+
 /**
  * Routes that should not show the sidebar
  */
@@ -59,21 +68,29 @@ function App() {
   return (
     <div className="w-screen h-screen flex flex-row flex-nowrap justify-start">
       {shouldShowSidebar && <AppSidebar />}
-      <main className="grow bg-amber-200 h-screen flex flex-col flex-nowrap overflow-x-hidden overflow-y-auto">
+      <main className="grow h-screen flex flex-col flex-nowrap overflow-x-hidden overflow-y-auto relative">
         <Routes>
           <Route index element={<HomePage />} />
           <Route element={<AuthenticatedRouter />}>
             <Route path="/post" element={<CreatePostPage />} />
             <Route path="/logout" element={<LogoutPage />} />
             <Route path="/feed" element={<FeedPage />} />
-            <Route path="/profile/edit" element={<EditProfile />} />
-            <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/profile" element={<ProfileLayout />}>
+              <Route path="/profile/:id" element={<ViewProfilePage />} />
+            </Route>
+            <Route path="/p/:postId" element={<ViewDetailedPostPage />} />
           </Route>
           <Route element={<UnauthenticatedRouter />}>
             <Route path="/login" element={<LoginPage />} />
           </Route>
+          <Route element={<UnauthenticatedRouter />}>
+            <Route path="/recipe" element={<RecipePage />} />
+          </Route>
+          =========
+          <Route path="/dev" element={<DevPage />} />
           <Route path="*" element={<div>404 - Not found</div>} />
         </Routes>
+        <Toaster position="top-right" closeButton={false} />
       </main>
     </div>
   );

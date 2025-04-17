@@ -15,7 +15,7 @@ const client = axios.create({
  */
 export const request = async (config: AxiosRequestConfig) => {
   const onError = (error: AxiosError) => {
-    return Promise.reject(error.response?.data);
+    return Promise.reject(error);
   };
 
   const onSuccess = (response: AxiosResponse) => {
@@ -24,3 +24,6 @@ export const request = async (config: AxiosRequestConfig) => {
 
   return client.request(config).then(onSuccess).catch(onError);
 };
+
+export const is404Error = (error: unknown): boolean =>
+  error instanceof AxiosError && error.response?.status === 404;

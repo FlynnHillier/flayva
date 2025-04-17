@@ -6,7 +6,7 @@
     "moduleResolution": "node",
     "esModuleInterop": true,
     "outDir": "./dist",
-    "rootDir": "./src",
+    "rootDir": "./",
     "strict": true,
     "baseUrl": "./",
     "paths": {
@@ -16,7 +16,8 @@
       "@routes/*": ["src/server/routes/*"],
       "@middleware/*": ["src/server/middleware/*"],
       "@auth/*": ["src/auth/*"],
-      "@flayva-monorepo/shared": ["../shared/src"]
+      "@constants/*": ["src/constants/*"],
+      "@flayva-monorepo/shared/*": ["../shared/src/*"]
       // "@config/*": ["./src/constants/config/*"]
     },
     "composite": true,
@@ -25,6 +26,11 @@
     "sourceMap": true
   },
 
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "scripts/**/*"],
+  "exclude": [
+    "../shared/dist", // Exclude the built output of the shared package
+    "../shared/src", // Exclude the source files of the shared package
+    "../shared/node_modules"
+  ],
   "references": [{ "path": "../shared" }]
 }

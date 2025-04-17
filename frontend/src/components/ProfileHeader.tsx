@@ -1,14 +1,23 @@
 import { useMe } from "@/hooks/auth.hooks";
-import { Link } from "react-router-dom";
 import { Check, Copy } from "lucide-react";
 import { useState } from "react";
 import { Avatar, AvatarImage, AvatarFallback } from "@components/ui/avatar";
 import { Button } from "@components/ui/button";
+import { useFetchUserById } from "@/hooks/social.hooks";
 
-export const ProfileHeader = () => {
-  const { data } = useMe();
+export const ProfileHeader = ({
+  userid,
+  onEditToggle,
+  editingProfile,
+}: {
+  userid: string;
+  onEditToggle: () => void;
+  editingProfile: boolean;
+}) => {
+  const { data, isLoading, isError } = useFetchUserById(userid);
+  const { data: userData } = useMe();
   const [isCopied, setIsCopied] = useState(false);
-  const link = "http://localhost:5173/profile";
+  const link = `http://localhost:5173/profile/:${userid}}`;
 
   const handleShareProfile = async () => {
     try {
@@ -20,14 +29,27 @@ export const ProfileHeader = () => {
     }
   };
 
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <p>Loading profile...</p>
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <p>Failed to load profile. Please try again later.</p>
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col md:flex-row items-center md:items-start gap-6 max-w-6xl mx-auto">
       <div className="flex-shrink-0">
         <Avatar className="w-20 h-20 md:w-24 md:h-24 lg:w-32 lg:h-32 border-4 border-white">
-          <AvatarImage
-            src={data?.user?.profile_picture_url}
-            alt="option here for alt"
-          />
+          <AvatarImage src={data?.user?.profile_picture_url} />
           <AvatarFallback>{data?.user?.username.charAt(0)}</AvatarFallback>
         </Avatar>
       </div>
@@ -36,12 +58,15 @@ export const ProfileHeader = () => {
         <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4">
           <h1 className="text-2xl font-bold flex-1">{data?.user?.username}</h1>
           <div className="flex gap-2">
-            <Link to="/profile/edit">
-              <Button variant="outline" className="flex-1 sm:flex-auto">
+            {data?.user?.id === userData?.user?.id && !editingProfile && (
+              <Button
+                onClick={onEditToggle}
+                variant="outline"
+                className="flex-1 sm:flex-auto "
+              >
                 Edit Profile
               </Button>
-            </Link>
-
+            )}
             <Button
               variant="outline"
               onClick={handleShareProfile}

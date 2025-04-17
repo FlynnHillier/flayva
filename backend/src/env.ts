@@ -1,4 +1,5 @@
 import dotenv from "dotenv";
+
 dotenv.config({ path: "./.env.local", debug: true, encoding: "utf8" });
 import { z } from "zod";
 
@@ -6,6 +7,7 @@ import { z } from "zod";
  * SCHEMA FOR BACKEND ENV VARIABLES
  */
 const envSchema = z.object({
+  NODE_ENV: z.enum(["development", "production"]).default("development"),
   PORT: z.coerce.number().optional().default(3000),
 
   // DATABASE
@@ -21,6 +23,10 @@ const envSchema = z.object({
   GOOGLE_CLIENT_ID: z.string().min(1),
   GOOGLE_CLIENT_SECRET: z.string().min(1),
   SESSION_SECRET: z.string().min(1).optional(),
+
+  // UPLOADTHING
+  UPLOADTHING_TOKEN: z.string().min(1),
+  UPLOAD_THING_APP_ID: z.string().min(1),
 });
 
 /**
@@ -33,7 +39,9 @@ export const env = (() => {
   } catch (error) {
     if (error instanceof z.ZodError) {
       throw new Error(
-        `INVALID ENV: [\n${error.errors.map((e) => `\t'${e.path}' - ${e.message}`).join(",\n")}\n]`
+        `INVALID ENV: [\n${error.errors
+          .map((e) => `\t'${e.path}' - ${e.message}`)
+          .join(",\n")}\n]`
       );
     } else throw error;
   }

@@ -1,5 +1,13 @@
 {
   "extends": "./tsconfig.json",
+  "references": [
+    {
+      "path": "../shared"
+    },
+    {
+      "path": "../backend"
+    }
+  ],
   "compilerOptions": {
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
     "target": "ES2020",
@@ -31,9 +39,10 @@
       "@queries/*": ["src/queries/*"],
       "@hooks/*": ["src/hooks/*"],
       "@pages/*": ["src/pages/*"],
-      "@flayva-monorepo/shared": ["../shared/src"],
+      "@flayva-monorepo/shared/*": ["../shared/src/*"],
       "@lib/*": ["src/lib/*"],
-      "@assets/*": ["src/assets/*"]
+      "@assets/*": ["src/assets/*"],
+      "@apptypes/*": ["src/types/*"]
     }
   },
   "include": ["src"]

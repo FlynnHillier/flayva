@@ -16,6 +16,11 @@ In order to update your PostgreSQL tables to reflect the structure defined withi
 1. run the command `pnpm run db:push`
 1. This should trigger drizzle-kit to begin a migration on your database and create or update the tables as required.
 
+### Data insertion
+
+1. Follow the steps present in the `data` folder's `readme.md` file.
+2. Run `pnpm run db:setup`
+
 ## Auth
 
 ### Google
@@ -30,6 +35,15 @@ In order to update your PostgreSQL tables to reflect the structure defined withi
 1. add authoursied redirect URI `http://localhost:<PORT>/auth/google/callback`
 1. click `create`
 1. select the newly created client and copy the `Client ID` & `Client Secret` into your `.env.local` file
+
+## UploadThing
+
+UploadThing is used to store our media in the cloud
+
+1. Sign up for uploadthing https://uploadthing.com/dashboard/
+2. create new app
+3. on your newly created app within your dashboard, navigate to 'API Keys'
+4. Copy this API key into the relevant environment variable
 
 ## Environment
 

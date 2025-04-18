@@ -24,7 +24,7 @@ const items = [
   },
   {
     text: "Search",
-    url: "#", //Add search route when Jadd's part is pulled
+    url: "/search",
     icon: Search,
   },
   {

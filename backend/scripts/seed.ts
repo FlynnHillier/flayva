@@ -1,8 +1,9 @@
 import { dbInsertRecipeIngredients } from "scripts/ingredients.db.setup";
 import { dbInsertRecipeTags } from "scripts/tags.db.setup";
+import { dbInsertMockSocialData } from "./dummy.posts";
 
 async function dbSetup() {
-  await Promise.all([dbInsertRecipeTags(), dbInsertRecipeIngredients()]);
+  await Promise.all([dbInsertRecipeTags(), dbInsertRecipeIngredients(), dbInsertMockSocialData()]);
 }
 
 dbSetup()

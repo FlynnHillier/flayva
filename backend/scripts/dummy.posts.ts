@@ -1,6 +1,6 @@
 import { USER_ID_LENGTH } from "@/constants/auth.constants";
 import { db } from "@/db";
-import { posts, recipes, users } from "@/db/schema";
+import { ingredient_items, posts, recipe_ingredients, recipe_instruction_steps, recipe_meta_infos, recipes, users } from "@/db/schema";
 import { POST, RECIPE } from "@flayva-monorepo/shared/constants";
 import { nanoid } from "nanoid";
 
@@ -48,6 +48,8 @@ const mockRecipes: Omit<typeof recipes.$inferInsert, "id">[] = Array.from({ leng
     created_at: new Date().toISOString(),
   }));
 
+
+
   export async function dbInsertMockSocialData() {
     const insertedUsers = await Promise.all(
       mockUsers.map(async (user) => {
@@ -77,6 +79,46 @@ const mockRecipes: Omit<typeof recipes.$inferInsert, "id">[] = Array.from({ leng
       recipeId: insertedRecipes[i].id,
       created_at: new Date().toISOString(),
     }));
-  
+
     await db.insert(posts).values(postEntries).onConflictDoNothing();
+
+    const metaData: typeof recipe_meta_infos.$inferInsert[] = insertedRecipes.map((r, i) => ({
+        recipeId: r.id,
+        estimatedCookTime: `${10 + i * 5} mins`,
+        estimatedPrepTime: `${10 + i * 2} mins`,
+        servings: 2 + i,
+
+    }))
+  
+    await db.insert(recipe_meta_infos).values(metaData).onConflictDoNothing();
+
+    const instructions: typeof recipe_instruction_steps.$inferInsert[] = insertedRecipes.flatMap((r, i) => [
+        {
+          recipeId: r.id,
+          stepNumber: 1,
+          instruction: `Step 1 for ${r.title}: Gather ingredients.`,
+        },
+        {
+          recipeId: r.id,
+          stepNumber: 2,
+          instruction: `Step 2 for ${r.title}: Start cooking.`,
+        },
+      ]);
+      
+    await db.insert(recipe_instruction_steps).values(instructions).onConflictDoNothing();
+      
+
+    const existingIngredients = await db.select().from(ingredient_items).limit(5);
+    if(existingIngredients.length != 0) {
+    const recipeIngredients: typeof recipe_ingredients.$inferInsert[] = insertedRecipes.map((r, i) => ({
+        recipe_id: r.id,
+        ingredient_id: existingIngredients[i % existingIngredients.length].id,
+        amount_whole: 1 + i,
+        amount_fractional_numerator: 1,
+        amount_fractional_denominator: 2,
+        unit: RECIPE.INGREDIENT_UNITS[i % RECIPE.INGREDIENT_UNITS.length],
+    }));
+    
+    await db.insert(recipe_ingredients).values(recipeIngredients).onConflictDoNothing();
+}
   }

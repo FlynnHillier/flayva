@@ -154,6 +154,9 @@ export async function getUserPostsWithTagFilters(
 }
 
 export async function fetchPostsFeed(excludedPostIds: string[]) {
+  // TODO : remove this delay when finished testing
+  await new Promise((resolve) => setTimeout(resolve, 2000)); // Simulate a delay
+
   const { data } = await request({
     url: "/api/p/feed",
     method: "GET",

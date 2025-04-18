@@ -8,6 +8,7 @@ import {
   useMemo,
   useState,
 } from "react";
+import { toast } from "sonner";
 
 type FeedContextType = {
   posts: Post[];
@@ -67,12 +68,21 @@ export const FeedProvider = ({ children }: React.PropsWithChildren<{}>) => {
   }, [setActiveIndex]);
 
   useEffect(() => {
+    // Fetch more posts if the active index is out of bounds and there are more posts to fetch
     if (activeIndex >= posts.length) {
       if (!isFetchingNextPage && hasNextPage) {
         fetchNextPage();
       }
     }
   }, [activeIndex, posts, isFetchingNextPage]);
+
+  useEffect(() => {
+    // Roll the active index back to the last post if the current active index is out of bounds AND there are no more posts to fetch
+    if (activeIndex >= posts.length && !hasNextPage) {
+      setActiveIndex(posts.length - 1);
+      toast.info("You have reached the end of the feed.");
+    }
+  }, [activeIndex, hasNextPage, posts]);
 
   return (
     <FeedContext.Provider

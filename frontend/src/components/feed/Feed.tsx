@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 import React, { useEffect, useRef, useState } from "react";
 import { FeedSidebar } from "./FeedSidebar";
 import { PostRating } from "../post/ratings/ratings-common";
+import { Skeleton } from "../ui/skeleton";
 
 const ImageCarousel = ({
   images,
@@ -93,10 +94,12 @@ const FeedEntry = React.forwardRef<HTMLDivElement, { post: Post }>(
 );
 
 export const Feed = () => {
-  const { posts, activeIndex, nextPost, prevPost } = useFeed();
+  const { posts, activeIndex, nextPost, prevPost, hasNextPage } = useFeed();
 
   const feedContainerRef = useRef<HTMLDivElement>(null);
+
   const feedPostRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const feedPostSkeletonRef = useRef<HTMLDivElement>(null);
 
   const [isFeedScrolling, setIsFeedScrolling] = useState(false);
 
@@ -156,12 +159,16 @@ export const Feed = () => {
   }, [feedContainerRef.current]);
 
   useEffect(() => {
-    const ref = feedPostRefs.current[activeIndex];
-    ref?.scrollIntoView({
-      behavior: "smooth",
-      block: "nearest",
-    });
-  }, [activeIndex, feedPostRefs.current]);
+    if (activeIndex >= posts.length)
+      feedPostSkeletonRef.current?.scrollIntoView({ behavior: "smooth" });
+    else {
+      const ref = feedPostRefs.current[activeIndex];
+      ref?.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest",
+      });
+    }
+  }, [activeIndex, feedPostRefs.current, feedPostSkeletonRef.current, posts]);
 
   return (
     <div className="flex flex-row flex-nowrap w-full max-h-full h-full  max-w-7xl">
@@ -180,6 +187,10 @@ export const Feed = () => {
               }}
             />
           ))}
+          {/* Skeleton loading post view */}
+          <div className="h-full w-full" ref={feedPostSkeletonRef}>
+            <Skeleton className="h-full w-full rounded-lg" />
+          </div>
         </div>
         <FeedNavigationHandle direction="down" onClick={nextPost} />
       </div>

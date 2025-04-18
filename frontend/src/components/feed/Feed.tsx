@@ -1,5 +1,10 @@
 import { uploadThingFileUrlFromKey } from "@/lib/ut";
-import { Carousel, CarouselContent, CarouselItem } from "../ui/carousel";
+import {
+  Carousel,
+  CarouselApi,
+  CarouselContent,
+  CarouselItem,
+} from "../ui/carousel";
 import { useFeed } from "./feed.context";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { Post } from "../../../../backend/src/types/exported/post.types";
@@ -8,23 +13,56 @@ import React, { useEffect, useRef, useState } from "react";
 import { FeedSidebar } from "./FeedSidebar";
 import { PostRating } from "../post/ratings/ratings-common";
 import { Skeleton } from "../ui/skeleton";
+import { ProfilePicture } from "../profile/profile-common";
 
 const ImageCarousel = ({
-  images,
+  post,
   className,
 }: {
-  images: string[];
+  post: Post;
   className?: string;
 }) => {
+  const { posts, activeIndex } = useFeed();
+
+  const [api, setApi] = useState<CarouselApi>();
+
+  useEffect(() => {
+    if (!api) return;
+
+    // This effect is used to handle keyboard navigation for the carousel.
+    // It listens for keydown events and scrolls the carousel accordingly.
+    // It also checks if the currently active post is the same as the one being viewed.
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (posts[activeIndex] && posts[activeIndex].id === post.id)
+        switch (event.key) {
+          case "ArrowLeft":
+            event.preventDefault();
+            api.scrollPrev();
+            break;
+          case "ArrowRight":
+            event.preventDefault();
+            api.scrollNext();
+            break;
+        }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [api, posts, activeIndex]);
+
   return (
     <Carousel
+      setApi={setApi}
       className={cn("w-full h-full overflow-hidden rounded-lg ", className)}
     >
       <CarouselContent className="h-full">
-        {images.map((imageUrl, index) => (
+        {post.images.map(({ key }, index) => (
           <CarouselItem key={index} className="w-full h-full overflow-hidden ">
             <img
-              src={imageUrl}
+              src={uploadThingFileUrlFromKey(key)}
               alt={`Image ${index + 1}`}
               className="object-cover w-full h-full rounded-lg"
             />
@@ -45,7 +83,7 @@ const FeedNavigationHandle = ({
   return (
     <div className="h-fit w-full flex flex-row justify-center items-center gap-2 py-1">
       <button
-        className="hover:bg-muted rounded-full p-0.5 hover:cursor-pointer"
+        className="hover:bg-muted rounded-full p-0.5 hover:cursor-pointer boreder-1 "
         onClick={onClick}
       >
         {direction === "up" && <ChevronUp />}
@@ -54,6 +92,47 @@ const FeedNavigationHandle = ({
     </div>
   );
 };
+
+const FeedEntryFooter = ({ post }: { post: Post }) => (
+  <div className="flex flex-col h-fit @2xl:max-h-40 max-h-40 py-2 w-full absolute bottom-0 left-0 px-2 backdrop-blur-3xl">
+    <div className="flex flex-row gap-2 items-center h-fit shrink-0">
+      {/* User */}
+      <ProfilePicture user={post.owner} className="size-10" />
+      <div className="flex flex-col gap-0">
+        <span className="text-secondary text-sm @2xl:text-lg font-semibold">
+          {post.owner.username}
+        </span>
+        {/* Date */}
+        <span className="text-secondary text-xs font-normal">
+          {new Date(post.created_at).toLocaleDateString("en-US", {
+            month: "long",
+            day: "numeric",
+            year: "numeric",
+          })}
+        </span>
+      </div>
+    </div>
+    <div className="flex flex-row gap-2 items-center h-fit shrink-0 flex-nowrap text-nowrap">
+      {/* Title */}
+      <span className="@2xl:text-4xl @2xl:pb-1 text-2xl h-fit text-secondary rounded-xl font-semibold backdrop-blur-3xl max-w-fit truncate">
+        {post.recipe.title}
+      </span>
+      {/* Rating */}
+      {post.recipe.ratings.statiststics.count > 0 && (
+        <PostRating
+          className="stroke-secondary @2xl:mt-2 @2xl:size-6 size-5 mt-1 shrink-0"
+          interactive={false}
+          rating={post.recipe.ratings.statiststics.average}
+        />
+      )}
+    </div>
+    {/* Description */}
+    <span className="w-full text-secondary text-sm @2xl:text-lg font-normal grow-1">
+      {/* TODO: add text truncate here */}
+      {post.recipe.description}
+    </span>
+  </div>
+);
 
 /**
  * A component that displays a single feed entry.
@@ -65,29 +144,8 @@ const FeedEntry = React.forwardRef<HTMLDivElement, { post: Post }>(
         className="h-full w-full relative @container rounded-xl overflow-hidden select-none"
         ref={ref}
       >
-        <ImageCarousel
-          images={post.images.map(({ key }) => uploadThingFileUrlFromKey(key))}
-          className="grow-1"
-        />
-        <div className="flex flex-col @2xl:h-32 h-24 w-full absolute bottom-0 left-0 px-2 backdrop-blur-3xl">
-          <div className="flex flex-row gap-2 items-center h-fit">
-            <span className="@2xl:text-4xl text-2xl h-fit text-secondary rounded-xl font-semibold backdrop-blur-3xl w-fit ">
-              {post.recipe.title}
-            </span>
-            {post.recipe.ratings.statiststics.count > 0 ? (
-              <PostRating
-                className="stroke-secondary"
-                interactive={false}
-                rating={post.recipe.ratings.statiststics.average}
-              />
-            ) : (
-              <span className="text-sm text-secondary self-end"></span>
-            )}
-          </div>
-          <span className="w-full text-secondary text-sm @2xl:text-lg font-normal ">
-            {post.recipe.description}
-          </span>
-        </div>
+        <ImageCarousel post={post} className="grow-1" />
+        <FeedEntryFooter post={post} />
       </div>
     );
   }

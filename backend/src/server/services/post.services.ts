@@ -79,12 +79,14 @@ export const getPostsByOwnerId = (ownerId: string) =>
  * Get a feed of posts
  *
  */
-export const getFeed = async () => {
-  const posts = await postRepo.getRecentPosts(5);
+export const getFeed = async (excludePostIds: string[] = []) => {
+  const posts = await postRepo.getRecentPosts({
+    limit: 5,
+    where: (post, { not, inArray }) => not(inArray(post.id, excludePostIds)),
+  });
 
   return posts;
 };
-
 
 /**
  * Get a list of post previews by title and tags with infinite scroll
@@ -129,8 +131,6 @@ export const getTagList = async () => {
 
   return posts;
 };
-
-
 
 export const interactions = {
   /**

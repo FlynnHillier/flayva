@@ -48,7 +48,9 @@ export const useInfiniteScrollFeed = () =>
     queryFn: ({ pageParam }) =>
       infiniteQueries.feed.pagination().queryFn(pageParam),
     initialPageParam: [] as string[],
-    getNextPageParam: (_, all) => {
+    getNextPageParam: ({ feed }, all) => {
+      if (feed.length === 0) return undefined;
+
       return all.flatMap((feedSection) =>
         feedSection.feed.map((post) => post.id)
       );

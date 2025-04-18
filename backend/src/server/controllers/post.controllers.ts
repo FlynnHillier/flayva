@@ -69,9 +69,7 @@ export const getFeed: RequestHandler = async (req: Request, res: Response) => {
     ? exclude.map((id) => String(id))
     : [];
 
-  console.log(parsedExclude);
-
-  const feed: Post[] = await postServices.getFeed();
+  const feed: Post[] = await postServices.getFeed(parsedExclude);
 
   res.status(200).send({
     feed,

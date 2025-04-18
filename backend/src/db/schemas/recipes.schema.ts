@@ -80,13 +80,19 @@ export const tags = pgTable("tags", {
 });
 
 export const recipe_ratings = pgTable("recipe_ratings", {
-  id: varchar("id").primaryKey(),
-  recipe_id: varchar("recipe_id").references(() => recipes.id, {
-    onDelete: "cascade",
-  }),
-  user_id: varchar("user_id").references(() => users.id, {
-    onDelete: "cascade",
-  }),
+  id: varchar("id")
+    .primaryKey()
+    .$defaultFn(() => nanoid(RECIPE.RECIPE_RATING_ID_LENGTH)),
+  recipe_id: varchar("recipe_id")
+    .notNull()
+    .references(() => recipes.id, {
+      onDelete: "cascade",
+    }),
+  user_id: varchar("user_id")
+    .notNull()
+    .references(() => users.id, {
+      onDelete: "cascade",
+    }),
   rating: integer("rating").notNull(),
   review: varchar("review"),
   date: timestamp("created_at", { mode: "string" }).defaultNow(),

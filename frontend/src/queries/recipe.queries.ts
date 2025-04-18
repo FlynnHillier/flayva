@@ -7,4 +7,12 @@ export const recipe = createQueryKeys("recipe", {
     queryFn: () => api.recipe.querySuggestedSimilarTags(tagQuery),
     queryKey: ["recipe", "querySuggestedSimilarTags", tagQuery],
   }),
+  recipeRatingsFetchStatistics: (recipeId: string) => ({
+    queryFn: () => api.recipe.ratings.statistics(recipeId),
+    queryKey: ["recipe", "interactions", "ratings", recipeId],
+  }),
+  recipeRatingsFetchPersonal: (recipeId: string) => ({
+    queryFn: () => api.recipe.ratings.fetchPersonal(recipeId),
+    queryKey: ["recipe", "interactions", "ratings", recipeId, "me"],
+  }),
 });

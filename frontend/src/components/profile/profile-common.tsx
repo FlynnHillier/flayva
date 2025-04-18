@@ -15,7 +15,9 @@ export const ProfilePicture = ({
 
   return (
     <Avatar className={cn("w-20 h-20 border-2", className)}>
-      <AvatarImage src={user.profile_picture_url} alt="Profile picture" />
+      {user.profile_picture_url && (
+        <AvatarImage src={user.profile_picture_url} alt="Profile picture" />
+      )}
       <AvatarFallback>{user.username.charAt(0)}</AvatarFallback>
     </Avatar>
   );

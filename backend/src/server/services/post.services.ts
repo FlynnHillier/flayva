@@ -4,6 +4,7 @@ import {
 } from "@/constants/posts.constants";
 import postRepo from "@/server/repositories/post.repo";
 import { uploadPostImages } from "@/server/services/images.services";
+import { NestedServiceObject } from "@/types/api.types";
 import { createNewPostSchema } from "@flayva-monorepo/shared/validation/post.validation";
 import { z } from "zod";
 import { PostPreview } from "@flayva-monorepo/shared/types";
@@ -44,13 +45,7 @@ export const deletePost = async (postId: string) => {
  * @param postId - The ID of the post to get
  * @returns The post with the given ID
  */
-export const getPostById = async (postId: string) => {
-  //TODO: process db response
-
-  const post = await postRepo.getPostById(postId);
-
-  return post;
-};
+export const getPostById = (postId: string) => postRepo.getPostById(postId);
 
 /**
  * Get a list of post previews by the owner ID with infinite scroll
@@ -89,6 +84,7 @@ export const getFeed = async () => {
 
   return posts;
 };
+
 
 /**
  * Get a list of post previews by title and tags with infinite scroll
@@ -134,6 +130,54 @@ export const getTagList = async () => {
   return posts;
 };
 
+
+
+export const interactions = {
+  /**
+   * Like and unlike posts
+   */
+  like: {
+    status: async (postId: string, userId: string) => {
+      const result = await postRepo.interactions.like.status(postId, userId);
+
+      return {
+        liked: !!result,
+        postId,
+        userId,
+      };
+    },
+    add: async (postId: string, userId: string) => {
+      const result = await postRepo.interactions.like.add(postId, userId);
+      return {
+        likeAdded: !!result,
+        postId,
+        userId,
+      };
+    },
+    remove: async (postId: string, userId: string) => {
+      const result = await postRepo.interactions.like.remove(postId, userId);
+      return {
+        likeRemoved: !!result,
+        postId,
+        userId,
+      };
+    },
+    toggle: async (postId: string, userId: string) => {
+      const { added, removed } = await postRepo.interactions.like.toggle(
+        postId,
+        userId
+      );
+
+      return {
+        postId,
+        userId,
+        added: !!added,
+        removed: !!removed,
+      };
+    },
+  },
+} as const satisfies NestedServiceObject;
+
 export default {
   createNewPost,
   getPostById,
@@ -142,4 +186,5 @@ export default {
   infiniteScrollProfilePostPreviews,
   infiniteSrollTitleAndTagsSearchPostPreviews,
   getTagList,
+  interactions,
 };

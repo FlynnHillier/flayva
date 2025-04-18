@@ -43,11 +43,11 @@ export async function deleteExistingPost(postId: string) {
 
 export async function getPostById(postId: string) {
   const { data } = await request({
-    url: `/api/p/${postId}`,
+    url: `/api/p/get/id/${postId}`,
     method: "GET",
   });
 
-  return { post: data } as { post: Post | null };
+  return { post: data.post } as { post: Post };
 }
 
 export async function searchPost(searchQuery: string) {
@@ -92,6 +92,7 @@ export async function getInfiniteScrollPostPreviewsByOwnerId(
     nextCursor: number | null;
   };
 }
+
 
 export async function getInfiniteScrollPostPreviewsByTitleAndTags(
   title: string,
@@ -148,4 +149,38 @@ export async function getUserPostsWithTagFilters(
     previews: PostPreview[];
     nextCursor: number | null;
   };
+}
+
+
+/**
+ * INTERACTIONS
+ */
+export async function getLikeStatus(postId: string) {
+  await new Promise((resolve) => setTimeout(resolve, 2000)); // Simulate a delay
+  const { data } = await request({
+    url: `/api/p/interactions/like/status/${postId}`,
+    method: "GET",
+  });
+  const { liked } = data as { liked: boolean };
+  return { liked };
+}
+
+export async function likePost(postId: string) {
+  const { data } = await request({
+    url: "/api/p/interactions/like",
+    method: "POST",
+    data: { postId },
+  });
+
+  return data as { liked: boolean };
+}
+
+export async function unlikePost(postId: string) {
+  const { data } = await request({
+    url: "/api/p/interactions/like",
+    method: "DELETE",
+    data: { postId },
+  });
+
+  return data as { unliked: boolean };
 }

@@ -171,6 +171,15 @@ export const RECIPE_TAG_COUNT_MAX = 10;
 export const RECIPE_TAG_ID_MIN = 1;
 export const RECIPE_TAG_ID_MAX = 100000; //TODO: change this to the actual number of tags
 
+// # RATINGS #
+export const RECIPE_RATING_ID_LENGTH = 13;
+
+export const RECIPE_RATING_MIN = 1;
+export const RECIPE_RATING_MAX = 5;
+
+export const RECIPE_RATING_REVIEW_MIN_LENGTH = 10;
+export const RECIPE_RATING_REVIEW_MAX_LENGTH = 500;
+
 // # TITLE #
 export const RECIPE_TITLE_LENGTH_MIN = 5;
 export const RECIPE_TITLE_LENGTH_MAX = 60;

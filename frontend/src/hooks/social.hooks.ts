@@ -1,6 +1,6 @@
 import { api } from "@/api/api";
 import { createConfigurableMutation } from "@/hooks/util/configurableMutation";
-import { queryClient } from "@/lib/query";
+import { queryClient, setQueryData } from "@/lib/query";
 import { queries } from "@/queries";
 import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
 
@@ -30,19 +30,9 @@ export const useFollowUser = createConfigurableMutation(
         );
 
         // Update profile preview query with new follower count
-        queryClient.setQueryData(
-          queries.social.fetchProfilePreview(userId).queryKey,
-          (
-            oldData:
-              | Awaited<
-                  ReturnType<
-                    Awaited<
-                      ReturnType<typeof queries.social.fetchProfilePreview>
-                    >["queryFn"]
-                  >
-                >
-              | undefined
-          ) =>
+        setQueryData(
+          queries.social.fetchProfilePreview(userId),
+          (oldData) =>
             oldData && {
               ...oldData,
               profile: {
@@ -59,6 +49,8 @@ export const useFollowUser = createConfigurableMutation(
   }
 );
 
+queries.social.fetchUserById;
+
 export const useUnfollowUser = createConfigurableMutation(
   async ({ userId }: { userId: string }) =>
     await api.social.unfollowUser(userId),
@@ -72,19 +64,9 @@ export const useUnfollowUser = createConfigurableMutation(
         );
 
         // Update profile preview query with new follower count
-        queryClient.setQueryData(
-          queries.social.fetchProfilePreview(userId).queryKey,
-          (
-            oldData:
-              | Awaited<
-                  ReturnType<
-                    Awaited<
-                      ReturnType<typeof queries.social.fetchProfilePreview>
-                    >["queryFn"]
-                  >
-                >
-              | undefined
-          ) =>
+        setQueryData(
+          queries.social.fetchProfilePreview(userId),
+          (oldData) =>
             oldData && {
               ...oldData,
               profile: {

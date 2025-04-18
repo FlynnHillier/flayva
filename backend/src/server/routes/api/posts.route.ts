@@ -7,6 +7,8 @@ import { ensureAuthenticated } from "@/server/middleware/auth.middleware";
 import postControllers from "@/server/controllers/post.controllers";
 import { validateRequestBody } from "zod-express-middleware";
 import { isRequestPostOwner } from "@/server/middleware/post.middleware";
+import { createRouter } from "@/server/routes/util/util";
+import { z } from "zod";
 const router: Router = Router();
 
 /**
@@ -53,6 +55,7 @@ router.get(
   postControllers.infiniteScrollProfilePostPreviews
 );
 
+
 /**
  * Get post previews by title and tags with infinite scrolling
  *
@@ -72,6 +75,30 @@ router.get("/getTagList", postControllers.getTagList);
  * @param ownerId - The ID of the user
  * @query tags - JSON string of selected tags by category
  */
-// router.get("/user/tags/:ownerId", postControllers.getUserPostsWithTagFilters);
+router.use(
+  "/interactions",
+  ensureAuthenticated,
+  createRouter({
+    "/like": {
+      handlers: {
+        POST: [
+          validateRequestBody(z.object({ postId: z.string() })),
+          postControllers.interactions.like.add,
+        ],
+        DELETE: [
+          validateRequestBody(z.object({ postId: z.string() })),
+          postControllers.interactions.like.remove,
+        ],
+      },
+      router: createRouter({
+        "/status/:postId": {
+          handlers: {
+            GET: [postControllers.interactions.like.status],
+          },
+        },
+      }),
+    },
+  })
+);
 
 export default router;

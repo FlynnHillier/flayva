@@ -91,7 +91,7 @@ export default function CreateNewPostForm() {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(handleSubmit)}
-        className="space-y-8 mx-auto px-4 max-w-5xl overflow-hidden"
+        className="space-y-8 mx-auto px-4 w-full  overflow-hidden"
       >
         <FormField
           disabled={isDisabled}

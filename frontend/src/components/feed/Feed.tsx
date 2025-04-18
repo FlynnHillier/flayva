@@ -77,14 +77,20 @@ const ImageCarousel = ({
 const FeedNavigationHandle = ({
   direction,
   onClick,
+  disabled,
 }: {
   direction: "up" | "down";
   onClick?: () => void;
+  disabled?: boolean;
 }) => {
   return (
     <div className="h-fit w-full flex flex-row justify-center items-center gap-2 py-1">
       <button
-        className="hover:bg-muted rounded-full p-0.5 hover:cursor-pointer boreder-1 "
+        disabled={disabled}
+        className={cn("rounded-full p-0.5 ", {
+          "text-muted-foreground": disabled,
+          "hover:bg-muted hover:cursor-pointer": !disabled,
+        })}
         onClick={onClick}
       >
         {direction === "up" && <ChevronUp />}
@@ -239,7 +245,11 @@ export const Feed = () => {
   return (
     <div className="flex flex-row flex-nowrap w-full max-h-full h-full  max-w-7xl">
       <div className="grow-1 max-h-full px-4 flex flex-col">
-        <FeedNavigationHandle direction="up" onClick={prevPost} />
+        <FeedNavigationHandle
+          direction="up"
+          onClick={prevPost}
+          disabled={activeIndex === 0}
+        />
         <div
           className="grow-1  rounded-lg overflow-hidden "
           ref={feedContainerRef}
@@ -258,7 +268,15 @@ export const Feed = () => {
             <Skeleton className="h-full w-full rounded-lg" />
           </div>
         </div>
-        <FeedNavigationHandle direction="down" onClick={nextPost} />
+        <FeedNavigationHandle
+          direction="down"
+          onClick={nextPost}
+          disabled={
+            hasNextPage
+              ? activeIndex >= posts.length
+              : activeIndex >= posts.length - 1
+          }
+        />
       </div>
       <FeedSidebar
         post={posts[activeIndex]}

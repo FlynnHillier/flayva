@@ -61,7 +61,9 @@ export const FeedProvider = ({ children }: React.PropsWithChildren<{}>) => {
   );
 
   const nextPost = useCallback(() => {
-    setActiveIndex((prevIndex) => Math.min(prevIndex + 1, posts.length));
+    setActiveIndex((prevIndex) =>
+      Math.min(prevIndex + 1, hasNextPage ? posts.length : posts.length - 1)
+    );
   }, [setActiveIndex, posts]);
 
   const prevPost = useCallback(() => {

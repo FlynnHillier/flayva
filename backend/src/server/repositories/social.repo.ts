@@ -2,7 +2,7 @@ import { db } from "@/db";
 import { posts, users } from "@/db/schema";
 import { followers } from "@/db/schemas/social.schema";
 import { User } from "@flayva-monorepo/shared/types";
-import { and, eq, or } from "drizzle-orm";
+import { and, eq, or, sql, asc } from "drizzle-orm";
 
 /**
  * Get a user object from the database by their ID
@@ -29,7 +29,10 @@ export const getUserProfileSocialStats = async (userId: string) => {
     })
     .from(users)
     .leftJoin(posts, eq(users.id, posts.ownerId))
-    .leftJoin(followers, or(eq(users.id, followers.followerId), eq(users.id, followers.followedId)))
+    .leftJoin(
+      followers,
+      or(eq(users.id, followers.followerId), eq(users.id, followers.followedId))
+    )
     .where(eq(users.id, userId))
     .groupBy(users.id);
 
@@ -48,17 +51,26 @@ export const createFollower = async (followerId: string, followedId: string) =>
     .onConflictDoNothing()
     .returning();
 
-export const deleteFollower = async (followerId: string, followedId: string) => {
+export const deleteFollower = async (
+  followerId: string,
+  followedId: string
+) => {
   const [result] = await db
     .delete(followers)
-    .where(and(eq(followers.followedId, followedId), eq(followers.followerId, followerId)))
+    .where(
+      and(
+        eq(followers.followedId, followedId),
+        eq(followers.followerId, followerId)
+      )
+    )
     .returning();
 
   return result as typeof result | null;
 };
 export const isFollowing = async (followerId: string, followedId: string) => {
   const follower = await db.query.followers.findFirst({
-    where: (f, { eq, and }) => and(eq(f.followerId, followerId), eq(f.followedId, followedId)),
+    where: (f, { eq, and }) =>
+      and(eq(f.followerId, followerId), eq(f.followedId, followedId)),
   });
 
   return !!follower;
@@ -70,11 +82,39 @@ export const getUserAvatarCloudFileKey = async (userId: string) => {
   return result && result.profile_picture_url;
 };
 
-export const updateUser = async (userId: string, data: Partial<Omit<User, "id">>) => {
-  const [result] = await db.update(users).set(data).where(eq(users.id, userId)).returning();
+export const updateUser = async (
+  userId: string,
+  data: Partial<Omit<User, "id">>
+) => {
+  const [result] = await db
+    .update(users)
+    .set(data)
+    .where(eq(users.id, userId))
+    .returning();
 
   return result as typeof result | null;
 };
+
+/**
+ * Get a list of users based on their username that are similar to the search query. Uses pagination
+ * @param username - The username of a user in a search query
+ * @param pageSize - The size of the results to be returned (for pagination)
+ * @param pageNumber - The page number for the results to be returned (for pagination)
+ *
+ */
+export const getUsersBySimilarUsername = (username: string) =>
+  db
+    .select()
+    .from(users)
+    .where(sql`${users.username} ILIKE ${"%" + username + "%"}`)
+    .orderBy(
+      sql`CASE
+  WHEN ${users.username} ILIKE ${username.toLowerCase()} THEN 1 
+  WHEN ${users.username} ILIKE ${`${username.toLowerCase()}%`} THEN 2
+  ELSE 3
+END`,
+      asc(users.id)
+    );
 
 export default {
   getUserById,
@@ -84,4 +124,5 @@ export default {
   isFollowing,
   getUserAvatarCloudFileKey,
   updateUser,
+  getUsersBySimilarUsername,
 };

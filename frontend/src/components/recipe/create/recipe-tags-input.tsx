@@ -26,7 +26,8 @@ function SelectedTag({
 
   return (
     <Badge
-      key={tag.tagId}
+      // tabIndex={activeIndex !== -1 ? 0 : activeIndex}
+      key={tag.id}
       aria-disabled={disabled}
       data-active={active}
       className={cn(
@@ -34,7 +35,7 @@ function SelectedTag({
       )}
       variant={"secondary"}
     >
-      <span className="text-xs">{tag.tagName}</span>
+      <span className="text-xs">{tag.name}</span>
       <button
         type="button"
         aria-label={`Remove ${tag} option`}
@@ -44,7 +45,7 @@ function SelectedTag({
         onClick={onRemove}
         className="disabled:cursor-not-allowed"
       >
-        <span className="sr-only">Remove {tag.tagId} option</span>
+        <span className="sr-only">Remove {tag.id} option</span>
         <RemoveIcon className="h-4 w-4 hover:stroke-destructive" />
       </button>
     </Badge>
@@ -62,14 +63,14 @@ function SuggestionTag({
 }) {
   return (
     <button
-      key={suggestion.tagId}
+      key={suggestion.id}
       onClick={onClick}
       className={cn("block w-full p-3 text-left transition-all", {
         "hover:shadow-lg hover:bg-gray-100": !isActive,
         "font-semibold bg-gray-200": isActive,
       })}
     >
-      {suggestion.tagName}
+      {suggestion.name}
     </button>
   );
 }
@@ -167,9 +168,7 @@ export function TagsInput({
 
   useEffect(() => {
     setSuggestions((prev) =>
-      prev.filter(
-        (suggestion) => !tags.some((tag) => tag.tagId === suggestion.tagId)
-      )
+      prev.filter((suggestion) => !tags.some((tag) => tag.id === suggestion.id))
     );
   }, [tags]);
 
@@ -177,14 +176,17 @@ export function TagsInput({
     if (!suggestionsQueryData) return clearSuggestions();
     setSuggestions(
       suggestionsQueryData.filter(
-        (suggestion) => !tags.some((tag) => tag.tagId === suggestion.tagId)
+        (suggestion) => !tags.some((tag) => tag.id === suggestion.id)
       )
     );
   }, [suggestionsQueryData]);
 
   useEffect(() => {
+    // Clear the suggestion index when the suggestions become empty
     if (!suggestions || suggestions.length === 0)
       return setActiveSuggestionIndex(-1);
+
+    // Reset the suggestion index when the suggestions change
     setActiveSuggestionIndex(0);
   }, [suggestions]);
 
@@ -365,7 +367,7 @@ export function TagsInput({
               removeSelectedTag(tag);
             }}
             tag={tag}
-            key={tag.tagId}
+            key={tag.id}
           />
         ))}
         <Input
@@ -399,7 +401,7 @@ export function TagsInput({
             isActive={activeSuggestionIndex === index}
             suggestion={suggestion}
             onClick={() => handleTagSuggestionSelected(suggestion)}
-            key={suggestion.tagId}
+            key={suggestion.id}
           />
         ))}
       </div>

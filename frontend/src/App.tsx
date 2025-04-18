@@ -12,6 +12,7 @@ import LoginPage from "./pages/Login.page";
 import CreatePostPage from "./pages/Create-post.page";
 import RecipePage from "./pages/Recipe.page";
 import ViewProfilePage from "./pages/profile-pages/Profile.page";
+import SearchPage from "./pages/Search.page";
 import DevPage from "./pages/Dev.page";
 import ProfileLayout from "@/pages/profile-pages/profile.layout";
 import ViewDetailedPostPage from "./pages/post-pages/View-detailed-post.page";
@@ -63,7 +64,7 @@ function App() {
   return (
     <div className="w-screen h-screen flex flex-row flex-nowrap justify-start">
       {shouldShowSidebar && <AppSidebar />}
-      <main className="grow h-screen flex flex-col flex-nowrap overflow-x-hidden overflow-y-auto relative items-center">
+      <main className="grow h-screen flex flex-col flex-nowrap overflow-x-hidden overflow-y-auto relative items-center box-border">
         <Routes>
           <Route index element={<HomePage />} />
           <Route element={<AuthenticatedRouter />}>
@@ -72,6 +73,7 @@ function App() {
             <Route path="/profile" element={<ProfileLayout />}>
               <Route path="/profile/:id" element={<ViewProfilePage />} />
             </Route>
+            <Route path="/search" element={<SearchPage />} />
             <Route path="/p/:postId" element={<ViewDetailedPostPage />} />
           </Route>
           <Route element={<UnauthenticatedRouter />}>

@@ -9,16 +9,11 @@ import { RATINGS_PAGINATION_PAGE_SIZE } from "@/constants/recipe.constants";
  * @returns a list of tags that are similar to the search term
  */
 export const searchSimilarValidRecipeTag = async (searchTerm: string) => {
-  const results = await recipeRepo.querySimilarValidTagOptions(searchTerm);
+  const results: RecipeTag[] = await recipeRepo.querySimilarValidTagOptions(
+    searchTerm
+  );
 
-  const formattedTags: RecipeTag[] = results.map((tag) => ({
-    tagId: tag.id,
-    tagName: tag.name,
-    category: tag.category,
-    group: tag.group,
-  }));
-
-  return formattedTags;
+  return results;
 };
 
 export const interactions = {

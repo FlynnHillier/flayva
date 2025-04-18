@@ -2,7 +2,7 @@ import { api } from "@/api/api";
 import { createConfigurableMutation } from "@/hooks/util/configurableMutation";
 import { queryClient, setQueryData } from "@/lib/query";
 import { queries } from "@/queries";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
 
 export const useFetchUserById = (userId: string) => {
   return useQuery({
@@ -101,3 +101,16 @@ export const useUpdateProfile = createConfigurableMutation(
     },
   }
 );
+
+export const useInfiniteUserSearch = (
+  username: string,
+  { enabled }: Partial<{ enabled: boolean }> = {}
+) =>
+  useInfiniteQuery({
+    queryKey: ["social", "search", "users", username],
+    queryFn: ({ pageParam }) =>
+      api.social.searchUserByUsername(username, pageParam),
+    getNextPageParam: ({ nextCursor }) => nextCursor,
+    initialPageParam: 0,
+    enabled: enabled ?? true,
+  });

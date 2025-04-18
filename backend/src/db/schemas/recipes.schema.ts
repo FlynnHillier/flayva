@@ -14,10 +14,6 @@ import { nanoid } from "nanoid";
 
 // ## ENUMS ##
 
-export const tagCategoryEnum = pgEnum("category", RECIPE.TAG_CATEGORIES);
-
-export const tagGroupEnum = pgEnum("group", RECIPE.TAG_GROUPS);
-
 export const ingredientUnitEnum = pgEnum("unit", RECIPE.INGREDIENT_UNITS);
 
 export const ingredientGroupEnum = pgEnum(
@@ -54,7 +50,9 @@ export const recipe_meta_infos = pgTable("recipe_meta_infos", {
 export const recipe_instruction_steps = pgTable(
   "recipe_instruction_steps",
   {
-    recipeId: varchar("recipe_id").notNull().references(() => recipes.id, { onDelete: "cascade" }),
+    recipeId: varchar("recipe_id").references(() => recipes.id, {
+      onDelete: "cascade",
+    }),
     stepNumber: integer("step_number").notNull(),
     instruction: varchar("instruction").notNull(),
   },
@@ -77,8 +75,8 @@ export const recipe_tags = pgTable(
 export const tags = pgTable("tags", {
   id: integer("id").primaryKey(),
   name: varchar("name").notNull(),
-  category: tagCategoryEnum("category").notNull(),
-  group: tagGroupEnum("group"),
+  category: varchar("category").notNull(),
+  emoji: varchar("emoji").notNull(),
 });
 
 export const recipe_ratings = pgTable("recipe_ratings", {

@@ -50,6 +50,31 @@ export const useInfiniteScrollProfilePostPreviews = (ownerId: string) =>
   });
 
 /**
+ * infinite scroll for post previews by title and tags
+ *
+ * @param title - The title to search for
+ * @param selectedTags - The selected tags to filter by
+ */
+// TODO: perhaps add this to query-key-store
+export const useInfiniteScrollTitleAndTagsPostPreviews = (
+  title: string,
+  tagIds: number[],
+  { enabled = true }: { enabled?: boolean } = {}
+) =>
+  useInfiniteQuery({
+    queryKey: ["posts-preview", "title-tags", title, tagIds],
+    queryFn: ({ pageParam }) =>
+      api.post.getInfiniteScrollPostPreviewsByTitleAndTags(
+        title,
+        tagIds,
+        pageParam
+      ),
+    initialPageParam: 0,
+    getNextPageParam: ({ nextCursor }) => nextCursor,
+    enabled: enabled,
+ })
+                       
+/**
  *
  *
  * INTERACTIONS

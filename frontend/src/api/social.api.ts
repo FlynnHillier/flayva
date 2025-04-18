@@ -122,3 +122,13 @@ export async function updateProfile(
     user: data.user as User,
   };
 }
+
+export async function searchUserByUsername(username: string, cursor: number) {
+  const { data } = await request({
+    url: `/api/s/search/u`,
+    method: "GET",
+    params: { username, cursor },
+  });
+
+  return data as { users: User[]; nextCursor: number };
+}

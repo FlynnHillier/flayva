@@ -1,8 +1,12 @@
+import { USER_PROFILE_SEARCH_INFINITE_SCROLL_BATCH_SIZE } from "@/constants/social.constants";
 import { uploadThingFileUrl } from "@/lib/uploadthing";
 import socialRepo from "@/server/repositories/social.repo";
 import imagesServices from "@/server/services/images.services";
 import { type User } from "@flayva-monorepo/shared/types/auth";
-import { SocialMetrics, ProfilePreview } from "@flayva-monorepo/shared/types/social.types";
+import {
+  SocialMetrics,
+  ProfilePreview,
+} from "@flayva-monorepo/shared/types/social.types";
 import {
   avatar,
   updateProfileFormSchema,
@@ -29,7 +33,9 @@ export const getUserById = async (userId: string): Promise<User | null> => {
   return formattedUser;
 };
 
-export const getProfilePreview = async (userId: string): Promise<ProfilePreview | null> => {
+export const getProfilePreview = async (
+  userId: string
+): Promise<ProfilePreview | null> => {
   const user = await getUserById(userId);
 
   if (!user) return null;
@@ -44,7 +50,9 @@ export const getProfilePreview = async (userId: string): Promise<ProfilePreview 
   };
 };
 
-export const getUserProfileSocialStats = async (userId: string): Promise<SocialMetrics | null> => {
+export const getUserProfileSocialStats = async (
+  userId: string
+): Promise<SocialMetrics | null> => {
   const result = await socialRepo.getUserProfileSocialStats(userId);
 
   if (!result) return null;
@@ -62,7 +70,8 @@ export const getUserProfileSocialStats = async (userId: string): Promise<SocialM
  */
 
 export const followUser = async (requesterId: string, targetId: string) => {
-  if (requesterId === targetId) return { success: false, message: "Cannot follow yourself" };
+  if (requesterId === targetId)
+    return { success: false, message: "Cannot follow yourself" };
 
   const [result] = await socialRepo.createFollower(requesterId, targetId);
 
@@ -84,7 +93,10 @@ export const unfollowUser = async (requesterId: string, targetId: string) => {
   };
 };
 
-export const isFollowingUser = async (requesterId: string, targetId: string) => {
+export const isFollowingUser = async (
+  requesterId: string,
+  targetId: string
+) => {
   const result = await socialRepo.isFollowing(requesterId, targetId);
 
   return {
@@ -123,7 +135,8 @@ export const updateProfile = async (
 };
 
 export const editProfileAvatar = async (userId: string, image: File) => {
-  const { success: isValidFile, error: validationError } = avatar.safeParse(image);
+  const { success: isValidFile, error: validationError } =
+    avatar.safeParse(image);
 
   if (!isValidFile) {
     //TODO: logging
@@ -131,10 +144,8 @@ export const editProfileAvatar = async (userId: string, image: File) => {
   }
 
   // Upload the image to the cloud
-  const { data: uploadData, error: uploadError } = await imagesServices.uploadAvatarImage(
-    userId,
-    image
-  );
+  const { data: uploadData, error: uploadError } =
+    await imagesServices.uploadAvatarImage(userId, image);
 
   if (uploadError) {
     // TODO: logging
@@ -177,6 +188,35 @@ export const editProfileAvatar = async (userId: string, image: File) => {
   };
 };
 
+/**
+ * Get a list of users based on their username that are similar to the search query. Uses pagination
+ * @param username - The username of a user in a search query
+ * @param cursor - The offset of the search query
+ *
+ */
+export const searchUsersByUsername = async (
+  username: string,
+  cursor: number
+) => {
+  const users = await socialRepo
+    .getUsersBySimilarUsername(username)
+    .$dynamic()
+    .limit(USER_PROFILE_SEARCH_INFINITE_SCROLL_BATCH_SIZE)
+    .offset(cursor)
+    .execute();
+
+  const hasMore =
+    users.length >= USER_PROFILE_SEARCH_INFINITE_SCROLL_BATCH_SIZE;
+  const nextCursor = hasMore
+    ? cursor + USER_PROFILE_SEARCH_INFINITE_SCROLL_BATCH_SIZE
+    : null;
+
+  return {
+    users,
+    nextCursor,
+  };
+};
+
 export default {
   getProfilePreview,
   getUserById,
@@ -185,4 +225,5 @@ export default {
   unfollowUser,
   isFollowingUser,
   updateProfile,
+  searchUsersByUsername,
 };

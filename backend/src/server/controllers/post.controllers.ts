@@ -84,6 +84,43 @@ export const infiniteScrollProfilePostPreviews: RequestHandler = async (
   });
 };
 
+export const infiniteScrollTagAndSimilarTitlePostPreviews: RequestHandler =
+  async (req: Request, res: Response) => {
+    // tag is an array of tag IDs, title is a string
+    // cursor is a number for pagination
+    const { title, tag, cursor } = req.query;
+
+    // parse and validate the parameters
+    const parsedCursor = !isNaN(Number(cursor)) ? Number(cursor) : 0;
+    const tagsAsArray =
+      tag === undefined ? [] : Array.isArray(tag) ? tag : [tag];
+    const parsedTags = tagsAsArray
+      .map((tag) => Number(tag))
+      .filter((tag) => !isNaN(tag));
+    const parsedTitle = title ? String(title) : "";
+
+    const searchResult =
+      await postServices.infiniteSrollTitleAndTagsSearchPostPreviews(
+        parsedTitle,
+        parsedTags,
+        parsedCursor
+      );
+
+    res.status(200).send(searchResult);
+  };
+
+// Get the list of tags
+export const getTagList: RequestHandler = async (
+  req: Request,
+  res: Response
+) => {
+  const result = await postServices.getTagList();
+
+  res.status(200).send({
+    ...result,
+  });
+};
+
 export const interactions = {
   /**
    * Like and unlike posts
@@ -179,5 +216,7 @@ export default {
   getPostById,
   getFeed,
   infiniteScrollProfilePostPreviews,
+  infiniteScrollTagAndSimilarTitlePostPreviews,
+  getTagList,
   interactions,
 };

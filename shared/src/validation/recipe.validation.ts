@@ -79,13 +79,13 @@ export const ingredients = z
 
 // ## TAGS ##
 export const tag = z.object({
-  tagId: z.number().min(RECIPE_TAG_ID_MIN).max(RECIPE_TAG_ID_MAX),
-  tagName: z.string(),
-  category: z.enum(TAG_CATEGORIES),
-  group: z.enum(TAG_GROUPS).nullable(),
+  id: z.number().min(RECIPE_TAG_ID_MIN).max(RECIPE_TAG_ID_MAX),
+  name: z.string(),
+  category: z.string(),
+  emoji: z.string(),
 });
 
-export const tagReference = tag.pick({ tagId: true, tagName: true });
+export const tagReference = tag.pick({ id: true, name: true });
 
 export const tagReferences = z
   .array(tagReference)
@@ -120,7 +120,7 @@ export const recipe = z.object({
   description: description,
   instructions: instructions,
   ingredients: ingredients,
-  tags: tagReferences,
+  tags: tags,
   metaInfo: metaInfo.optional(),
 });
 

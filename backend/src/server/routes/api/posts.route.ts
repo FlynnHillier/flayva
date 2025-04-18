@@ -55,6 +55,26 @@ router.get(
   postControllers.infiniteScrollProfilePostPreviews
 );
 
+
+/**
+ * Get post previews by title and tags with infinite scrolling
+ *
+ * @param title - The title to search for
+ * @query tags - JSON string of selected tags by category
+ */
+router.get(
+  "/search/preview",
+  postControllers.infiniteScrollTagAndSimilarTitlePostPreviews
+);
+
+router.get("/getTagList", postControllers.getTagList);
+
+/**
+ * Get post previews by user with tags filtering
+ *
+ * @param ownerId - The ID of the user
+ * @query tags - JSON string of selected tags by category
+ */
 router.use(
   "/interactions",
   ensureAuthenticated,

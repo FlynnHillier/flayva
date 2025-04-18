@@ -93,6 +93,65 @@ export async function getInfiniteScrollPostPreviewsByOwnerId(
   };
 }
 
+
+export async function getInfiniteScrollPostPreviewsByTitleAndTags(
+  title: string,
+  selectedTagIds: number[],
+  cursor: number
+) {
+  const { data } = await request({
+    url: `/api/p/search/preview`,
+    method: "GET",
+    params: {
+      cursor,
+      tag: selectedTagIds,
+      title: title,
+    },
+  });
+
+  const { previews, nextCursor } = data;
+
+  if (previews === undefined || nextCursor === undefined)
+    throw new UnexpectedResponseFormatError(
+      "getInfiniteScrollPostPreviewsByTitleAndTags",
+      "previews or nextCursor is missing in the response"
+    );
+
+  return { previews, nextCursor } as {
+    previews: PostPreview[];
+    nextCursor: number | null;
+  };
+}
+
+export async function getUserPostsWithTagFilters(
+  ownerId: string,
+  selectedTags: Record<string, string[]>,
+  cursor: number
+) {
+  const { data } = await request({
+    url: `/api/p/user/tags/${ownerId}`,
+    method: "GET",
+    params: {
+      cursor,
+      tags: JSON.stringify(selectedTags),
+    },
+  });
+
+  const { previews, nextCursor } = data;
+
+  if (previews === undefined || nextCursor === undefined)
+    throw new UnexpectedResponseFormatError(
+      "getUserPostsWithTagFilters",
+      "previews or nextCursor is missing in the response"
+    );
+
+  return { previews, nextCursor } as {
+    previews: PostPreview[];
+    nextCursor: number | null;
+  };
+}
+
+
 /**
  * INTERACTIONS
  */

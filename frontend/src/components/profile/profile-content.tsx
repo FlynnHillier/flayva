@@ -11,8 +11,6 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 const PostPreviewElement = ({ preview }: { preview: PostPreview }) => {
-  const imagePreviewUrl = preview.images.at(0)?.key;
-
   return (
     <Link
       to={`/p/${preview.id}`}
@@ -22,12 +20,10 @@ const PostPreviewElement = ({ preview }: { preview: PostPreview }) => {
         {preview.recipe.title}
       </span>
       <div className="absolute inset-0 bg-black opacity-0 hover:opacity-20 z-10 transition-opacity ease-in-out " />
-      {imagePreviewUrl && (
-        <img
-          src={uploadThingFileUrlFromKey(imagePreviewUrl)}
-          className="object-cover shrink-0 min-w-full min-h-full"
-        />
-      )}
+      <img
+        src={uploadThingFileUrlFromKey(preview.image.key)}
+        className="object-cover shrink-0 min-w-full min-h-full"
+      />
     </Link>
   );
 };
@@ -37,8 +33,15 @@ export const ProfileContent = () => {
 
   if (!profile) return null;
 
-  const { data, fetchNextPage, error, hasNextPage, isFetchingNextPage, isFetching, isFetched } =
-    useInfiniteScrollProfilePostPreviews(profile.user.id);
+  const {
+    data,
+    fetchNextPage,
+    error,
+    hasNextPage,
+    isFetchingNextPage,
+    isFetching,
+    isFetched,
+  } = useInfiniteScrollProfilePostPreviews(profile.user.id);
 
   const previews = useMemo(
     () => (data ? data.pages.flatMap((page) => page.previews) : []),
@@ -48,7 +51,10 @@ export const ProfileContent = () => {
   const { ref, inView } = useInView();
 
   useEffect(() => {
-    if (error) toast.error(error.message ?? "Something went wrong while attempting to load posts");
+    if (error)
+      toast.error(
+        error.message ?? "Something went wrong while attempting to load posts"
+      );
   }, [error]);
 
   useEffect(() => {
@@ -79,7 +85,11 @@ export const ProfileContent = () => {
       {error && (
         <div className="col-span-full text-center text-gray-500 flex flex-col items-center gap-2">
           <span className="text-red-500">Error loading posts</span>
-          <Button variant="outline" onClick={() => fetchNextPage()} disabled={isFetchingNextPage}>
+          <Button
+            variant="outline"
+            onClick={() => fetchNextPage()}
+            disabled={isFetchingNextPage}
+          >
             Retry
           </Button>
         </div>

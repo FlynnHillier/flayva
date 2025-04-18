@@ -6,7 +6,7 @@ import {
   CarouselItem,
 } from "../ui/carousel";
 import { useFeed } from "./feed.context";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { ChevronDown, ChevronUp, ExternalLink } from "lucide-react";
 import { Post } from "../../../../backend/src/types/exported/post.types";
 import { cn } from "@/lib/utils";
 import React, { useEffect, useRef, useState } from "react";
@@ -14,6 +14,7 @@ import { FeedSidebar } from "./FeedSidebar";
 import { PostRating } from "../post/ratings/ratings-common";
 import { Skeleton } from "../ui/skeleton";
 import { ProfilePicture } from "../profile/profile-common";
+import { Link } from "react-router-dom";
 
 const ImageCarousel = ({
   post,
@@ -95,7 +96,10 @@ const FeedNavigationHandle = ({
 
 const FeedEntryFooter = ({ post }: { post: Post }) => (
   <div className="flex flex-col h-fit @2xl:max-h-40 max-h-40 py-2 w-full absolute bottom-0 left-0 px-2 backdrop-blur-3xl">
-    <div className="flex flex-row gap-2 items-center h-fit shrink-0">
+    <Link
+      className="flex flex-row gap-2 items-center h-fit w-fit pr-2 shrink-0"
+      to={`/profile/${post.owner.id}`}
+    >
       {/* User */}
       <ProfilePicture user={post.owner} className="size-10" />
       <div className="flex flex-col gap-0">
@@ -111,12 +115,16 @@ const FeedEntryFooter = ({ post }: { post: Post }) => (
           })}
         </span>
       </div>
-    </div>
+    </Link>
     <div className="flex flex-row gap-2 items-center h-fit shrink-0 flex-nowrap text-nowrap">
       {/* Title */}
-      <span className="@2xl:text-4xl @2xl:pb-1 text-2xl h-fit text-secondary rounded-xl font-semibold backdrop-blur-3xl max-w-fit truncate">
-        {post.recipe.title}
-      </span>
+      <Link
+        className="@2xl:text-4xl @2xl:pb-1 text-2xl h-fit text-secondary rounded-xl font-semibold backdrop-blur-3xl max-w-fit truncate flex flex-row flex-nowrap items-center @2xl:gap-2 gap-1"
+        to={`/p/${post.id}`}
+      >
+        <span className="grow">{post.recipe.title}</span>
+        <ExternalLink className="@2xl:size-6 size-4 mt-1" />
+      </Link>
       {/* Rating */}
       {post.recipe.ratings.statiststics.count > 0 && (
         <PostRating

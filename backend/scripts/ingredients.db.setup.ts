@@ -33,7 +33,9 @@ export async function dbInsertRecipeIngredients() {
   }
 
   const fileData = await fs.readFile(data_fp, "utf-8").catch((err) => {
-    console.error(`Failed to insert Ingredients: failed to read file ${data_fp}`);
+    console.error(
+      `Failed to insert Ingredients: failed to read file ${data_fp}`
+    );
     return;
   });
 
@@ -50,6 +52,9 @@ export async function dbInsertRecipeIngredients() {
     console.error(`Failed to insert Ingredients: Invalid data format, `, error);
     return;
   }
-
-  await db.insert(ingredient_items).values(validatedIngredientData).onConflictDoNothing();
+  //gets here just fine
+  await db
+    .insert(ingredient_items)
+    .values(validatedIngredientData)
+    .onConflictDoNothing();
 }

@@ -1,7 +1,13 @@
 import type React from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 import Logo from "@assets/Logo.svg";
 
@@ -27,7 +33,9 @@ const OauthProviderButton = ({
       <span>{icon}</span>
       <span className="flex text-base">
         Login with&nbsp;
-        <p className="font-bold">{provider.charAt(0).toUpperCase() + provider.slice(1)}</p>
+        <p className="font-bold">
+          {provider.charAt(0).toUpperCase() + provider.slice(1)}
+        </p>
       </span>
     </Button>
   );
@@ -91,7 +99,12 @@ const MetaButton = () => {
       provider="meta"
       handleClick={handleMetaLogin}
       icon={
-        <svg xmlns="http://www.w3.org/2000/svg" width="45" height="29.813" viewBox="0 0 45 29.813">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="45"
+          height="29.813"
+          viewBox="0 0 45 29.813"
+        >
           <path
             id="Icon_fa-brands-meta"
             data-name="Icon fa-brands-meta"
@@ -105,16 +118,25 @@ const MetaButton = () => {
   );
 };
 
-export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRef<"div">) {
+export function LoginForm({
+  className,
+  ...props
+}: React.ComponentPropsWithoutRef<"div">) {
   return (
-    <div className={cn("w-96 inline-block overflow-hidden", className)} {...props}>
+    <div
+      className={cn("w-96 inline-block overflow-hidden", className)}
+      {...props}
+    >
       <div className="flex flex-col w-full h-fit bg-accent pb-3 rounded-xl border-1 border-accent">
         <Card className="w-full h-full pt-12 justify-between border-1 border-accent rounded-xl">
           <CardHeader className="text-center">
             <CardTitle className="text-3xl text-center flex flex-col space-y-10">
               <img src={Logo} alt="Flayva Logo" className="h-20 w-auto" />
               <span className="flex items-center justify-center text-nowrap">
-                Sign in to&nbsp;<p className="font-black font-stretch-ultra-condensed">FLAYVA</p>
+                Sign in to&nbsp;
+                <p className="font-black font-stretch-ultra-condensed">
+                  FLAYVA
+                </p>
               </span>
             </CardTitle>
             <CardDescription className="text-muted-foreground text-base">
@@ -130,8 +152,8 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
           </CardContent>
         </Card>
         <div className=" mx-8 py-2 text-balance text-center text-xs text-muted-foreground [&_a]:underline [&_a]:underline-offset-4 [&_a]:hover:text-primary  mt-4">
-          By clicking continue, you agree to our <a href="#">Terms of Service</a> and{" "}
-          <a href="#">Privacy Policy</a>.
+          By clicking continue, you agree to our{" "}
+          <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
         </div>
       </div>
     </div>

@@ -19,7 +19,7 @@ import { cn } from "@/lib/utils";
 const items = [
   {
     text: "Home",
-    url: "/",
+    url: "/feed",
     icon: Home,
   },
   {

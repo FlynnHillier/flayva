@@ -1,22 +1,16 @@
-import RecipeSidebar from './RecipeSidebar';
+import RecipeSidebar from "./RecipeSidebar";
 
 function RecipeMain() {
-	return (
-		<>
-			<div className="w-full" id="recipeMain">
-				<h1>RECIPE MAIN SECTION</h1>
-			</div>
-		</>
-	);
+  return <div></div>;
 }
 
 export default function Recipe() {
-	return (
-		<>
-			<div className="flex flex-row w-full h-screen">
-				<RecipeMain />
-				<RecipeSidebar />
-			</div>
-		</>
-	);
+  return (
+    <>
+      <div className="flex flex-row w-full h-screen">
+        <RecipeMain />
+        <RecipeSidebar />
+      </div>
+    </>
+  );
 }

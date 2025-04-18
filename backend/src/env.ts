@@ -1,4 +1,5 @@
 import dotenv from "dotenv";
+
 dotenv.config({ path: "./.env.local", debug: true, encoding: "utf8" });
 import { z } from "zod";
 
@@ -38,7 +39,9 @@ export const env = (() => {
   } catch (error) {
     if (error instanceof z.ZodError) {
       throw new Error(
-        `INVALID ENV: [\n${error.errors.map((e) => `\t'${e.path}' - ${e.message}`).join(",\n")}\n]`
+        `INVALID ENV: [\n${error.errors
+          .map((e) => `\t'${e.path}' - ${e.message}`)
+          .join(",\n")}\n]`
       );
     } else throw error;
   }

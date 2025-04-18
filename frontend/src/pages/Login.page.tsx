@@ -39,7 +39,9 @@ const SLIDESHOW_ITEMS = [
 ];
 
 function LoginImageSlideShow({ className }: { className: ClassNameValue }) {
-  return <Slideshow items={SLIDESHOW_ITEMS} header="FLAYVA" className={className} />;
+  return (
+    <Slideshow items={SLIDESHOW_ITEMS} header="FLAYVA" className={className} />
+  );
 }
 
 export default function LoginPage() {

@@ -12,10 +12,10 @@ import LoginPage from "./pages/Login.page";
 import CreatePostPage from "./pages/Create-post.page";
 import RecipePage from "./pages/Recipe.page";
 import ViewProfilePage from "./pages/profile-pages/Profile.page";
-import SearchPage from "./pages/Search.page";
-import DevPage from "./pages/Dev.page";
 import ProfileLayout from "@/pages/profile-pages/profile.layout";
+
 import ViewDetailedPostPage from "./pages/post-pages/View-detailed-post.page";
+import SearchPage from "./pages/Search.page";
 
 /**
  * Routes that should not show the sidebar
@@ -79,7 +79,6 @@ function App() {
           <Route element={<UnauthenticatedRouter />}>
             <Route path="/login" element={<LoginPage />} />
           </Route>
-          <Route path="/dev" element={<DevPage />} />
           <Route element={<UnauthenticatedRouter />}>
             <Route path="/recipe" element={<RecipePage />} />
           </Route>

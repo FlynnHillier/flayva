@@ -256,7 +256,7 @@ export const AddIngredient = ({
 
   return (
     <Card className="p-2">
-      <div className="flex flex-row gap-3 items-center justify-start">
+      <div className="flex flex-row flex-wrap gap-3 items-center justify-start">
         <IngredientSelect
           onIngredientSelect={setSelectedIngredient}
           selectedIngredient={selectedIngredient}

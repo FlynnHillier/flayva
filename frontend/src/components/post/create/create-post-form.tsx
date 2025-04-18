@@ -88,175 +88,154 @@ export default function CreateNewPostForm() {
   }, [form.formState.errors]);
 
   return (
-    <div>
-      <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(handleSubmit)}
-          className="space-y-8 max-w-3xl mx-auto py-10"
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit(handleSubmit)}
+        className="space-y-8 mx-auto px-4 max-w-5xl overflow-hidden"
+      >
+        <FormField
+          disabled={isDisabled}
+          control={form.control}
+          name="recipe.title"
+          render={({ field, fieldState: { error } }) => (
+            <FormItem>
+              <FormLabel>Recipe Title</FormLabel>
+              <FormControl>
+                <Input placeholder="" className="resize-none" {...field} />
+              </FormControl>
+            </FormItem>
+          )}
+        />
+        <FormField
+          disabled={isDisabled}
+          control={form.control}
+          name="recipe.description"
+          render={({ field, fieldState: { error } }) => (
+            <FormItem>
+              <FormLabel>Recipe description</FormLabel>
+              {error && (
+                <FormMessage className="text-red-500">
+                  {error.message}
+                </FormMessage>
+              )}
+              <FormControl>
+                <Textarea
+                  placeholder=""
+                  className="resize-none field-sizing-content"
+                  {...field}
+                />
+              </FormControl>
+            </FormItem>
+          )}
+        />
+        <FormField
+          disabled={isDisabled}
+          control={form.control}
+          name="images"
+          render={({ field, fieldState: { error } }) => (
+            <FormItem>
+              <FormLabel>Images</FormLabel>
+              {error && (
+                <FormMessage className="text-red-500">
+                  {error.message}
+                </FormMessage>
+              )}
+              <FormDescription>
+                Add images to make your post more appealing.
+              </FormDescription>
+              <FormControl>
+                <ImageUploadAndPreview
+                  images={field.value}
+                  setImages={(images) => form.setValue("images", images)}
+                />
+              </FormControl>
+            </FormItem>
+          )}
+        />
+        <FormField
+          disabled={isDisabled}
+          control={form.control}
+          name="recipe.tags"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Tags</FormLabel>
+              <FormDescription>
+                Add tags to help others find your recipe.
+              </FormDescription>
+              <FormControl>
+                <TagsInput
+                  tags={field.value}
+                  onTagsChange={(tags) => form.setValue("recipe.tags", tags)}
+                />
+              </FormControl>
+            </FormItem>
+          )}
+        />
+        <FormField
+          disabled={isDisabled}
+          control={form.control}
+          name="recipe.ingredients"
+          render={({ field, fieldState: { error } }) => (
+            <FormItem>
+              <FormLabel>Ingredients</FormLabel>
+              {error && (
+                <FormMessage className="text-red-500">
+                  {error.message}
+                </FormMessage>
+              )}
+              <FormDescription>
+                Add the ingredients needed to make your dish.
+              </FormDescription>
+
+              <FormControl>
+                <div className="flex flex-col gap-2">
+                  <IngredientsHandler
+                    ingredients={field.value}
+                    updateIngredients={(updatedIngredients) => {
+                      console.log("updated ingredients", updatedIngredients);
+
+                      form.setValue("recipe.ingredients", updatedIngredients);
+                    }}
+                  />
+                </div>
+              </FormControl>
+            </FormItem>
+          )}
+        />
+        <FormField
+          disabled={isDisabled}
+          control={form.control}
+          name="recipe.instructions"
+          render={({ fieldState: { error } }) => (
+            <FormItem>
+              <FormLabel>Instructions</FormLabel>
+              {error && (
+                <FormMessage className="text-red-500">
+                  {error.message}
+                </FormMessage>
+              )}
+              <FormDescription>
+                Let others know how they can recreate your dish
+              </FormDescription>
+              <FormControl>
+                <InstructionsHandler
+                  instructions={instructions}
+                  setInstructions={setInstructions}
+                />
+              </FormControl>
+            </FormItem>
+          )}
+        />
+        <Button
+          type="submit"
+          variant={"default"}
+          size={"lg"}
+          disabled={isDisabled}
+          className="ml-auto"
         >
-          <Card>
-            <CardHeader>
-              <CardTitle>Post your dish</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <FormField
-                disabled={isDisabled}
-                control={form.control}
-                name="recipe.title"
-                render={({ field, fieldState: { error } }) => (
-                  <FormItem>
-                    <FormLabel>Post Header</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="Enter Title"
-                        className="resize-none"
-                        {...field}
-                      />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-              <FormField
-                disabled={isDisabled}
-                control={form.control}
-                name="recipe.description"
-                render={({ field, fieldState: { error } }) => (
-                  <FormItem>
-                    <FormLabel>Post description</FormLabel>
-                    {error && (
-                      <FormMessage className="text-red-500">
-                        {error.message}
-                      </FormMessage>
-                    )}
-                    <FormControl>
-                      <Textarea
-                        placeholder="Enter Description"
-                        className="resize-none field-sizing-content"
-                        {...field}
-                      />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-              <FormField
-                disabled={isDisabled}
-                control={form.control}
-                name="images"
-                render={({ field, fieldState: { error } }) => (
-                  <FormItem>
-                    <FormLabel>Images</FormLabel>
-                    {error && (
-                      <FormMessage className="text-red-500">
-                        {error.message}
-                      </FormMessage>
-                    )}
-                    <FormDescription>
-                      Add images to make your post more appealing.
-                    </FormDescription>
-                    <FormControl>
-                      <ImageUploadAndPreview
-                        images={field.value}
-                        setImages={(images) => form.setValue("images", images)}
-                      />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-              <FormField
-                disabled={isDisabled}
-                control={form.control}
-                name="recipe.tags"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Tags</FormLabel>
-                    <FormDescription>
-                      Add tags to help others find your recipe.
-                    </FormDescription>
-                    <FormControl>
-                      <TagsInput
-                        tags={field.value}
-                        onTagsChange={(tags) =>
-                          form.setValue("recipe.tags", tags)
-                        }
-                      />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-              <FormField
-                disabled={isDisabled}
-                control={form.control}
-                name="recipe.ingredients"
-                render={({ field, fieldState: { error } }) => (
-                  <FormItem>
-                    <FormLabel>Ingredients</FormLabel>
-                    {error && (
-                      <FormMessage className="text-red-500">
-                        {error.message}
-                      </FormMessage>
-                    )}
-                    <FormDescription>
-                      Add the ingredients needed to make your dish.
-                    </FormDescription>
-
-                    <FormControl>
-                      <div className="flex flex-col gap-2">
-                        <IngredientsHandler
-                          ingredients={field.value}
-                          updateIngredients={(updatedIngredients) => {
-                            console.log(
-                              "updated ingredients",
-                              updatedIngredients
-                            );
-
-                            form.setValue(
-                              "recipe.ingredients",
-                              updatedIngredients
-                            );
-                          }}
-                        />
-                      </div>
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-              <FormField
-                disabled={isDisabled}
-                control={form.control}
-                name="recipe.instructions"
-                render={({ fieldState: { error } }) => (
-                  <FormItem>
-                    <FormLabel>Instructions</FormLabel>
-                    {error && (
-                      <FormMessage className="text-red-500">
-                        {error.message}
-                      </FormMessage>
-                    )}
-                    <FormDescription>
-                      Let others know how they can recreate your dish
-                    </FormDescription>
-                    <FormControl>
-                      <InstructionsHandler
-                        instructions={instructions}
-                        setInstructions={setInstructions}
-                      />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-              <Button
-                type="submit"
-                variant={"default"}
-                size={"lg"}
-                disabled={isDisabled}
-                className="ml-auto"
-              >
-                Post
-              </Button>
-            </CardContent>
-          </Card>
-        </form>
-      </Form>
-    </div>
+          Post
+        </Button>
+      </form>
+    </Form>
   );
 }

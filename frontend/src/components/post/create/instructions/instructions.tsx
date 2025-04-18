@@ -73,7 +73,7 @@ export const InstructionsHandler = ({
 
   return (
     <DndContext collisionDetection={closestCorners} onDragEnd={handleDragEnd}>
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-2 max-w-full overflow-hidden">
         <SortableContext
           items={instructions}
           strategy={verticalListSortingStrategy}

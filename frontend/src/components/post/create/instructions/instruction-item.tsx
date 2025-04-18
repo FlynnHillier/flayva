@@ -4,7 +4,7 @@ import { Pen, Trash2, GripVertical } from "lucide-react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { Input } from "../../../ui/input";
-import { useState, useRef, useCallback, useMemo } from "react";
+import { useState, useRef, useCallback, useMemo, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { type InstructionItem as InstructionItemType } from "./instructions";
 import { RECIPE } from "@flayva-monorepo/shared/constants";
@@ -41,6 +41,13 @@ export const InstructionItem = ({
         RECIPE.RECIPE_INSTRUCTION_MAX_STEP_LENGTH,
     [instructionTextPreview]
   );
+
+  useEffect(() => {
+    if (isEditing) {
+      inputRef.current?.focus();
+      inputRef.current?.select();
+    }
+  }, [isEditing]);
 
   const handleEdit = () => {
     setIsEditing(false);
@@ -83,9 +90,9 @@ export const InstructionItem = ({
         transform: CSS.Transform.toString(transform),
         transition,
       }}
-      className="p-1 hover:bg-accent/50"
+      className="p-1 hover:bg-accent/50 w-full"
     >
-      <div className="p-1 flex items-center justify-between gap-3">
+      <div className="p-1 flex flex-row items-center justify-between gap-3">
         <div className="flex flex-row gap-3 items-center">
           <GripVertical
             size={20}
@@ -102,7 +109,7 @@ export const InstructionItem = ({
           onChange={(e) => setInstructionTextPreview(e.target.value)}
           placeholder="Enter New Instruction"
           className={cn(
-            "w-full shadow-none border-0 text-sm resize-none field-sizing-content",
+            "shadow-none border-0 text-sm resize-none field-sizing-content",
             {
               "border-2": isEditing,
             }

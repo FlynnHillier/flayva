@@ -33,20 +33,20 @@ const IngredientItemView = ({
       </div>
 
       <div className="flex gap-2">
-        <Button
+        {/* <Button
           variant="ghost"
           className="size-8 hover:bg-background"
           type="button"
           onClick={onEditButtonClick}
         >
           <Pen className="size-4" />
-        </Button>
+        </Button> */}
         <Button
           variant="ghost"
-          className="size-8 hover:bg-background"
+          className="size-8 group hover:cursor-pointer"
           onClick={onDeleteButtonClick}
         >
-          <Trash2 className="size-4" />
+          <Trash2 className="size-4 group-hover:text-muted-foreground" />
         </Button>
       </div>
     </div>

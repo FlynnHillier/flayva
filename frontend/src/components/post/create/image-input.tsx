@@ -1,4 +1,5 @@
 import React, {
+  ComponentProps,
   ReactNode,
   useCallback,
   useContext,
@@ -14,7 +15,13 @@ import {
   CarouselContent,
   CarouselItem,
 } from "@/components/ui/carousel";
-import { Trash2, CloudUpload, ImagePlus } from "lucide-react";
+import {
+  Trash2,
+  CloudUpload,
+  ImagePlus,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ClassNameValue } from "tailwind-merge";
 
@@ -132,6 +139,46 @@ const DeleteButton = ({
   );
 };
 
+function NextButton({
+  className,
+  direction,
+  onClick,
+  disabled,
+  ...props
+}: {
+  className?: ClassNameValue;
+  direction: "left" | "right";
+  onClick?: () => void;
+} & ComponentProps<"button">) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={disabled}
+      className={cn(
+        "absolute top-1/2 -translate-y-1/2 z-10  duration-200 rounded-full p-2 border-2 transition-all w-fit h-fit",
+        {
+          "left-2": direction === "left",
+          "right-2": direction === "right",
+        },
+        {
+          "bg-primary-foreground/80 hover:bg-primary-foreground border-2 border-primary/40 cursor-pointer":
+            !disabled,
+          "opacity-0 border-primary/0": disabled,
+        },
+        className
+      )}
+      {...props}
+    >
+      {direction === "left" ? (
+        <ChevronLeft className="w-4 h-4 lg:w-6 lg:h-6" />
+      ) : (
+        <ChevronRight className="w-4 h-4 lg:w-6 lg:h-6" />
+      )}
+    </button>
+  );
+}
+
 /**
  * A component that displays a preview of the uploaded images in a carousel.
  * It also allows the user to delete images from the carousel.
@@ -140,6 +187,36 @@ const CarouselImagePreview = ({ className }: { className?: string }) => {
   const { imagePreviewUrls, setImages, images } = useImageUpload();
 
   const [api, setApi] = useState<CarouselApi>();
+
+  const [canScrollNext, setCanScrollNext] = useState(false);
+  const [canScrollPrev, setCanScrollPrev] = useState(false);
+
+  useEffect(() => {
+    if (!api) return;
+
+    const updateCanSroll = () => {
+      setCanScrollNext(api.canScrollNext());
+      setCanScrollPrev(api.canScrollPrev());
+    };
+
+    const onScroll = () => updateCanSroll();
+
+    const onSlidesChanged = () => updateCanSroll();
+
+    const onResize = () => updateCanSroll();
+
+    api.on("scroll", onScroll);
+    api.on("slidesChanged", onSlidesChanged);
+    api.on("resize", onResize);
+
+    updateCanSroll();
+
+    return () => {
+      api.off("scroll", onScroll);
+      api.off("slidesChanged", onSlidesChanged);
+      api.off("resize", onResize);
+    };
+  }, [api, setCanScrollNext, setCanScrollPrev]);
 
   const handleDeleteImage = useCallback(
     (index: number) => {
@@ -181,6 +258,20 @@ const CarouselImagePreview = ({ className }: { className?: string }) => {
           <FileUploadImagePlaceholder />
         </CarouselItem>
       </CarouselContent>
+      <NextButton
+        direction="left"
+        className={cn({
+          "opacity-0": !canScrollPrev,
+        })}
+        onClick={() => api?.scrollPrev(false)}
+      />
+      <NextButton
+        direction="right"
+        onClick={() => api?.scrollNext(false)}
+        className={cn({
+          "opacity-0": !canScrollNext,
+        })}
+      />
     </Carousel>
   );
 };

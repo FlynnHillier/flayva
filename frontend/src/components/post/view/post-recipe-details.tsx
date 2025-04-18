@@ -22,7 +22,7 @@ function SideBarSection({
   );
 }
 
-const Ingredient = ({
+export const Ingredient = ({
   ingredient,
 }: {
   ingredient: Exclude<Post["recipe"]["ingredients"], undefined>[number];
@@ -35,7 +35,10 @@ const Ingredient = ({
     unit,
   } = ingredient;
 
-  const hasFraction = useMemo(() => denominator > 0 && numerator > 0, [denominator, numerator]);
+  const hasFraction = useMemo(
+    () => denominator > 0 && numerator > 0,
+    [denominator, numerator]
+  );
   const hasWhole = useMemo(() => whole > 0, [whole]);
 
   return (
@@ -111,12 +114,23 @@ function InstructionsSection({
   );
 }
 
-export function PostRecipeDetails({ className }: { className?: ClassNameValue }) {
+export function PostRecipeDetails({
+  className,
+}: {
+  className?: ClassNameValue;
+}) {
   const { post } = usePost();
 
   return (
-    <div className={cn("flex flex-col flex-nowrap space-y-0.5 w-full mt-6", className)}>
-      <span className="text-2xl xl:text-3xl font-semibold mb-4">Recipe Details</span>
+    <div
+      className={cn(
+        "flex flex-col flex-nowrap space-y-0.5 w-full mt-6",
+        className
+      )}
+    >
+      <span className="text-2xl xl:text-3xl font-semibold mb-4">
+        Recipe Details
+      </span>
       <IngredientsSection ingredients={post?.recipe.ingredients} />
       <InstructionsSection instructions={post?.recipe.instructions} />
     </div>

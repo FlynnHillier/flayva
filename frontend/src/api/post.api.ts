@@ -96,7 +96,6 @@ export async function getInfiniteScrollPostPreviewsByOwnerId(
   };
 }
 
-
 export async function getInfiniteScrollPostPreviewsByTitleAndTags(
   title: string,
   selectedTagIds: number[],
@@ -154,6 +153,15 @@ export async function getUserPostsWithTagFilters(
   };
 }
 
+export async function fetchPostsFeed(excludedPostIds: string[]) {
+  const { data } = await request({
+    url: "/api/p/feed",
+    method: "GET",
+    params: { exclude: excludedPostIds },
+  });
+
+  return data as { feed: Post[] };
+}
 
 /**
  * INTERACTIONS

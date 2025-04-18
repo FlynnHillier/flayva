@@ -68,7 +68,7 @@ export function PostBody() {
 
   return (
     <section className="w-full flex flex-col flex-nowrap space-y-2 ">
-      <PostImageCarousel />
+      <PostImageCarousel post={post} slideClassName="sm:basis-1/2" />
       <Interactions />
       <Description description={post?.recipe.description} />
       <Tags tags={post?.recipe.tags} />

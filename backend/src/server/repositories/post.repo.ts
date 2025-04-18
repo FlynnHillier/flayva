@@ -244,7 +244,6 @@ export const getPostPreviewsByOwnerId = (
     ...options,
   });
 
-
 /**
  * Get post previews by post IDs
  * @param postIds - The IDs of the post previews to fetch
@@ -297,17 +296,17 @@ export const getPosts = async (
         columns: {
           key: true,
         },
-        recipe: {
-          with: {
-            tagLinks: {
-              with: {
-                tag: {
-                  columns: {
-                    category: true,
-                    emoji: true,
-                    id: true,
-                    name: true,
-                  },
+      },
+      recipe: {
+        with: {
+          tagLinks: {
+            with: {
+              tag: {
+                columns: {
+                  category: true,
+                  emoji: true,
+                  id: true,
+                  name: true,
                 },
               },
             },
@@ -534,11 +533,9 @@ export const getPostIdsByTagsAndSimilarTitle = (
     )
     .groupBy(posts.id, recipes.title, recipes.id);
 
-
-
 /**
  *
- * 
+ *
  * INTERACTIONS
  *
  *

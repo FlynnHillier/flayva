@@ -46,6 +46,7 @@ export const FeedProvider = ({ children }: React.PropsWithChildren<{}>) => {
     error,
     fetchNextPage,
     isFetchingNextPage,
+    isFetched,
   } = useInfiniteScrollFeed();
 
   const fetchMore = useCallback(() => {
@@ -78,7 +79,7 @@ export const FeedProvider = ({ children }: React.PropsWithChildren<{}>) => {
 
   useEffect(() => {
     // Roll the active index back to the last post if the current active index is out of bounds AND there are no more posts to fetch
-    if (activeIndex >= posts.length && !hasNextPage) {
+    if (isFetched && activeIndex >= posts.length && !hasNextPage) {
       setActiveIndex(posts.length - 1);
       toast.info("You have reached the end of the feed.");
     }

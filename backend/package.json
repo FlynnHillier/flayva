@@ -10,7 +10,8 @@
     "db:push": "drizzle-kit push --config=./drizzle.config.ts",
     "parse:ingredients": "tsx ./scripts/parse-foodb.ts",
     "db:setup": "tsx ./scripts/seed.ts",
-    "build": "tsc"
+    "build": "tsc",
+    "db:insert": "tsx ./scripts/insert-data.ts"
   },
   "keywords": [],
   "author": "flynnhillier",

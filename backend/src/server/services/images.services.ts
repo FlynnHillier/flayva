@@ -19,31 +19,39 @@ type InferredUploadFileResult = Awaited<ReturnType<typeof uploadthing.uploadFile
 export const uploadPostImages = async (images: File[]) => {
   // TODO: add better error fallbacks and logging
 
-  const processedImageFiles = images.map((image) => {
-    const imageFileExtension = image.name.split(".").at(-1);
-    const imageFileName = `${nanoid(POST_IMAGE_CLOUD_ID_LENGTH)}.${imageFileExtension}`;
+  if(images.length > 0){
+    const processedImageFiles = images.map((image) => {
+      const imageFileExtension = image.name.split(".").at(-1);
+      const imageFileName = `${nanoid(POST_IMAGE_CLOUD_ID_LENGTH)}.${imageFileExtension}`;
 
-    return new File([image], imageFileName, { type: image.type });
-  });
+      return new File([image], imageFileName, { type: image.type });
+    });
 
-  const uploadResults = await uploadthing.uploadFiles(processedImageFiles);
 
-  const isSuccessfulUpload = ({ data, error }: UploadFileResult) => data && !error;
+    const uploadResults = await uploadthing.uploadFiles(processedImageFiles);
 
-  const successfulUploads = uploadResults
-    .filter(isSuccessfulUpload)
-    .map(({ data }) => data as UploadedFileData);
+    const isSuccessfulUpload = ({ data, error }: UploadFileResult) => data && !error;
 
-  // TODO: handle unsuccessful uploads
-  const unsuccessfulUploads = uploadResults
-    .filter((result) => !isSuccessfulUpload(result))
-    .map(({ error }) => error);
+    const successfulUploads = uploadResults
+      .filter(isSuccessfulUpload)
+      .map(({ data }) => data as UploadedFileData);
 
-  return {
-    successes: successfulUploads,
-    failures: unsuccessfulUploads.length,
-  };
-};
+    // TODO: handle unsuccessful uploads
+    const unsuccessfulUploads = uploadResults
+      .filter((result) => !isSuccessfulUpload(result))
+      .map(({ error }) => error);
+
+    return {
+      successes: successfulUploads,
+      failures: unsuccessfulUploads.length,
+    };
+  } else {
+    return {
+      successes: [],
+      failures: 0,
+    }
+  }
+}
 
 export const uploadAvatarImage = async (
   userId: string,

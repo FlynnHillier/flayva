@@ -63,6 +63,7 @@ const ImageCarousel = ({
         {post.images.map(({ key }, index) => (
           <CarouselItem key={index} className="w-full h-full overflow-hidden ">
             <img
+              loading="lazy"
               src={uploadThingFileUrlFromKey(key)}
               alt={`Image ${index + 1}`}
               className="object-cover w-full h-full rounded-lg"
@@ -101,7 +102,7 @@ const FeedNavigationHandle = ({
 };
 
 const FeedEntryFooter = ({ post }: { post: Post }) => (
-  <div className="flex flex-col h-fit @2xl:max-h-40 max-h-40 py-2 w-full absolute bottom-0 left-0 px-2 backdrop-blur-3xl">
+  <div className="flex flex-col h-fit @2xl:max-h-40 max-h-40 py-2 w-full absolute bottom-0 left-0 px-2 backdrop-blur-3xl bg-black/50">
     <Link
       className="flex flex-row gap-2 items-center h-fit w-fit pr-2 shrink-0"
       to={`/profile/${post.owner.id}`}
@@ -125,7 +126,7 @@ const FeedEntryFooter = ({ post }: { post: Post }) => (
     <div className="flex flex-row gap-2 items-center h-fit shrink-0 flex-nowrap text-nowrap">
       {/* Title */}
       <Link
-        className="@2xl:text-4xl @2xl:pb-1 text-2xl h-fit text-secondary rounded-xl font-semibold backdrop-blur-3xl max-w-fit truncate flex flex-row flex-nowrap items-center @2xl:gap-2 gap-1"
+        className="@2xl:text-4xl @2xl:pb-1 text-2xl h-fit text-secondary rounded-xl font-semibold  max-w-fit truncate flex flex-row flex-nowrap items-center @2xl:gap-2 gap-1"
         to={`/p/${post.id}`}
       >
         <span className="grow">{post.recipe.title}</span>
@@ -241,6 +242,8 @@ export const Feed = () => {
       });
     }
   }, [activeIndex, feedPostRefs.current, feedPostSkeletonRef.current, posts]);
+
+  useEffect(() => {}, [posts, activeIndex]);
 
   return (
     <div className="flex flex-row flex-nowrap w-full max-h-full h-full  max-w-7xl">

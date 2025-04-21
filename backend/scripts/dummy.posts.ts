@@ -44,8 +44,8 @@ const mockUsers: Omit<typeof users.$inferInsert, "id">[] = [
 ]
 
 const mockRecipes: Omit<typeof recipes.$inferInsert, "id">[] = Array.from({ length: 5 }).map((_, i) => ({
-    title: `Mock Recipe ${i + 1}`,
-    description: `This is a description for Mock Recipe ${i + 1}.`,
+    title: `Dummy recipe ${i + 1}`,
+    description: `MMM Yummy Recipe number ${i + 1}.`,
     created_at: new Date().toISOString(),
   }));
 
@@ -97,12 +97,12 @@ const mockRecipes: Omit<typeof recipes.$inferInsert, "id">[] = Array.from({ leng
         {
           recipeId: r.id,
           stepNumber: 1,
-          instruction: `Step 1 for ${r.title}: Gather ingredients.`,
+          instruction: `Gather ingredients.`,
         },
         {
           recipeId: r.id,
           stepNumber: 2,
-          instruction: `Step 2 for ${r.title}: Start cooking.`,
+          instruction: `tart cooking.`,
         },
       ]);
       

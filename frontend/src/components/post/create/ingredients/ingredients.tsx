@@ -1,6 +1,9 @@
 import { useCallback } from "react";
 import AddedIngredientsListDisplay from "./ingredients-list";
-import { RecipeIngredientEntry } from "@flayva-monorepo/shared/types";
+import {
+  RecipeIngredientEntry,
+  RecipeIngredientReference,
+} from "@flayva-monorepo/shared/types";
 import { AddIngredient } from "./ingredient-add";
 
 /**

@@ -1,4 +1,8 @@
-import { ingredient, tag } from "@validation/recipe.validation";
+import {
+  ingredient,
+  ingredientReference,
+  tag,
+} from "@validation/recipe.validation";
 import { z } from "zod";
 
 export {
@@ -9,5 +13,7 @@ export {
 export type RecipeTag = z.infer<typeof tag>;
 
 export type RecipeIngredientEntry = z.infer<typeof ingredient>;
+
+export type RecipeIngredientReference = z.infer<typeof ingredientReference>;
 
 export type RecipeIngredientUnit = RecipeIngredientEntry["unit"];

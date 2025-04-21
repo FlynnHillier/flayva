@@ -8,6 +8,7 @@
     "start:dev": "tsx watch ./src/index.ts",
     "start": "node dist/index.js",
     "db:push": "drizzle-kit push --config=./drizzle.config.ts",
+    "db:generate-data": "tsx ./scripts/dummy-data/generate-data.ts",
     "parse:ingredients": "tsx ./scripts/parse-foodb.ts",
     "db:setup": "tsx ./scripts/seed.ts",
     "build": "tsc"

@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { capitalizeFirstLetter, cn } from "@/lib/utils";
 import { ClassNameValue } from "tailwind-merge";
 import { PostLikeButton } from "./post-interactions";
+import Tag from "@/components/tags/Tag";
 
 function Description({
   description,
@@ -41,9 +42,7 @@ function Tags({
             <Skeleton className="w-14 h-6 rounded-xl" key={i} />
           ))
         : tags.map((tag) => (
-            <Badge className="h-6 rounded-xl" variant={"outline"} key={tag.id}>
-              {capitalizeFirstLetter(tag.name)}
-            </Badge>
+            <Tag tag={tag} />
           ))}
     </section>
   );

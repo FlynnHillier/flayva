@@ -14,6 +14,9 @@ importers:
       nodemon:
         specifier: ^3.1.9
         version: 3.1.9
+      tsx:
+        specifier: ^4.19.2
+        version: 4.19.2
       typescript:
         specifier: ~5.7.2
         version: 5.7.3
@@ -1138,7 +1141,7 @@ packages:
         optional: true
       '@types/react-dom':
         optional: true
-        
+
   '@radix-ui/react-arrow@1.1.2':
     resolution: {integrity: sha512-G+KcpzXHq24iH0uGG/pF8LyzpFJYGD4RfLjCIBfGdSLXvjLHST31RUiRVrupIBMvIppMgSzQ6l66iAxl03tdlg==}
     peerDependencies:

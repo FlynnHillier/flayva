@@ -1,5 +1,6 @@
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import { TagSelector } from "@/components/tags/TagSelector";
 import { cn } from "@/lib/utils";
 import { X as RemoveIcon } from "lucide-react";
 import { useEffect, useCallback, useState } from "react";

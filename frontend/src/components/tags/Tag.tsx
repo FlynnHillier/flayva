@@ -17,6 +17,7 @@ export default function Tag({
 }) {
   return (
     <button
+      type="button"
       onClick={onClick}
       className={cn(
         `flex items-center space-x-1 py-1 px-2 rounded-full text-xs @md:text-sm border text-nowrap text-gray-700`,

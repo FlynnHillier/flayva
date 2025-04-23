@@ -1,4 +1,5 @@
 // TagSelectorSidebar.tsx
+import { RecipeTag } from "@flayva-monorepo/shared/types";
 import { useSearchBar } from "../search/context/searchBar.context";
 import { TagSelector } from "./TagSelector";
 import { cn } from "@/lib/utils";
@@ -6,9 +7,11 @@ import { cn } from "@/lib/utils";
 export function TagSelectorRegular() {
   const { showFilters, setFilterTagIds, filterTagIds } = useSearchBar();
 
-  const toggleTagIsSelected = (tag) => {
+  const toggleTagIsSelected = (tag: RecipeTag) => {
     setFilterTagIds((prev) =>
-      prev.includes(tag.id) ? prev.filter((id) => id !== tag.id) : [...prev, tag.id]
+      prev.includes(tag.id)
+        ? prev.filter((id) => id !== tag.id)
+        : [...prev, tag.id]
     );
   };
 
@@ -25,7 +28,10 @@ export function TagSelectorRegular() {
         <div className="text-center mb-2 text-gray-500 font-medium text-2xl">
           Filters
         </div>
-        <TagSelector selectedTagIds={filterTagIds} onToggle={toggleTagIsSelected} />
+        <TagSelector
+          selectedTagIds={filterTagIds}
+          onToggle={toggleTagIsSelected}
+        />
       </div>
     </div>
   );

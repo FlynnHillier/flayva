@@ -6,13 +6,16 @@ import { cn } from "@/lib/utils";
 import { RecipeTag } from "@flayva-monorepo/shared/types";
 
 export function TagSelectorMobile() {
-  const { setShowFilters, showFilters, setFilterTagIds, filterTagIds } = useSearchBar();
+  const { setShowFilters, showFilters, setFilterTagIds, filterTagIds } =
+    useSearchBar();
 
   const onClose = () => setShowFilters(false);
 
   const toggleTagIsSelected = (tag: RecipeTag) => {
     setFilterTagIds((prev) =>
-      prev.includes(tag.id) ? prev.filter((id) => id !== tag.id) : [...prev, tag.id]
+      prev.includes(tag.id)
+        ? prev.filter((id) => id !== tag.id)
+        : [...prev, tag.id]
     );
   };
 
@@ -33,7 +36,10 @@ export function TagSelectorMobile() {
         </button>
       </div>
       <div className="flex-1 overflow-auto p-4">
-        <TagSelector selectedTagIds={filterTagIds} onToggle={toggleTagIsSelected} />
+        <TagSelector
+          selectedTagIds={filterTagIds}
+          onToggle={toggleTagIsSelected}
+        />
       </div>
     </div>
   );

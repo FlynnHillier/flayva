@@ -17,7 +17,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { POST as POST_VALIDATOR } from "@flayva-monorepo/shared/validation";
 import { toast } from "sonner";
 import { Input } from "../../ui/input";
-import { TagsInput } from "../../recipe/create/recipe-tags-input";
 import IngredientsHandler from "./ingredients/ingredients";
 import { useCreateNewPost } from "@/hooks/post.hooks";
 import { ImageUploadAndPreview } from "./image-input";
@@ -26,6 +25,8 @@ import {
   InstructionsHandler,
 } from "./instructions/instructions";
 import { useNavigate } from "react-router-dom";
+import { TagSelector } from "@/components/tags/TagSelector";
+import { RECIPE } from "@flayva-monorepo/shared/constants";
 
 const { createNewPostSchema } = POST_VALIDATOR;
 
@@ -156,20 +157,40 @@ export default function CreateNewPostForm() {
           disabled={isDisabled}
           control={form.control}
           name="recipe.tags"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Tags</FormLabel>
-              <FormDescription>
-                Add tags to help others find your recipe.
-              </FormDescription>
-              <FormControl>
-                <TagsInput
-                  tags={field.value}
-                  onTagsChange={(tags) => form.setValue("recipe.tags", tags)}
-                />
-              </FormControl>
-            </FormItem>
-          )}
+          render={({ field, fieldState: { error } }) => {
+            // field.value is an array of RecipeTag objects
+            const selectedTagIds = field.value.map((tag) => tag.id);
+
+            const handleToggleTag = (tag) => {
+              if (selectedTagIds.includes(tag.id)) {
+                const updated = field.value.filter((t) => t.id !== tag.id);
+                form.setValue("recipe.tags", updated);
+              } else {
+                form.setValue("recipe.tags", [...field.value, tag]);
+              }
+            };
+
+            return (
+              <FormItem>
+                <FormLabel>Tags</FormLabel>
+                {error && (
+                  <FormMessage className="text-red-500">
+                    {error.message}
+                  </FormMessage>
+                )}
+                <FormDescription>
+                  Add tags to help others find your recipe.
+                </FormDescription>
+                <FormControl>
+                  <TagSelector
+                    selectedTagIds={selectedTagIds}
+                    onToggle={handleToggleTag}
+                    categoryTextSize="text-sm" 
+                  />
+                </FormControl>
+              </FormItem>
+            );
+          }}
         />
         <FormField
           disabled={isDisabled}
@@ -192,8 +213,6 @@ export default function CreateNewPostForm() {
                   <IngredientsHandler
                     ingredients={field.value}
                     updateIngredients={(updatedIngredients) => {
-                      console.log("updated ingredients", updatedIngredients);
-
                       form.setValue("recipe.ingredients", updatedIngredients);
                     }}
                   />

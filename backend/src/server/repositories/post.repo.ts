@@ -18,6 +18,7 @@ import { DbFindManyParams } from "@/types/db.types";
 import { and, asc, eq, inArray, or, sql, gt, lte } from "drizzle-orm";
 import { RecipeTag } from "@flayva-monorepo/shared/types";
 import { NestedRepositoryObject } from "@/types/api.types";
+import { EMBEDDING_DIM } from "@flayva-monorepo/shared/constants/embedding.constants";
 
 /**
  * MANAGING POSTS
@@ -81,6 +82,41 @@ export const saveNewPost = (
               tagID: tag.id,
             }))
           );
+        
+    const insertEmbeddingPromise =
+      recipeData.tags.length === 0
+        ? Promise.resolve()
+        : (async () => {
+            const tagEmbeddings = await tx
+              .select({ embedding: tagsTable.embedding })
+              .from(tagsTable)
+              .where(
+                inArray(
+                  tagsTable.id,
+                  recipeData.tags.map((tag) => tag.id)
+                )
+              );
+
+            if (tagEmbeddings.length === 0) return;
+
+            const dimension = EMBEDDING_DIM;
+            const averagedEmbedding = new Array(dimension).fill(0);
+
+            for (const tag of tagEmbeddings) {
+              tag.embedding?.forEach((value, i) => {
+                averagedEmbedding[i] += value;
+              });
+            }
+
+            for (let i = 0; i < dimension; i++) {
+              averagedEmbedding[i] /= tagEmbeddings.length;
+            }
+
+            await tx
+              .update(posts)
+              .set({ embedding: averagedEmbedding })
+              .where(eq(posts.id, post.id));
+          })();
 
     const insertInstructionsPromise =
       recipeData.instructions.length === 0
@@ -112,6 +148,7 @@ export const saveNewPost = (
     await Promise.all([
       insertIngredientsPromise,
       insertTagsPromise,
+      insertEmbeddingPromise,
       insertInstructionsPromise,
       insertMetaInfoPromise,
       insertImageReferencesPromise,

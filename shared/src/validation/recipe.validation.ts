@@ -93,6 +93,7 @@ export const tag = z.object({
   name: z.string(),
   category: z.string(),
   emoji: z.string(),
+  embedding: z.array(z.number()),
 });
 
 export const tagReference = tag.pick({ id: true });

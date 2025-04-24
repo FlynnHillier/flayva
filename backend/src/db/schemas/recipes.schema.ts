@@ -1,4 +1,4 @@
-import { RECIPE } from "@flayva-monorepo/shared/constants";
+import { EMBEDDING, RECIPE } from "@flayva-monorepo/shared/constants";
 import { users } from "@/db/schema";
 import { posts } from "@/db/schemas/posts.schema";
 import {
@@ -13,6 +13,10 @@ import { relations } from "drizzle-orm";
 import { nanoid } from "nanoid";
 
 // ## ENUMS ##
+const uniqueTagCategories = Array.from(
+  new Set(RECIPE.RECIPE_TAGS.map((tag) => tag.category))
+) as [string, ...string[]];
+export const tagCategoryEnum = pgEnum("category", uniqueTagCategories);
 
 export const ingredientUnitEnum = pgEnum("unit", RECIPE.INGREDIENT_UNITS);
 
@@ -76,7 +80,7 @@ export const tags = pgTable("tags", {
   id: integer("id").primaryKey(),
   name: varchar("name").notNull(),
   category: varchar("category").notNull(),
-  emoji: varchar("emoji").notNull(),
+  embedding: vector("embedding", { dimensions: EMBEDDING.EMBEDDING_DIM})
 });
 
 export const recipe_ratings = pgTable("recipe_ratings", {

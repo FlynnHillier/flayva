@@ -1,0 +1,1 @@
+export const EMBEDDING_DIM = 32;

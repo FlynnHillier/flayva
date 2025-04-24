@@ -3,6 +3,7 @@ import { RecipeTag } from "@flayva-monorepo/shared/types";
 import { RECIPE } from "@flayva-monorepo/shared/constants";
 import Tag from "../tags/Tag";
 import { cn } from "@/lib/utils";
+import { useMemo } from "react";
 
 type TagSelectorProps = {
   selectedTagIds: number[];
@@ -18,15 +19,21 @@ export function TagSelector({
   categoryTextSize = "text-lg",
 }: TagSelectorProps) {
   // Categorise tags
-  const categorisedTags = RECIPE.RECIPE_TAGS.reduce<
-    Record<string, RecipeTag[]>
-  >(
-    (acc, tag) => ({
-      ...acc,
-      [tag.category]: acc[tag.category] ? [...acc[tag.category], tag] : [tag],
-    }),
-    {} as Record<string, RecipeTag[]>
+  const categorisedTags = useMemo(
+    () =>
+      RECIPE.RECIPE_TAGS.reduce<Record<string, RecipeTag[]>>(
+        (acc, tag) => ({
+          ...acc,
+          [tag.category]: acc[tag.category]
+            ? [...acc[tag.category], tag]
+            : [tag],
+        }),
+        {} as Record<string, RecipeTag[]>
+      ),
+    []
   );
+
+  console.log("ss");
 
   return (
     <div className={cn("h-full overflow-y-auto", className)}>

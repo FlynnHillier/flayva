@@ -9,31 +9,30 @@ import disp2 from "@assets/disp2.jpg";
 import disp3 from "@assets/disp3.jpg";
 import disp4 from "@assets/disp4.jpg";
 
-
 //TODO: create a proper set of slideshow items
 const SLIDESHOW_ITEMS = [
   {
     Image: disp1,
     caption:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi.",
+      "Satisfy your sweet tooth and get inspired—join Flayva to discover and share stunning desserts like this luscious raspberry layer cake with fellow food lovers!",
     alt: "disp1",
   },
   {
     Image: disp2,
     caption:
-      "Loewm ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi.",
+      "Love classic pizza? Join Flayva to explore, share, and connect over delicious creations like this wood-fired Margherita—your next slice of inspiration is waiting!",
     alt: "disp2",
   },
   {
     Image: disp3,
     caption:
-      "Loewm ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi.",
+      "Start your day deliciously—join Flayva to share and discover breakfast inspirations like this golden stack of pancakes drizzled with syrup and fresh banana!",
     alt: "disp3",
   },
   {
     Image: disp4,
     caption:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi.",
+      "Craving something extraordinary? Join Flayva to discover and share drool-worthy creations like this epic burger—find your next food obsession with our community!",
     alt: "disp4",
   },
 ];
@@ -48,11 +47,12 @@ export default function LoginPage() {
   const { isLoading, error } = useMe();
 
   // TODO: improve loading and error states
-  if (isLoading) return (
-    <div>
-      <Skeleton className="h-16 w-16"/>
-    </div>
-  );
+  if (isLoading)
+    return (
+      <div>
+        <Skeleton className="h-16 w-16" />
+      </div>
+    );
   if (error) return `Error: ${error.message}`;
 
   return (

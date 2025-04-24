@@ -15,16 +15,19 @@ import Logo from "@assets/Logo.svg";
  * Button component for OAuth providers
  */
 const OauthProviderButton = ({
+  disabled = false,
   provider,
   icon,
   handleClick,
 }: {
+  disabled?: boolean;
   icon: React.ReactNode;
   provider: string;
   handleClick: (...args: any[]) => any;
 }) => {
   return (
     <Button
+      disabled={disabled}
       type="button"
       variant="outline"
       className="w-full h-14 hover:bg-gray-100 hover:cursor-pointer"
@@ -75,6 +78,7 @@ const AppleButton = () => {
 
   return (
     <OauthProviderButton
+      disabled={true}
       provider="apple"
       handleClick={handleAppleLogin}
       icon={
@@ -96,6 +100,7 @@ const MetaButton = () => {
 
   return (
     <OauthProviderButton
+      disabled={true}
       provider="meta"
       handleClick={handleMetaLogin}
       icon={

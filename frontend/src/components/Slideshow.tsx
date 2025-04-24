@@ -1,5 +1,10 @@
 import { useState, useEffect, useRef } from "react";
-import { Carousel, CarouselContent, CarouselItem, CarouselApi } from "@/components/ui/carousel";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselApi,
+} from "@/components/ui/carousel";
 import { cn } from "@/lib/utils";
 import { ClassNameValue } from "tailwind-merge";
 
@@ -56,7 +61,7 @@ export function SlideshowItem({
         <img src={Image} alt={alt} className="h-full w-full object-cover" />
         <div className="absolute  left-0 bottom-0 h-[50%] w-full bg-gradient-to-t from-black to-black/0 z-10"></div>
         <h1 className="absolute lg:text-2xl text-xl pr-10 text-white left-10 bottom-20 z-20">
-          {quote && quote.length > 0 ? '"' + quote + '"' : null}
+          {quote && quote.length > 0 ? quote : null}
         </h1>
       </div>
     </CarouselItem>
@@ -75,7 +80,8 @@ export default function Slideshow({
   className?: ClassNameValue;
 }) {
   const [api, setApi] = useState<CarouselApi>();
-  const { handleTouchStart, handleTouchMove, handleTouchEnd, isManual } = useSwipe(api);
+  const { handleTouchStart, handleTouchMove, handleTouchEnd, isManual } =
+    useSwipe(api);
 
   useEffect(() => {
     if (!api || isManual || autoScrollInterval === false) return;
@@ -105,7 +111,12 @@ export default function Slideshow({
         onTouchEnd={handleTouchEnd}
       >
         {items.map((item) => (
-          <SlideshowItem key={item.alt} Image={item.Image} caption={item.caption} alt={item.alt} />
+          <SlideshowItem
+            key={item.alt}
+            Image={item.Image}
+            caption={item.caption}
+            alt={item.alt}
+          />
         ))}
       </CarouselContent>
     </Carousel>

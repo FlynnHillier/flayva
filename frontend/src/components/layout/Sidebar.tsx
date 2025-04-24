@@ -15,6 +15,9 @@ import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { useMemo } from "react";
 import { cn } from "@/lib/utils";
+import { Avatar, AvatarImage } from "../ui/avatar";
+import { AvatarFallback } from "@radix-ui/react-avatar";
+import { ProfilePicture } from "../profile/profile-common";
 
 const items = [
   {
@@ -113,11 +116,7 @@ function SidebarItemFooter() {
         ) : !data?.user ? (
           <LogIn className="h-8 w-8 m-2" />
         ) : data.user.profile_picture_url ? (
-          <img
-            src={data.user.profile_picture_url}
-            alt="profile"
-            className="h-12 w-12 rounded-full"
-          />
+          <ProfilePicture user={data.user} className="size-12" />
         ) : (
           <Circle className="h-12 w-12" />
         )}

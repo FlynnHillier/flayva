@@ -16,6 +16,7 @@ import ProfileLayout from "@/pages/profile-pages/profile.layout";
 
 import ViewDetailedPostPage from "./pages/post-pages/View-detailed-post.page";
 import SearchPage from "./pages/Search.page";
+import LoadingView from "./components/layout/Loading";
 
 /**
  * Routes that should not show the sidebar
@@ -29,7 +30,7 @@ const HIDE_SIDEBAR_ROUTES = ["/login"];
 function AuthenticatedRouter() {
   const { data, isPending } = useMe();
 
-  if (isPending) return "loading..."; // TODO: better loading view
+  if (isPending) return <LoadingView />; // TODO: better loading view
 
   if (!data?.authenticated || !data.user) return <Navigate to="/login" />;
 
@@ -43,7 +44,7 @@ function AuthenticatedRouter() {
 function UnauthenticatedRouter() {
   const { data, isPending } = useMe();
 
-  if (isPending) return "loading..."; // TODO: better loading view
+  if (isPending) return <LoadingView />; // TODO: better loading view
 
   if (data?.authenticated || data?.user) return <Navigate to="/feed" />;
 

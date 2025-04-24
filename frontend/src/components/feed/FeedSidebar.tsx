@@ -49,9 +49,9 @@ export const FeedSidebar = ({
 				rating={post?.recipe.ratings.statiststics.average}
 				className={'mt-2'}
 			/>
-			<span className="text-sm text-muted-foreground">
+			<div className="text-sm text-muted-foreground">
 				{isSkeleton ? (
-					<span className="h-4 w-32 animate-pulse bg-muted rounded-full" />
+					<div className="h-4 w-32 animate-pulse bg-muted rounded-full" />
 				) : (
 					new Date(post?.created_at ?? '').toLocaleDateString('en-GB', {
 						year: 'numeric',
@@ -59,9 +59,17 @@ export const FeedSidebar = ({
 						day: 'numeric',
 					})
 				)}
-			</span>
+			</div>
+
 			<div className="flex flex-col space-y-8 mt-2">
-				<Tags tags={post?.recipe.tags} />
+				<div className="flex">
+					{isSkeleton ? (
+						<div className="h-4 w-32 animate-pulse bg-muted rounded-full" />
+					) : (
+						<Tags tags={post?.recipe.tags} />
+					)}
+				</div>
+
 				<SidebarSection header="Ingredients">
 					<ul className="flex flex-col space-y-1 list-disc list-inside">
 						{isSkeleton

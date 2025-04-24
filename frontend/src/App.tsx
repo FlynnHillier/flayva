@@ -68,7 +68,7 @@ function App() {
         <Routes>
           <Route index element={<HomePage />} />
           <Route element={<AuthenticatedRouter />}>
-            <Route path="/post" element={<CreatePostPage />} />
+            <Route path="/create" element={<CreatePostPage />} />
             <Route path="/feed" element={<FeedPage />} />
             <Route path="/profile" element={<ProfileLayout />}>
               <Route path="/profile/:id" element={<ViewProfilePage />} />

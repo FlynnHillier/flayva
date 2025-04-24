@@ -27,21 +27,21 @@ const items = [
     url: "/search",
     icon: Search,
   },
-  {
-    text: "Notifications",
-    url: "#", //What will this be?
-    icon: Heart,
-  },
+  // {
+  //   text: "Notifications",
+  //   url: "#", //What will this be?
+  //   icon: Heart,
+  // },
   {
     text: "Create",
-    url: "/post",
+    url: "/create",
     icon: Plus,
   },
-  {
-    text: "More",
-    url: "#", //What will this be?
-    icon: Text,
-  },
+  // {
+  //   text: "More",
+  //   url: "#", //What will this be?
+  //   icon: Text,
+  // },
 ];
 
 function SidebarItem({

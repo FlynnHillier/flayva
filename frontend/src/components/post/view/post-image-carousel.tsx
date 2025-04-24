@@ -5,7 +5,6 @@ import {
   CarouselItem,
 } from "@/components/ui/carousel";
 import { Skeleton } from "@/components/ui/skeleton";
-import { usePost } from "@/contexts/post.context";
 import { uploadThingFileUrlFromKey } from "@/lib/ut";
 import { cn } from "@/lib/utils";
 import { Post } from "@flayva-monorepo/shared/types";

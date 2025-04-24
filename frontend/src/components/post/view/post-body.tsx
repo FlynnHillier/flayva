@@ -1,12 +1,10 @@
 import { usePost } from "@/contexts/post.context";
 import { PostImageCarousel } from "./post-image-carousel";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Post } from "@flayva-monorepo/shared/types";
-import { Badge } from "@/components/ui/badge";
-import { capitalizeFirstLetter, cn } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import { ClassNameValue } from "tailwind-merge";
 import { PostLikeButton } from "./post-interactions";
-import Tag from "@/components/tags/Tag";
+import Tags from "@/components/tags/Tags";
 
 function Description({
   description,
@@ -22,28 +20,6 @@ function Description({
       ) : (
         <Skeleton className="h-18 w-96" />
       )}
-    </section>
-  );
-}
-
-function Tags({
-  tags,
-  className,
-}: {
-  tags: Post["recipe"]["tags"] | undefined;
-  className?: ClassNameValue;
-}) {
-  //TODO: add icons for tags based on the group / category
-
-  return (
-    <section className={cn("flex flex-row gap-1 flex-wrap", className)}>
-      {tags === undefined
-        ? Array.from({ length: 3 }, (_, i) => (
-            <Skeleton className="w-14 h-6 rounded-xl" key={i} />
-          ))
-        : tags.map((tag) => (
-            <Tag tag={tag} />
-          ))}
     </section>
   );
 }
@@ -67,7 +43,7 @@ export function PostBody() {
 
   return (
     <section className="w-full flex flex-col flex-nowrap space-y-2 ">
-      <PostImageCarousel />
+      <PostImageCarousel post={post} slideClassName="sm:basis-1/2" />
       <Interactions />
       <Description description={post?.recipe.description} />
       <Tags tags={post?.recipe.tags} />

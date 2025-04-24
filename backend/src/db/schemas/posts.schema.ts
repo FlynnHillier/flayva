@@ -2,7 +2,13 @@ import { users } from "@/db/schema";
 import { recipes } from "@/db/schemas/recipes.schema";
 import { POST } from "@flayva-monorepo/shared/constants";
 import { relations } from "drizzle-orm";
-import { pgTable, primaryKey, serial, timestamp, varchar } from "drizzle-orm/pg-core";
+import {
+  pgTable,
+  primaryKey,
+  serial,
+  timestamp,
+  varchar,
+} from "drizzle-orm/pg-core";
 import { nanoid } from "nanoid";
 
 // ## TABLES ##
@@ -14,7 +20,9 @@ export const posts = pgTable("posts", {
   ownerId: varchar("owner_id")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
-  created_at: timestamp("created_at", { mode: "string" }).defaultNow(),
+  created_at: timestamp("created_at", { mode: "string" })
+    .notNull()
+    .defaultNow(),
   recipeId: varchar("recipe_id")
     .notNull()
     .references(() => recipes.id, { onDelete: "cascade" }),

@@ -1,5 +1,6 @@
 import postServices from "@/server/services/post.services";
 import { NestedControllerObject } from "@/types/api.types";
+import { Post } from "@flayva-monorepo/shared/types";
 import { createNewPostSchema } from "@flayva-monorepo/shared/validation/post.validation";
 import { RequestHandler, Request, Response } from "express";
 import { z } from "zod";
@@ -61,9 +62,18 @@ export const getPostById: RequestHandler = async (
 };
 
 export const getFeed: RequestHandler = async (req: Request, res: Response) => {
-  const feed = await postServices.getFeed();
+  // Exclude is an array of post IDs to exclude from the feed
+  const { exclude } = req.query;
 
-  res.status(200).send(feed);
+  const parsedExclude = Array.isArray(exclude)
+    ? exclude.map((id) => String(id))
+    : [];
+
+  const feed: Post[] = await postServices.getFeed(parsedExclude);
+
+  res.status(200).send({
+    feed,
+  });
 };
 
 export const infiniteScrollProfilePostPreviews: RequestHandler = async (

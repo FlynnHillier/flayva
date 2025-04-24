@@ -2,6 +2,7 @@ import { api } from "@/api/api";
 import { createConfigurableMutation } from "@/hooks/util/configurableMutation";
 import { setQueryData } from "@/lib/query";
 import { queries } from "@/queries";
+import { infiniteQueries } from "@/queries/infinite.queries";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 
 /**
@@ -33,6 +34,36 @@ export const useDeleteExistingPost = (postId: string) =>
  */
 export const useGetPostById = (postId: string) =>
   useQuery({ ...queries.post.getPostById(postId), enabled: !!postId });
+
+/**
+ *
+ * FEED
+ *
+ *
+ */
+
+export const useInfiniteScrollFeed = () =>
+  useInfiniteQuery({
+    queryKey: infiniteQueries.feed.pagination().queryKey,
+    queryFn: ({ pageParam }) =>
+      infiniteQueries.feed.pagination().queryFn(pageParam),
+    initialPageParam: [] as string[],
+    getNextPageParam: ({ feed }, all) => {
+      if (feed.length === 0) return undefined;
+
+      return all.flatMap((feedSection) =>
+        feedSection.feed.map((post) => post.id)
+      );
+    },
+  });
+
+/**
+ *
+ *
+ * POST PREVIEWS
+ *
+ *
+ */
 
 /**
  * infinite scroll for post previews by the owner Id
@@ -72,8 +103,8 @@ export const useInfiniteScrollTitleAndTagsPostPreviews = (
     initialPageParam: 0,
     getNextPageParam: ({ nextCursor }) => nextCursor,
     enabled: enabled,
- })
-                       
+  });
+
 /**
  *
  *

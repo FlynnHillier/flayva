@@ -473,10 +473,12 @@ export const getPostByRecipeId = (
  * @param limit - The number of posts to fetch
  *
  */
-export const getRecentPosts = async (limit: number) => {
+export const getRecentPosts = async (
+  options: Omit<Parameters<typeof getPosts>[0], "orderBy"> = {}
+) => {
   const posts = await getPosts({
-    limit,
     orderBy: (posts, { desc }) => desc(posts.created_at),
+    ...options,
   });
 
   return posts;

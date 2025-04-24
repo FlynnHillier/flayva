@@ -27,4 +27,11 @@ export const infiniteQueries = {
       }),
     },
   },
+  feed: {
+    pagination: () => ({
+      queryFn: (excludePostIds: string[]) =>
+        api.post.fetchPostsFeed(excludePostIds),
+      queryKey: ["feed", "pagination"],
+    }),
+  },
 } satisfies QueryObject;

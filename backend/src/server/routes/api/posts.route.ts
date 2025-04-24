@@ -43,7 +43,7 @@ router.get("/get/id/:id", postControllers.getPostById);
 /**
  * Get a feed of posts
  */
-router.get("/get/feed", postControllers.getFeed);
+router.get("/feed", postControllers.getFeed);
 
 /**
  * Get post previews by owner ID with infinte scrolling
@@ -54,7 +54,6 @@ router.get(
   "/owner/inf/:ownerId",
   postControllers.infiniteScrollProfilePostPreviews
 );
-
 
 /**
  * Get post previews by title and tags with infinite scrolling

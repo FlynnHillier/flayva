@@ -15,12 +15,12 @@ const PostRatingSkeleton = ({ className }: { className?: ClassNameValue }) => (
 
 export const PostRating = ({
   rating,
-  interactive,
+  interactive = false,
   onInteract,
   className,
 }: {
   rating: number | undefined;
-  interactive: boolean;
+  interactive?: boolean;
   onInteract?: (rating: number) => void;
   className?: ClassNameValue;
 }) => {

@@ -5,9 +5,9 @@ import {
   CarouselItem,
 } from "@/components/ui/carousel";
 import { Skeleton } from "@/components/ui/skeleton";
-import { usePost } from "@/contexts/post.context";
 import { uploadThingFileUrlFromKey } from "@/lib/ut";
 import { cn } from "@/lib/utils";
+import { Post } from "@flayva-monorepo/shared/types";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { ComponentProps, useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
@@ -21,11 +21,22 @@ const PostImageCarouselItem = ({
   const { ref: endRef, inView: endInView } = useInView();
 
   return (
-    <CarouselItem className="sm:basis-1/2" {...props}>
-      <div className="w-full h-full  block relative overflow-hidden rounded-lg">
+    <CarouselItem className="" {...props}>
+      <div
+        className={cn(
+          "max-w-full max-h-full w-full aspect-square  block relative overflow-hidden rounded-lg",
+          props.className
+        )}
+      >
         {/* Hidden elements to decide wether or not to gray self out  */}
-        <div className="absolute opacity-0 z-10 block w-[1px] h-[full] left-[30%]" ref={startRef} />
-        <div className="absolute opacity-0 z-10 block w-[1px] h-[full] right-[30%]" ref={endRef} />
+        <div
+          className="absolute opacity-0 z-10 block w-[1px] h-[full] left-[30%]"
+          ref={startRef}
+        />
+        <div
+          className="absolute opacity-0 z-10 block w-[1px] h-[full] right-[30%]"
+          ref={endRef}
+        />
         <div
           className={cn(
             "absolute w-full h-full block ease-in transition-colors duration-200 bg-primary/20",
@@ -88,8 +99,15 @@ function CarouselDots({}) {
   //TODO: implement dots
 }
 
-export function PostImageCarousel({ className }: { className?: ClassNameValue }) {
-  const { post, isLoading } = usePost();
+export function PostImageCarousel({
+  className,
+  post,
+  slideClassName,
+}: {
+  className?: ClassNameValue;
+  slideClassName?: ClassNameValue;
+  post: Post | undefined;
+}) {
   const [api, setApi] = useState<CarouselApi>();
   const [canScrollNext, setCanScrollNext] = useState(false);
   const [canScrollPrev, setCanScrollPrev] = useState(false);
@@ -112,7 +130,7 @@ export function PostImageCarousel({ className }: { className?: ClassNameValue })
     api.on("slidesChanged", onSlidesChanged);
     api.on("resize", onResize);
 
-    updateCanSroll()
+    updateCanSroll();
 
     return () => {
       api.off("scroll", onScroll);
@@ -121,7 +139,7 @@ export function PostImageCarousel({ className }: { className?: ClassNameValue })
     };
   }, [api, setCanScrollNext, setCanScrollPrev]);
 
-  if (isLoading) return <Skeleton className="w-full h-96 sm:h-72 xl:h-96" />;
+  if (!post) return <Skeleton className="w-full h-96 sm:h-72 xl:h-96" />;
 
   return (
     <Carousel
@@ -132,7 +150,10 @@ export function PostImageCarousel({ className }: { className?: ClassNameValue })
         align: "center",
         containScroll: "trimSnaps",
       }}
-      className={cn("max-h-fit max-w-full rounded-lg overflow-hidden ", className)}
+      className={cn(
+        "max-h-fit max-w-full rounded-lg overflow-hidden ",
+        className
+      )}
     >
       <CarouselContent>
         {post?.images.map(({ key: uploadThingImageKey }, i) => (
@@ -140,6 +161,7 @@ export function PostImageCarousel({ className }: { className?: ClassNameValue })
             onClick={() => api?.scrollTo(i, false)}
             key={i}
             imageUrl={uploadThingFileUrlFromKey(uploadThingImageKey)}
+            className={cn(slideClassName)}
           />
         ))}
       </CarouselContent>

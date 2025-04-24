@@ -71,6 +71,17 @@ export const ingredient = z.object({
   unit: ingredient_unit,
 });
 
+export const ingredientReference = ingredient.pick({
+  id: true,
+  amount: true,
+  unit: true,
+});
+
+export const ingredientReferences = z
+  .array(ingredientReference)
+  .min(RECIPE_INGREDIENT_MIN_COUNT)
+  .max(RECIPE_INGREDIENT_MAX_COUNT);
+
 export const ingredients = z
   .array(ingredient)
   .min(RECIPE_INGREDIENT_MIN_COUNT)
@@ -84,7 +95,7 @@ export const tag = z.object({
   emoji: z.string(),
 });
 
-export const tagReference = tag.pick({ id: true, name: true });
+export const tagReference = tag.pick({ id: true });
 
 export const tagReferences = z
   .array(tagReference)
@@ -120,6 +131,15 @@ export const recipe = z.object({
   instructions: instructions,
   ingredients: ingredients,
   tags: tags,
+  metaInfo: metaInfo.optional(),
+});
+
+export const createNewRecipeSchema = z.object({
+  title: title,
+  description: description,
+  instructions: instructions,
+  tags: tagReferences,
+  ingredients: ingredients, //TODO: use //ingredientReferences,
   metaInfo: metaInfo.optional(),
 });
 

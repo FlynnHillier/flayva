@@ -8,6 +8,7 @@ import {
   primaryKey,
   timestamp,
   varchar,
+  vector,
 } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 import { nanoid } from "nanoid";
@@ -80,7 +81,7 @@ export const tags = pgTable("tags", {
   id: integer("id").primaryKey(),
   name: varchar("name").notNull(),
   category: varchar("category").notNull(),
-  embedding: vector("embedding", { dimensions: EMBEDDING.EMBEDDING_DIM})
+  embedding: vector("embedding", {dimensions: EMBEDDING.EMBEDDING_DIM}).default([]),
 });
 
 export const recipe_ratings = pgTable("recipe_ratings", {

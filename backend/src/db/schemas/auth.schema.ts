@@ -1,5 +1,6 @@
 import { OAUTH_PROVIDERS, USER_ID_LENGTH } from "@/constants/auth.constants";
 import { followers } from "@/db/schema";
+import { EMBEDDING } from "@flayva-monorepo/shared/constants";
 import { relations } from "drizzle-orm";
 import {
   pgTable,
@@ -11,6 +12,7 @@ import {
   primaryKey,
   pgEnum,
   varchar,
+  vector,
 } from "drizzle-orm/pg-core";
 import { nanoid } from "nanoid";
 
@@ -26,6 +28,7 @@ export const users = pgTable("users", {
   bio: text("bio").notNull().default("Here for the flayva!"),
   createdAt: timestamp("created_at", { mode: "string" }).defaultNow(),
   updatedAt: timestamp("updated_at", { mode: "string" }).defaultNow(),
+  embedding: vector("embedding", {dimensions: EMBEDDING.EMBEDDING_DIM}).default([]),
 });
 
 // Accounts table for linking OAuth providers (optional for local auth).

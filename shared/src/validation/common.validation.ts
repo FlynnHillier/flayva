@@ -29,8 +29,17 @@ export const customImageFile = (opts: Partial<ImageFileOptions> = {}) => {
   return zfd
     .file()
     .refine(
-      ({ type }) =>
-        allowedTypes.includes(type as ImageFileOptions["type"][number]),
+      ({ type }) => {
+        if (allowedTypes.includes(type as ImageFileOptions["type"][number]))
+          return true;
+        // Check if the type is a wildcard (e.g., "image/*")
+        const wildcardType = allowedTypes.find((t) => t.endsWith("/*"));
+        if (wildcardType) {
+          const baseType = wildcardType.split("/")[0];
+          return type.startsWith(baseType);
+        }
+      },
+
       {
         message: `File type must be one of: ${allowedTypes.join(", ")}`,
       }

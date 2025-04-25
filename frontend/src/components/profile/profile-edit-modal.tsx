@@ -246,7 +246,7 @@ export const EditProfileForm = ({
           control={form.control}
           name="avatar"
           render={({ field, fieldState: { error } }) => (
-            <FormItem>
+            <FormItem className="flex flex-col items-center w-full">
               <FormControl>
                 <EditProfilePicture
                   user={user}
@@ -258,8 +258,7 @@ export const EditProfileForm = ({
               </FormControl>
               {error && (
                 <FormMessage className="text-red-500">
-                  {" "}
-                  {error.message}{" "}
+                  {error.message}
                 </FormMessage>
               )}
             </FormItem>

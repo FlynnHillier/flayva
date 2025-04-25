@@ -18,10 +18,4 @@
     }
   },
   "include": ["src/**/*"],
-
-  "references": [
-    {
-      "path": "../backend" // References the backend by proxy of the shared folder (some items are re-exported from the backend within shared)
-    }
-  ]
 }

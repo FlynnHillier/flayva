@@ -156,7 +156,7 @@ const FeedEntry = React.forwardRef<HTMLDivElement, { post: Post }>(
   ({ post }, ref) => {
     return (
       <div
-        className="h-full w-full relative @container rounded-xl overflow-hidden select-none"
+        className="h-full w-full relative @container rounded-xl overflow-hidden select-none mb-2"
         ref={ref}
       >
         <ImageCarousel post={post} className="grow-1" />

@@ -67,8 +67,8 @@ function App() {
       {shouldShowSidebar && <AppSidebar />}
       <main className="grow h-screen flex flex-col flex-nowrap overflow-x-hidden overflow-y-auto relative items-center box-border">
         <Routes>
-          <Route index element={<HomePage />} />
           <Route element={<AuthenticatedRouter />}>
+            <Route index element={<FeedPage />} />
             <Route path="/create" element={<CreatePostPage />} />
             <Route path="/feed" element={<FeedPage />} />
             <Route path="/profile" element={<ProfileLayout />}>

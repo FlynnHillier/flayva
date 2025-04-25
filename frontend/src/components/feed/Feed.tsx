@@ -15,6 +15,7 @@ import { PostRating } from "../post/ratings/ratings-common";
 import { Skeleton } from "../ui/skeleton";
 import { ProfilePicture } from "../profile/profile-common";
 import { Link } from "react-router-dom";
+import { useInView } from "react-intersection-observer";
 
 const ImageCarousel = ({
   post,
@@ -167,7 +168,8 @@ const FeedEntry = React.forwardRef<HTMLDivElement, { post: Post }>(
 );
 
 export const Feed = () => {
-  const { posts, activeIndex, nextPost, prevPost, hasNextPage } = useFeed();
+  const { posts, activeIndex, nextPost, prevPost, hasNextPage, fetchMore } =
+    useFeed();
 
   const feedContainerRef = useRef<HTMLDivElement>(null);
 
@@ -175,6 +177,13 @@ export const Feed = () => {
   const feedPostSkeletonRef = useRef<HTMLDivElement>(null);
 
   const [isFeedScrolling, setIsFeedScrolling] = useState(false);
+
+  const [fetchNewPostTriggerElementRef, isFetchNewPostTriggerElementInView] =
+    useInView();
+
+  useEffect(() => {
+    if (isFetchNewPostTriggerElementInView) fetchMore();
+  }, [isFetchNewPostTriggerElementInView]);
 
   /**
    * This effect is used to handle keyboard navigation for the feed.
@@ -275,7 +284,7 @@ export const Feed = () => {
           className="grow-1  rounded-lg overflow-hidden "
           ref={feedContainerRef}
         >
-          {posts.map((post, i) => (
+          {posts.slice(0, posts.length - 2).map((post, i) => (
             <FeedEntry
               key={post.id}
               post={post}
@@ -284,6 +293,24 @@ export const Feed = () => {
               }}
             />
           ))}
+          {/* Trigger element for fetching new posts */}
+          {posts.length > 0 && (
+            <div
+              ref={fetchNewPostTriggerElementRef}
+              className="h-[1px] w-[1px] opacity-0"
+            />
+          )}
+
+          {posts.slice(posts.length - 2).map((post, i) => (
+            <FeedEntry
+              key={post.id}
+              post={post}
+              ref={(el) => {
+                if (el) feedPostRefs.current[posts.length - 2 + i] = el;
+              }}
+            />
+          ))}
+
           {/* Skeleton loading post view */}
           <div className="h-full w-full" ref={feedPostSkeletonRef}>
             <Skeleton className="h-full w-full rounded-lg" />

@@ -1,12 +1,11 @@
-import { env } from "@/env";
 import { drizzle } from "drizzle-orm/postgres-js";
 import * as schema from "@/db/schema";
 import postgres from "postgres";
 
+// Prefer DATABASE_URL from environment for production/deployment flexibility
 const client = postgres(
-  `postgres://${env.DB_USER}:${encodeURIComponent(env.DB_PASSWORD)}@${env.DB_HOST}:${
-    env.DB_PORT
-  }/postgres`
+  process.env.DATABASE_URL ||
+    `postgres://${process.env.DB_USER}:${encodeURIComponent(process.env.DB_PASSWORD!)}@${process.env.DB_HOST}:${process.env.DB_PORT}/postgres`
 );
 
 /**

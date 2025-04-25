@@ -27,6 +27,7 @@ const envSchema = z.object({
   // UPLOADTHING
   UPLOADTHING_TOKEN: z.string().min(1),
   UPLOAD_THING_APP_ID: z.string().min(1),
+  DATABASE_URL: z.string().min(1),
 });
 
 /**

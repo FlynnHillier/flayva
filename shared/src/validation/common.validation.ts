@@ -7,9 +7,15 @@ type FileOptions<T extends string> = {
   type: T[];
 };
 
-const RECOGNISED_IMAGE_FILE_TYPES = ["image/jpeg", "image/png"] as const;
+const RECOGNISED_IMAGE_FILE_TYPES = [
+  "image/jpeg",
+  "image/png",
+  "image/*",
+] as const;
 
-type ImageFileOptions = FileOptions<(typeof RECOGNISED_IMAGE_FILE_TYPES)[number]> & {};
+type ImageFileOptions = FileOptions<
+  (typeof RECOGNISED_IMAGE_FILE_TYPES)[number]
+> & {};
 
 const defaultImageFileOptions: ImageFileOptions = {
   size: 1024 * 1024 * 5, // 5MB
@@ -22,9 +28,13 @@ export const customImageFile = (opts: Partial<ImageFileOptions> = {}) => {
 
   return zfd
     .file()
-    .refine(({ type }) => allowedTypes.includes(type as ImageFileOptions["type"][number]), {
-      message: `File type must be one of: ${allowedTypes.join(", ")}`,
-    })
+    .refine(
+      ({ type }) =>
+        allowedTypes.includes(type as ImageFileOptions["type"][number]),
+      {
+        message: `File type must be one of: ${allowedTypes.join(", ")}`,
+      }
+    )
     .refine(({ size }) => size <= maxSize, {
       message: `File size must not exceed ${maxSize / (1024 * 1024)} MB`,
     });

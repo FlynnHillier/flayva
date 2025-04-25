@@ -33,6 +33,17 @@ import { Button } from "../ui/button";
 import { Textarea } from "../ui/textarea";
 import { cn } from "@/lib/utils";
 import { ClassNameValue } from "tailwind-merge";
+import { type DropzoneOptions } from "react-dropzone";
+import { SOCIAL as SOCIAL_CONSTANTS } from "@flayva-monorepo/shared/constants";
+
+const DROPZONE_CONFIG: DropzoneOptions = {
+  maxSize: SOCIAL_CONSTANTS.SOCIAL_AVATAR_IMAGE_MAX_FILE_SIZE,
+  multiple: false,
+  maxFiles: 2,
+  accept: {
+    "image/*": [],
+  },
+};
 
 const ConfirmExitDialog = ({
   onConfirm,
@@ -156,14 +167,7 @@ export const EditProfilePicture = ({
       value={image ? [image] : []}
       onValueChange={onValueChange}
       // TODO: edit dropzone config
-      dropzoneOptions={{
-        multiple: false,
-        maxFiles: 2,
-        accept: {
-          "image/jpeg": [],
-          "image/png": [],
-        },
-      }}
+      dropzoneOptions={DROPZONE_CONFIG}
       className="max-w-fit max-h-fit p-1"
     >
       <FileInput>

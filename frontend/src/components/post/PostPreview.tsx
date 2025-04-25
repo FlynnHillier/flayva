@@ -20,28 +20,26 @@ export default function PostPreview({
   // Get the image URL
   const imagePreviewUrl = uploadThingFileUrlFromKey(preview.image.key);
 
-  // Function to get the width of the post preview
-  function getWidthPostPreview(): number {
-    if (previewRef.current) {
-      return previewRef.current.clientWidth;
-    }
-    return 0;
-  }
-
   // Update width on mount and resize
   useEffect(() => {
-    const updateWidth = () => {
-      setPreviewWidth(getWidthPostPreview());
-    };
+    const node = previewRef.current;
+    if (!node) return;
 
-    // Initial width calculation
+    const updateWidth = () => setPreviewWidth(node.clientWidth);
+
+    // Initial width
     updateWidth();
 
-    // Add resize listener
-    window.addEventListener("resize", updateWidth);
+    // Setup ResizeObserver
+    const resizeObserver = new ResizeObserver(() => {
+      updateWidth();
+    });
+    resizeObserver.observe(node);
 
     // Cleanup
-    return () => window.removeEventListener("resize", updateWidth);
+    return () => {
+      resizeObserver.disconnect();
+    };
   }, []);
 
   return (

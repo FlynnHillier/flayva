@@ -59,7 +59,9 @@ export default function PostPreviewTags({
         {tags.map((tag, i) => (
           <div
             key={i}
-            ref={el => (tagRefs.current[i] = el)}
+            ref={(el) => {
+              tagRefs.current[i] = el;
+            }}
             className="inline-block"
           >
             <Tag tag={tag} transparent={true} className="@xl:text-lg" />

@@ -218,10 +218,7 @@ export const EditProfileForm = ({
   });
 
   const handleSubmit = useCallback(
-    form.handleSubmit((data) => {
-      // data for some reason will not include the username field
-      mutate(form.getValues());
-    }),
+    form.handleSubmit((data) => mutate(data)),
     [form.handleSubmit, mutate, form]
   );
 

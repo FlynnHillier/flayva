@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useProfile } from "@/contexts/profile.context";
-import { useLogout, useMe } from "@/hooks/auth.hooks";
+import { useMe } from "@/hooks/auth.hooks";
 import {
   useFetchOwnFollowingUserStatus,
   useFollowUser,
@@ -14,6 +14,7 @@ import { toast } from "sonner";
 import { ClassNameValue } from "tailwind-merge";
 import { EditOwnProfileModal } from "./profile-edit-modal";
 import { ProfilePicture } from "./profile-common";
+import { LogoutButton } from "./logout";
 
 function Bio() {
   const { profile } = useProfile();
@@ -202,21 +203,6 @@ const FollowToggleButton = () => {
     <UnfollowButton disabled={isPending} />
   ) : (
     <FollowButton disabled={isPending} />
-  );
-};
-
-const LogoutButton = () => {
-  const { isPending, mutate } = useLogout({
-    onError: () => toast.error("failed to log out!"),
-    onSuccess: () => {
-      toast.success("Logged out!");
-    },
-  });
-
-  return (
-    <Button disabled={isPending} onClick={() => mutate(undefined)}>
-      Logout
-    </Button>
   );
 };
 

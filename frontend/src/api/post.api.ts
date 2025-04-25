@@ -7,8 +7,6 @@ import { z } from "zod";
 export async function createNewPost(
   postData: z.infer<typeof createNewPostSchema>
 ) {
-  console.log("pd", postData);
-
   const fd = new FormData();
 
   postData.images.forEach((image) => {
@@ -44,7 +42,6 @@ export async function deleteExistingPost(postId: string) {
 }
 
 export async function getPostById(postId: string) {
-  await new Promise((resolve) => setTimeout(resolve, 2000)); // Simulate a delay
   const { data } = await request({
     url: `/api/p/get/id/${postId}`,
     method: "GET",
@@ -154,9 +151,6 @@ export async function getUserPostsWithTagFilters(
 }
 
 export async function fetchPostsFeed(excludedPostIds: string[]) {
-  // TODO : remove this delay when finished testing
-  await new Promise((resolve) => setTimeout(resolve, 2000)); // Simulate a delay
-
   const { data } = await request({
     url: "/api/p/feed",
     method: "GET",
@@ -170,7 +164,6 @@ export async function fetchPostsFeed(excludedPostIds: string[]) {
  * INTERACTIONS
  */
 export async function getLikeStatus(postId: string) {
-  await new Promise((resolve) => setTimeout(resolve, 2000)); // Simulate a delay
   const { data } = await request({
     url: `/api/p/interactions/like/status/${postId}`,
     method: "GET",

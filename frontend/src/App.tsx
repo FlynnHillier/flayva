@@ -48,7 +48,7 @@ function AuthenticatedRouter() {
       />
     );
 
-  if (isPending) return <LoadingView />; // TODO: better loading view
+  if (isPending) return <LoadingView />;
 
   if (!data?.authenticated || !data.user) return <Navigate to="/login" />;
 
@@ -82,7 +82,7 @@ function UnauthenticatedRouter() {
       />
     );
 
-  if (isPending) return <LoadingView />; // TODO: better loading view
+  if (isPending) return <LoadingView />;
 
   if (data?.authenticated || data?.user) return <Navigate to="/feed" />;
 

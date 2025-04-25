@@ -9,7 +9,6 @@ import disp2 from "@assets/disp2.jpg";
 import disp3 from "@assets/disp3.jpg";
 import disp4 from "@assets/disp4.jpg";
 
-//TODO: create a proper set of slideshow items
 const SLIDESHOW_ITEMS = [
   {
     Image: disp1,
@@ -46,7 +45,6 @@ function LoginImageSlideShow({ className }: { className: ClassNameValue }) {
 export default function LoginPage() {
   const { isLoading, error } = useMe();
 
-  // TODO: improve loading and error states
   if (isLoading)
     return (
       <div>

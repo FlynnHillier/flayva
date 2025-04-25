@@ -166,7 +166,6 @@ export const EditProfilePicture = ({
     <FileUploader
       value={image ? [image] : []}
       onValueChange={onValueChange}
-      // TODO: edit dropzone config
       dropzoneOptions={DROPZONE_CONFIG}
       className="max-w-fit max-h-fit p-1"
     >

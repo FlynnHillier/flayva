@@ -83,11 +83,6 @@ export default function CreateNewPostForm() {
     setIsDisabled(isPending);
   }, [isPending]);
 
-  //TODO: remove
-  useEffect(() => {
-    console.log(form.formState.errors);
-  }, [form.formState.errors]);
-
   return (
     <Form {...form}>
       <form
@@ -185,7 +180,7 @@ export default function CreateNewPostForm() {
                   <TagSelector
                     selectedTagIds={selectedTagIds}
                     onToggle={handleToggleTag}
-                    categoryTextSize="text-sm" 
+                    categoryTextSize="text-sm"
                   />
                 </FormControl>
               </FormItem>

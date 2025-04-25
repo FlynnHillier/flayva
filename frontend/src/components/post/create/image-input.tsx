@@ -226,7 +226,6 @@ const CarouselImagePreview = ({ className }: { className?: string }) => {
     [setImages]
   );
 
-  //TODO: add buttons to navigate the carousel
   return (
     <Carousel
       className={cn(

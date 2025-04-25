@@ -5,7 +5,15 @@ import path from "path";
 import { DATA_FOLDER_PATH } from "scripts/utils";
 import { z } from "zod";
 
-type ImagesFor = "burger" | "pizza" | "sushi" | "salad" | "dessert";
+type ImagesFor =
+  | "burger"
+  | "pizza"
+  | "sushi"
+  | "salad"
+  | "pancakes"
+  | "steak"
+  | "spaghetti"
+  | "roast-dinner";
 
 const DUMMY_POST_DATA: {
   imageType: ImagesFor;
@@ -41,6 +49,112 @@ const DUMMY_POST_DATA: {
           id: 70,
         },
       ],
+    },
+  },
+  {
+    imageType: "pizza",
+    recipe: {
+      title: "Margherita Magic Pizza",
+      description: "Classic Italian pizza with fresh basil and mozzarella",
+      ingredients: [],
+      instructions: [
+        { instruction: "Preheat oven to 250°C" },
+        { instruction: "Stretch pizza dough" },
+        { instruction: "Add tomato sauce" },
+        { instruction: "Top with mozzarella" },
+        { instruction: "Bake for 8-10 minutes" },
+      ],
+      tags: [{ id: 12 }, { id: 34 }, { id: 55 }],
+    },
+  },
+  {
+    imageType: "sushi",
+    recipe: {
+      title: "Sushi Supreme Platter",
+      description: "Assortment of fresh nigiri and maki rolls",
+      ingredients: [],
+      instructions: [
+        { instruction: "Prepare sushi rice" },
+        { instruction: "Slice fresh fish" },
+        { instruction: "Assemble nigiri pieces" },
+        { instruction: "Roll maki with bamboo mat" },
+      ],
+      tags: [{ id: 88 }, { id: 92 }, { id: 17 }, { id: 63 }],
+    },
+  },
+  {
+    imageType: "salad",
+    recipe: {
+      title: "Summer Berry Salad",
+      description: "Mixed greens with seasonal berries and balsamic glaze",
+      ingredients: [],
+      instructions: [
+        { instruction: "Wash salad leaves" },
+        { instruction: "Slice strawberries" },
+        { instruction: "Add blueberries" },
+        { instruction: "Drizzle with dressing" },
+      ],
+      tags: [{ id: 45 }, { id: 21 }, { id: 77 }],
+    },
+  },
+  {
+    imageType: "pancakes",
+    recipe: {
+      title: "Fluffy Buttermilk Stack",
+      description: "Light and airy pancakes with maple syrup",
+      ingredients: [],
+      instructions: [
+        { instruction: "Mix dry ingredients" },
+        { instruction: "Whisk in buttermilk" },
+        { instruction: "Cook on griddle" },
+        { instruction: "Stack and serve" },
+      ],
+      tags: [{ id: 33 }, { id: 19 }, { id: 42 }, { id: 56 }],
+    },
+  },
+  {
+    imageType: "steak",
+    recipe: {
+      title: "Perfect Ribeye Steak",
+      description: "Juicy ribeye cooked to medium-rare perfection",
+      ingredients: [],
+      instructions: [
+        { instruction: "Season steak generously" },
+        { instruction: "Sear in cast iron" },
+        { instruction: "Baste with butter" },
+        { instruction: "Rest before slicing" },
+      ],
+      tags: [{ id: 68 }, { id: 14 }, { id: 29 }],
+    },
+  },
+  {
+    imageType: "spaghetti",
+    recipe: {
+      title: "Sunday Night Bolognese",
+      description: "Hearty meat sauce over al dente pasta",
+      ingredients: [],
+      instructions: [
+        { instruction: "Brown ground beef" },
+        { instruction: "Simmer tomato sauce" },
+        { instruction: "Cook spaghetti" },
+        { instruction: "Combine and serve" },
+      ],
+      tags: [{ id: 5 }, { id: 38 }, { id: 44 }, { id: 51 }],
+    },
+  },
+  {
+    imageType: "roast-dinner",
+    recipe: {
+      title: "Sunday Roast Feast",
+      description: "Traditional roast beef with all the trimmings",
+      ingredients: [],
+      instructions: [
+        { instruction: "Season beef joint" },
+        { instruction: "Roast potatoes" },
+        { instruction: "Prepare Yorkshire puddings" },
+        { instruction: "Make gravy from drippings" },
+      ],
+      tags: [{ id: 27 }, { id: 39 }, { id: 61 }, { id: 72 }, { id: 83 }],
     },
   },
 ];

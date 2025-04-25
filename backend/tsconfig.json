@@ -32,5 +32,5 @@
     "../shared/src", // Exclude the source files of the shared package
     "../shared/node_modules"
   ],
-  "references": [{ "path": "../shared" }]
+  "references": [{ "path": "./shared/dist/*" }]
 }

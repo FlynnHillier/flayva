@@ -6,6 +6,7 @@ import { env } from "@/env";
 import passport from "@auth/passport";
 import pg from "pg";
 import connectPgSimple from "connect-pg-simple";
+import path from "path";
 
 const app: Application = express();
 
@@ -47,6 +48,8 @@ app.use(
 );
 app.use(passport.initialize());
 app.use(passport.session());
+
+app.use(express.static(path.join(import.meta.dirname, "../public")));
 
 // Register Routes
 app.use("/", indexRouter);

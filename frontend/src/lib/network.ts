@@ -27,3 +27,11 @@ export const request = async (config: AxiosRequestConfig) => {
 
 export const is404Error = (error: unknown): boolean =>
   error instanceof AxiosError && error.response?.status === 404;
+
+/**
+ * Constructs a full URL from a path and the server origin
+ * @param path The path to append to the server origin
+ * @returns The full URL as a string
+ */
+export const serverOriginUrl = (path: string) =>
+  new URL(path, import.meta.env.VITE_SERVER_ORIGIN).toString();

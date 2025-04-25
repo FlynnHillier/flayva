@@ -47,18 +47,18 @@ function useSwipe(api: CarouselApi | null) {
 }
 
 export function SlideshowItem({
-  Image,
+  imageUrl,
   caption: quote,
   alt,
 }: {
-  Image: string;
+  imageUrl: string;
   caption?: string;
   alt: string;
 }) {
   return (
     <CarouselItem className="pl-0">
       <div className="relative h-full w-full">
-        <img src={Image} alt={alt} className="h-full w-full object-cover" />
+        <img src={imageUrl} alt={alt} className="h-full w-full object-cover" />
         <div className="absolute  left-0 bottom-0 h-[50%] w-full bg-gradient-to-t from-black to-black/0 z-10"></div>
         <h1 className="absolute lg:text-2xl text-xl pr-10 text-white left-10 bottom-20 z-20">
           {quote && quote.length > 0 ? quote : null}
@@ -74,7 +74,7 @@ export default function Slideshow({
   autoScrollInterval = 5000,
   header,
 }: {
-  items: { Image: string; caption: string; alt: string }[];
+  items: { imageUrl: string; caption: string; alt: string }[];
   autoScrollInterval?: number | false;
   header?: string;
   className?: ClassNameValue;
@@ -113,7 +113,7 @@ export default function Slideshow({
         {items.map((item) => (
           <SlideshowItem
             key={item.alt}
-            Image={item.Image}
+            imageUrl={item.imageUrl}
             caption={item.caption}
             alt={item.alt}
           />

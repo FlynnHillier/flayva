@@ -1,6 +1,8 @@
+import { imageCompression } from "@/lib/compression";
 import { uploadthing } from "@/lib/uploadthing";
 import { POST_IMAGE_CLOUD_ID_LENGTH } from "@flayva-monorepo/shared/constants/post.constants";
 import { nanoid } from "nanoid";
+import sharp from "sharp";
 import { UploadedFileData, UploadFileResult } from "uploadthing/types";
 
 /**
@@ -8,7 +10,9 @@ import { UploadedFileData, UploadFileResult } from "uploadthing/types";
  * Typescript has issues inferring the correct type for the upload result.
  * This type is used to ensure that the result is correctly typed.
  */
-type InferredUploadFileResult = Awaited<ReturnType<typeof uploadthing.uploadFiles>>[number];
+type InferredUploadFileResult = Awaited<
+  ReturnType<typeof uploadthing.uploadFiles>
+>[number];
 
 /**
  * upload post images to the cloud
@@ -21,14 +25,17 @@ export const uploadPostImages = async (images: File[]) => {
 
   const processedImageFiles = images.map((image) => {
     const imageFileExtension = image.name.split(".").at(-1);
-    const imageFileName = `${nanoid(POST_IMAGE_CLOUD_ID_LENGTH)}.${imageFileExtension}`;
+    const imageFileName = `${nanoid(
+      POST_IMAGE_CLOUD_ID_LENGTH
+    )}.${imageFileExtension}`;
 
     return new File([image], imageFileName, { type: image.type });
   });
 
   const uploadResults = await uploadthing.uploadFiles(processedImageFiles);
 
-  const isSuccessfulUpload = ({ data, error }: UploadFileResult) => data && !error;
+  const isSuccessfulUpload = ({ data, error }: UploadFileResult) =>
+    data && !error;
 
   const successfulUploads = uploadResults
     .filter(isSuccessfulUpload)
@@ -54,9 +61,18 @@ export const uploadAvatarImage = async (
     POST_IMAGE_CLOUD_ID_LENGTH
   )}.${imageFileExtension}`;
 
-  const processedImageFile = new File([image], imageFileName, { type: image.type });
+  const processedImageFile = new File([image], imageFileName, {
+    type: image.type,
+  });
 
-  const [result] = await uploadthing.uploadFiles([processedImageFile]);
+  const [compressedImageFile] = await imageCompression([processedImageFile], {
+    width: 512,
+    height: 512,
+    fit: sharp.fit.fill,
+    withoutEnlargement: false,
+  });
+
+  const [result] = await uploadthing.uploadFiles([compressedImageFile]);
 
   return result;
 };

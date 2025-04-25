@@ -9,6 +9,7 @@ import { createNewPostSchema } from "@flayva-monorepo/shared/validation/post.val
 import { z } from "zod";
 import { PostPreview } from "@flayva-monorepo/shared/types";
 import sharp from "sharp";
+import { imageCompression } from "@/lib/compression";
 
 /**
  * Create a new post
@@ -21,24 +22,7 @@ export const createNewPost = async (
   newPostData: z.infer<typeof createNewPostSchema>
 ) => {
   // Compress images to webp format and resize them to a maximum width of 1200px
-  const compressedImages = await Promise.all(
-    newPostData.images.map(async (image) => {
-      const imageArrayBuffer = await image.arrayBuffer();
-      const outputBuffer = await sharp(imageArrayBuffer)
-        .resize({
-          width: 1200,
-          withoutEnlargement: true,
-        })
-        .webp({
-          quality: 80,
-        })
-        .toBuffer();
-      const newFileName = image.name.replace(/\.[^/.]+$/, ".webp");
-      return new File([outputBuffer], newFileName, {
-        type: "image/webp",
-      });
-    })
-  );
+  const compressedImages = await imageCompression(newPostData.images);
 
   // TODO: handle upload image failures
   const { successes: imageUploads } = await uploadPostImages(compressedImages);

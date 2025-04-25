@@ -231,6 +231,9 @@ export const Feed = () => {
     };
   }, [feedContainerRef.current]);
 
+  /**
+   * This effect is used to scroll the active post into view when the active index changes.
+   */
   useEffect(() => {
     if (activeIndex >= posts.length)
       feedPostSkeletonRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -243,7 +246,22 @@ export const Feed = () => {
     }
   }, [activeIndex, feedPostRefs.current, feedPostSkeletonRef.current, posts]);
 
-  useEffect(() => {}, [posts, activeIndex]);
+  /**
+   * This effect is used to instantly scroll to the active post when the feed is first loaded.
+   * It ensures that the active post is always in view when the feed is rendered.
+   */
+  useEffect(() => {
+    if (activeIndex >= posts.length)
+      feedPostSkeletonRef.current?.scrollIntoView({ behavior: "instant" });
+    else {
+      const ref = feedPostRefs.current[activeIndex];
+      ref?.scrollIntoView({
+        behavior: "instant",
+        block: "nearest",
+      });
+    }
+    setIsFeedScrolling(false);
+  }, [feedPostRefs.current, feedPostSkeletonRef.current]);
 
   return (
     <div className="flex flex-row flex-nowrap w-full max-h-full h-full  max-w-7xl">

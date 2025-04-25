@@ -1,8 +1,8 @@
 import { Routes, Route, useLocation } from "react-router-dom";
 import { Outlet, Navigate } from "react-router-dom";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { useMe } from "./hooks/auth.hooks";
-import { Toaster } from "sonner";
+import { toast, Toaster } from "sonner";
 
 /* Pages */
 import HomePage from "./pages/Home.page";
@@ -16,7 +16,7 @@ import ProfileLayout from "@/pages/profile-pages/profile.layout";
 
 import ViewDetailedPostPage from "./pages/post-pages/View-detailed-post.page";
 import SearchPage from "./pages/Search.page";
-import LoadingView from "./components/layout/Loading";
+import { OnLoadingErrorView, LoadingView } from "./components/layout/Loading";
 
 /**
  * Routes that should not show the sidebar
@@ -28,7 +28,25 @@ const HIDE_SIDEBAR_ROUTES = ["/login"];
  *
  */
 function AuthenticatedRouter() {
-  const { data, isPending } = useMe();
+  const { data, isPending, error, refetch } = useMe();
+
+  if (error)
+    toast.error(
+      "Failed to verify authentication status! Please try again later."
+    );
+
+  if (error)
+    return (
+      <OnLoadingErrorView
+        message={
+          <>
+            We’re having trouble verifying your access.
+            <br /> Please try again later.
+          </>
+        }
+        onRetry={() => refetch()}
+      />
+    );
 
   if (isPending) return <LoadingView />; // TODO: better loading view
 
@@ -42,7 +60,27 @@ function AuthenticatedRouter() {
  *
  */
 function UnauthenticatedRouter() {
-  const { data, isPending } = useMe();
+  const { data, isPending, error, refetch } = useMe();
+
+  useEffect(() => {
+    if (error)
+      toast.error(
+        "Failed to verify authentication status! Please try again later."
+      );
+  }, [error]);
+
+  if (error)
+    return (
+      <OnLoadingErrorView
+        message={
+          <>
+            We’re having trouble verifying your access.
+            <br /> Please try again later.
+          </>
+        }
+        onRetry={() => refetch()}
+      />
+    );
 
   if (isPending) return <LoadingView />; // TODO: better loading view
 

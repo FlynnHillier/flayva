@@ -24,6 +24,20 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ClassNameValue } from "tailwind-merge";
+import { POST } from "@flayva-monorepo/shared/constants";
+
+/**
+ * Dropzone configuration
+ * Used to configure the dropzone options for file upload
+ */
+const DROPZONE_CONFIG: DropzoneOptions = {
+  maxFiles: POST.POST_IMAGE_MAX_COUNT,
+  maxSize: POST.POST_IMAGE_MAX_FILE_SIZE,
+  multiple: POST.POST_IMAGE_MAX_COUNT > 1,
+  accept: {
+    "image/*": [],
+  },
+};
 
 type ImageUploadContext = {
   images: File[];
@@ -87,19 +101,6 @@ const FileUploadImagePlaceholder = ({
   className?: ClassNameValue;
 }) => {
   const { images, setImages } = useImageUpload();
-
-  /**
-   * Dropzone configuration
-   */
-  const DROPZONE_CONFIG: DropzoneOptions = {
-    maxFiles: 5,
-    maxSize: 1024 * 1024 * 4,
-    multiple: true,
-    accept: {
-      "image/jpeg": [],
-      "image/png": [],
-    },
-  };
 
   return (
     <FileUploader

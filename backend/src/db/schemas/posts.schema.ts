@@ -1,4 +1,5 @@
 import { users } from "@/db/schema";
+import { sql } from "drizzle-orm";
 import { recipes } from "@/db/schemas/recipes.schema";
 import { EMBEDDING, POST } from "@flayva-monorepo/shared/constants";
 import { relations } from "drizzle-orm";
@@ -20,7 +21,7 @@ export const posts = pgTable("posts", {
   recipeId: varchar("recipe_id")
     .notNull()
     .references(() => recipes.id, { onDelete: "cascade" }),
-  embedding: vector("embedding", { dimensions: EMBEDDING.EMBEDDING_DIM}).default([]),
+  embedding: vector("embedding", {dimensions: EMBEDDING.EMBEDDING_DIM})
 });
 
 export const post_likes = pgTable(

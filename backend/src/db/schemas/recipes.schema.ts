@@ -1,3 +1,4 @@
+import { sql } from "drizzle-orm";
 import { EMBEDDING, RECIPE } from "@flayva-monorepo/shared/constants";
 import { users } from "@/db/schema";
 import { posts } from "@/db/schemas/posts.schema";
@@ -81,7 +82,8 @@ export const tags = pgTable("tags", {
   id: integer("id").primaryKey(),
   name: varchar("name").notNull(),
   category: varchar("category").notNull(),
-  embedding: vector("embedding", {dimensions: EMBEDDING.EMBEDDING_DIM}).default([]),
+  emoji: varchar("emoji").notNull(),
+  embedding: vector("embedding", {dimensions: EMBEDDING.EMBEDDING_DIM})
 });
 
 export const recipe_ratings = pgTable("recipe_ratings", {

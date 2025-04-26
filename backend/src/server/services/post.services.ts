@@ -79,11 +79,20 @@ export const getPostsByOwnerId = (ownerId: string) =>
  * Get a feed of posts
  *
  */
-export const getFeed = async (excludePostIds: string[] = []) => {
-  const posts = await postRepo.getRecentPosts({
+export const getFeed = async (userId: string, excludePostIds: string[] = []) => {
+  if (!userId) {
+    const posts = await postRepo.getRecentPosts({
+      limit: 5,
+      where: (post, { not, inArray }) => not(inArray(post.id, excludePostIds)),
+    });
+
+    return posts;
+  }
+  const posts = await postRepo.getFeedForUser({
+    userId: userId,
     limit: 5,
-    where: (post, { not, inArray }) => not(inArray(post.id, excludePostIds)),
-  });
+    excludePostIds: excludePostIds,
+});
 
   return posts;
 };

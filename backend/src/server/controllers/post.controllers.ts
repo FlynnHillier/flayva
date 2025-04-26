@@ -64,12 +64,13 @@ export const getPostById: RequestHandler = async (
 export const getFeed: RequestHandler = async (req: Request, res: Response) => {
   // Exclude is an array of post IDs to exclude from the feed
   const { exclude } = req.query;
+  const userId = req.user!.id;
 
   const parsedExclude = Array.isArray(exclude)
     ? exclude.map((id) => String(id))
     : [];
 
-  const feed: Post[] = await postServices.getFeed(parsedExclude);
+  const feed: Post[] = await postServices.getFeed(req.user!.id, parsedExclude || []);
 
   res.status(200).send({
     feed,

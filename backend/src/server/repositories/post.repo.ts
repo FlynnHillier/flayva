@@ -10,12 +10,13 @@ import {
   recipe_tags,
   recipes,
   tags as tagsTable,
+  users,
 } from "@/db/schema";
 import { createNewPostSchema } from "@flayva-monorepo/shared/validation/post.validation";
 import { z } from "zod";
 import { UploadedFileData } from "uploadthing/types";
 import { DbFindManyParams } from "@/types/db.types";
-import { and, asc, eq, inArray, or, sql, gt, lte } from "drizzle-orm";
+import { and, asc, eq, inArray, or, sql, gt, lte, not } from "drizzle-orm";
 import { RecipeTag } from "@flayva-monorepo/shared/types";
 import { NestedRepositoryObject } from "@/types/api.types";
 import { EMBEDDING_DIM } from "@flayva-monorepo/shared/constants/embedding.constants";
@@ -321,6 +322,7 @@ export const getPosts = async (
       id: true,
       recipeId: true,
       created_at: true,
+      embedding: true,
     },
     with: {
       owner: {
@@ -344,6 +346,7 @@ export const getPosts = async (
                   emoji: true,
                   id: true,
                   name: true,
+                  embedding: true,
                 },
               },
             },
@@ -605,6 +608,40 @@ export const interactions = {
         .onConflictDoNothing()
         .returning();
 
+      if (liked) {
+        const [postEmbedding] = await db
+          .select({ embedding: posts.embedding })
+          .from(posts)
+          .where(eq(posts.id, postId))
+          .execute();
+      
+        const [user] = await db
+          .select({ embedding: users.embedding })
+          .from(users)
+          .where(eq(users.id, userId))
+          .execute();
+
+        const [interactions] = await db
+          .select({ interactions: users.interactions })
+          .from(users)
+          .where(eq(users.id, userId))
+          .execute();
+      
+        if (postEmbedding?.embedding && interactions?.interactions) {
+          const userEmbedding = user?.embedding ?? Array(postEmbedding.embedding.length).fill(0);
+        
+          const updatedEmbedding = userEmbedding.map((val, i) =>
+            (val + (postEmbedding.embedding?.[i] ?? 0)) / (interactions.interactions + 1)
+          );
+        
+          await db
+            .update(users)
+            .set({ embedding: updatedEmbedding, interactions: interactions.interactions + 1 })
+            .where(eq(users.id, userId));
+        }
+        
+      }
+
       return liked as typeof liked | undefined;
     },
     remove: async (postId: string, userId: string) => {
@@ -615,6 +652,40 @@ export const interactions = {
         )
         .returning()
         .execute();
+
+        if (deleted) {
+          const [postEmbedding] = await db
+            .select({ embedding: posts.embedding })
+            .from(posts)
+            .where(eq(posts.id, postId))
+            .execute();
+        
+          const [user] = await db
+            .select({ embedding: users.embedding })
+            .from(users)
+            .where(eq(users.id, userId))
+            .execute();
+  
+          const [interactions] = await db
+            .select({ interactions: users.interactions })
+            .from(users)
+            .where(eq(users.id, userId))
+            .execute();
+        
+          if (postEmbedding?.embedding && interactions?.interactions) {
+            const userEmbedding = user?.embedding ?? Array(postEmbedding.embedding.length).fill(0);
+          
+            const updatedEmbedding = userEmbedding.map((val, i) =>
+              (val * interactions.interactions - (postEmbedding.embedding?.[i] ?? 0)) / (interactions.interactions - 1)
+            );
+          
+            await db
+              .update(users)
+              .set({ embedding: updatedEmbedding, interactions: interactions.interactions - 1 })
+              .where(eq(users.id, userId));
+          }
+          
+        }
 
       return deleted as typeof deleted | undefined;
     },
@@ -668,6 +739,58 @@ export const createPostLikeInteraction = (userId: string, postId: string) =>
     .returning();
 
 /**
+ * Utility function to compute cosine similarity between two vectors.
+ */
+function cosineSimilarity(a: number[], b: number[]): number {
+  const dot = a.reduce((sum, val, i) => sum + val * b[i], 0);
+  const magA = Math.sqrt(a.reduce((sum, val) => sum + val * val, 0));
+  const magB = Math.sqrt(b.reduce((sum, val) => sum + val * val, 0));
+  return magA && magB ? dot / (magA * magB) : 0;
+}
+
+/**
+ * Get a feed of posts for a user, sorted by similarity to the user's embedding.
+ * @param userId - The ID of the user
+ * @param limit - The number of posts to return (default 10)
+ */
+export const getFeedForUser = async ({
+  userId,
+  limit = 10,
+  excludePostIds = [],
+}: {
+  userId: string;
+  limit?: number;
+  excludePostIds?: string[];
+}) => {
+  const [user] = await db
+    .select({ embedding: users.embedding })
+    .from(users)
+    .where(eq(users.id, userId))
+    .execute();
+
+  if (!user?.embedding) {
+    throw new Error("User embedding not found");
+  }
+
+  const postsWithEmbeddings = await getPosts({
+    where: (posts, { and, not, inArray, sql }) =>
+      and(
+        sql`posts.embedding IS NOT NULL`,
+        excludePostIds.length > 0 ? not(inArray(posts.id, excludePostIds)) : sql`TRUE`
+      ),
+  });
+
+  const postsWithSimilarity = postsWithEmbeddings.map((post) => ({
+    ...post,
+    similarity: cosineSimilarity(user.embedding!, post.embedding!),
+  }));
+
+  postsWithSimilarity.sort((a, b) => b.similarity - a.similarity);
+
+  return postsWithSimilarity.slice(0, limit);
+};
+
+/**
  * Default export including all functions from this file
  */
 
@@ -682,6 +805,7 @@ export default {
   getPostPreviewsByPostIds,
   getPostByRecipeId,
   getTagList,
+  getFeedForUser,
   getPostIdsByTagsAndSimilarTitle,
   createPostLikeInteraction,
   interactions,

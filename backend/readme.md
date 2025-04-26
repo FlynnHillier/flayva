@@ -7,6 +7,12 @@
 1. [Download PostgreSQL](https://www.postgresql.org/download/)
 1. Download a table editor (I use [table plus](https://tableplus.com/download))
 
+### PGVECTOR installation
+
+1. Follow the guide to install pgvector extension: (https://github.com/pgvector/pgvector)
+2. Run `CREATE EXTENSION vector;` in your database
+3. There might be problems with the installation if this command throws an error
+
 ### Schema
 
 In order to update your PostgreSQL tables to reflect the structure defined within `src/db/schema.ts`

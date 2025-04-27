@@ -36,7 +36,7 @@ const UserSearchResultCard = ({ user }: { user: User }) => (
 
 export default function UserSearchResults() {
   const { mode, searchQuery } = useSearchBar();
-  const [debouncedSearchQuery] = useDebounce(searchQuery, 500);
+  const debouncedSearchQuery = useDebounce(searchQuery, 500);
 
   const {
     data,

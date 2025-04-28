@@ -6,7 +6,7 @@
   "dependencies": {},
   "scripts": {
     "build": "tsc --build",
-    "clean": "rimraf dist",
+    "clean": "rimraf dist && rimraf tsconfig.tsbuildinfo",
     "prebuild": "pnpm run clean"
   }
 }

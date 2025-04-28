@@ -8,8 +8,8 @@
     "zod": "3.24.2"
   },
   "scripts": {
-    "build": "tsc --build --force",
-    "clean": "rimraf dist",
+    "build": "tsc --build",
+    "clean": "rimraf dist && rimraf tsconfig.tsbuildinfo",
     "prebuild": "pnpm run clean"
   }
 }

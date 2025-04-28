@@ -9,8 +9,8 @@
     "zod-form-data": "^2.0.7"
   },
   "scripts": {
-    "build": "tsc --build --force",
-    "clean": "rimraf dist",
+    "build": "tsc --build",
+    "clean": "rimraf dist && rimraf tsconfig.tsbuildinfo",
     "prebuild": "pnpm run clean"
   }
 }

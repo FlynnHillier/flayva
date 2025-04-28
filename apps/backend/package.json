@@ -11,7 +11,9 @@
     "db:generate-data": "tsx ./scripts/dummy-data/generate-data.ts",
     "parse:ingredients": "tsx ./scripts/parse-foodb.ts",
     "db:setup": "tsx ./scripts/seed.ts",
-    "build": "tsc --build && tsc-alias && ts-add-js-extension --dir=dist --allowJs"
+    "build": "tsc --build && tsc-alias",
+    "prebuild": "pnpm run clean",
+    "clean": "rimraf dist && rimraf tsconfig.tsbuildinfo"
   },
   "keywords": [],
   "author": "flynnhillier",
@@ -29,7 +31,6 @@
     "@types/pg": "^8.11.11",
     "@types/qs": "^6.9.18",
     "drizzle-kit": "^0.30.4",
-    "ts-add-js-extension": "^1.6.5",
     "tsc-alias": "^1.8.15",
     "tsx": "^4.19.2",
     "typescript": "~5.7.2"

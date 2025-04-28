@@ -79,7 +79,7 @@ const DUMMY_POST_DATA: {
         { instruction: "Assemble nigiri pieces" },
         { instruction: "Roll maki with bamboo mat" },
       ],
-      tags: [{ id: 88 }, { id: 92 }, { id: 17 }, { id: 63 }],
+      tags: [{ id: 17 }, { id: 63 }],
     },
   },
   {
@@ -94,7 +94,7 @@ const DUMMY_POST_DATA: {
         { instruction: "Add blueberries" },
         { instruction: "Drizzle with dressing" },
       ],
-      tags: [{ id: 45 }, { id: 21 }, { id: 77 }],
+      tags: [{ id: 45 }, { id: 21 }],
     },
   },
   {
@@ -154,7 +154,7 @@ const DUMMY_POST_DATA: {
         { instruction: "Prepare Yorkshire puddings" },
         { instruction: "Make gravy from drippings" },
       ],
-      tags: [{ id: 27 }, { id: 39 }, { id: 61 }, { id: 72 }, { id: 83 }],
+      tags: [{ id: 27 }, { id: 39 }, { id: 61 }, { id: 72 }],
     },
   },
 ];

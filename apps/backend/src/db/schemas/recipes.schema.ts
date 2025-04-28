@@ -17,7 +17,7 @@ import {
   RECIPE_INGREDIENT_SUBGROUPS,
   RECIPE_ID_LENGTH,
   RECIPE_RATING_ID_LENGTH,
-} from "../../../../../packages/constants/src";
+} from "@flayva/constants";
 
 // ## ENUMS ##
 

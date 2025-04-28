@@ -2,7 +2,7 @@
   "name": "@flayva/types",
   "version": "1.0.0",
   "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "types": "dist/types/index.d.ts",
   "dependencies": {
     "@flayva/validation": "workspace:*",
     "zod": "3.24.2"

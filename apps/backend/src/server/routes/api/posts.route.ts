@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { POST as POST_VALIDATION } from "@flayva/validation";
 import { validateMultiPartFormData } from "@/server/middleware/validation.middleware";
-import { POST_IMAGE_MAX_COUNT } from "../../../../../../packages/constants/src";
+import { POST_IMAGE_MAX_COUNT } from "@flayva/constants";
 import { ensureAuthenticated } from "@/server/middleware/auth.middleware";
 
 import postControllers from "@/server/controllers/post.controllers";

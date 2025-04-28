@@ -2,7 +2,7 @@
   "name": "@flayva/constants",
   "version": "1.0.0",
   "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "types": "dist/types/index.d.ts",
   "dependencies": {},
   "scripts": {
     "build": "tsc --build",

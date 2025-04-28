@@ -1,6 +1,6 @@
 import { imageCompression } from "@/lib/compression";
 import { uploadthing } from "@/lib/uploadthing";
-import { POST_IMAGE_CLOUD_ID_LENGTH } from "../../../../../packages/constants/src";
+import { POST_IMAGE_CLOUD_ID_LENGTH } from "@flayva/constants";
 import { nanoid } from "nanoid";
 import sharp from "sharp";
 import { UploadedFileData, UploadFileResult } from "uploadthing/types";

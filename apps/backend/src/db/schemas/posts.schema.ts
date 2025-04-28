@@ -1,6 +1,6 @@
 import { users } from "@/db/schema";
 import { recipes } from "@/db/schemas/recipes.schema";
-import { POST_ID_LENGTH } from "../../../../../packages/constants/src";
+import { POST_ID_LENGTH } from "@flayva/constants";
 import { relations } from "drizzle-orm";
 import {
   pgTable,

@@ -1,6 +1,6 @@
 // TagSelector.tsx
-import { RecipeTag } from "@flayva-monorepo/shared/types";
-import { RECIPE } from "@flayva-monorepo/shared/constants";
+import type { RecipeTag } from "@flayva/types";
+import { RECIPE_TAGS } from "@flayva/constants";
 import Tag from "../tags/Tag";
 import { cn } from "@/lib/utils";
 import { useMemo } from "react";
@@ -21,7 +21,7 @@ export function TagSelector({
   // Categorise tags
   const categorisedTags = useMemo(
     () =>
-      RECIPE.RECIPE_TAGS.reduce<Record<string, RecipeTag[]>>(
+      RECIPE_TAGS.reduce<Record<string, RecipeTag[]>>(
         (acc, tag) => ({
           ...acc,
           [tag.category]: acc[tag.category]

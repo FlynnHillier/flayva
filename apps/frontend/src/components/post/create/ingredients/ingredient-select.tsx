@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/popover";
 import { useDebounce } from "use-debounce";
 
-import { RecipeIngredientItem } from "@flayva-monorepo/shared/types";
+import type { RecipeIngredientItem } from "@flayva/backend-types";
 
 /**
  * A component that allows the user to search for ingredients and select one from a list.

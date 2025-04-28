@@ -1,10 +1,7 @@
 import { request } from "@/lib/network";
 import { ApiObject } from "@/types/util/api";
-import {
-  RecipeIngredientItem,
-  RecipeRating,
-  RecipeTag,
-} from "@flayva-monorepo/shared/types";
+import { RecipeTag } from "@flayva/types";
+import { RecipeIngredientItem, RecipeRating } from "@flayva/backend-types";
 
 export const querySuggestedSimilarTags = async (tagQuery: string) => {
   const { data } = await request({

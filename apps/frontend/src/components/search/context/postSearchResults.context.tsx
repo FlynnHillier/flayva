@@ -1,5 +1,5 @@
 import { useInfiniteScrollTitleAndTagsPostPreviews } from "@/hooks/post.hooks";
-import { PostPreview } from "@flayva-monorepo/shared/types";
+import type { PostPreview } from "@flayva/backend-types";
 import React, { ReactNode, useMemo } from "react";
 import { useDebounce } from "use-debounce";
 import { useSearchBar } from "./searchBar.context";

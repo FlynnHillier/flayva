@@ -9,7 +9,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@components/ui/dialog";
-import { SOCIAL } from "@flayva-monorepo/shared/validation";
+import { SOCIAL } from "@flayva/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ReactNode, useCallback, useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -28,16 +28,16 @@ import { FileUploader, FileInput } from "../ui/file-upload";
 import { Pencil } from "lucide-react";
 import { useMe } from "@/hooks/auth.hooks";
 import { ProfilePicture } from "./profile-common";
-import { User } from "@flayva-monorepo/shared/types";
+import type { User, UpdateProfileFormSchemaType } from "@flayva/types";
 import { Button } from "../ui/button";
 import { Textarea } from "../ui/textarea";
 import { cn } from "@/lib/utils";
 import { ClassNameValue } from "tailwind-merge";
 import { type DropzoneOptions } from "react-dropzone";
-import { SOCIAL as SOCIAL_CONSTANTS } from "@flayva-monorepo/shared/constants";
+import { SOCIAL_AVATAR_IMAGE_MAX_FILE_SIZE } from "@flayva/constants";
 
 const DROPZONE_CONFIG: DropzoneOptions = {
-  maxSize: SOCIAL_CONSTANTS.SOCIAL_AVATAR_IMAGE_MAX_FILE_SIZE,
+  maxSize: SOCIAL_AVATAR_IMAGE_MAX_FILE_SIZE,
   multiple: false,
   maxFiles: 2,
   accept: {
@@ -193,7 +193,8 @@ export const EditProfileForm = ({
   className?: ClassNameValue;
   onUnsavedChanges?: (isUnsavedChanges: boolean) => void;
 }) => {
-  const form = useForm<z.infer<typeof SOCIAL.updateProfileFormSchema>>({
+  const form = useForm<UpdateProfileFormSchemaType>({
+    //@ts-ignore TODO: remove this when zod is updated !
     resolver: zodResolver(SOCIAL.updateProfileFormSchema),
     defaultValues: {
       username: user.username,

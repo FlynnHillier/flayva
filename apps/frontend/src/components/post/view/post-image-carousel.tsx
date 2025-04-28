@@ -7,7 +7,7 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { uploadThingFileUrlFromKey } from "@/lib/ut";
 import { cn } from "@/lib/utils";
-import { Post } from "@flayva-monorepo/shared/types";
+import type { Post } from "@flayva/backend-types";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { ComponentProps, useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";

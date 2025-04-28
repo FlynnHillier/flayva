@@ -1,12 +1,11 @@
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { TagSelector } from "@/components/tags/TagSelector";
 import { cn } from "@/lib/utils";
 import { X as RemoveIcon } from "lucide-react";
 import { useEffect, useCallback, useState } from "react";
 import { useDebounce } from "use-debounce";
 import { useQuery } from "@tanstack/react-query";
-import { RecipeTag } from "@flayva-monorepo/shared/types";
+import { RecipeTag } from "@flayva/types";
 import { queries } from "@/queries";
 
 function SelectedTag({

@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { FourSquare } from "react-loading-indicators";
 import { ClassNameValue } from "tailwind-merge";
 import { cn } from "@/lib/utils";
-import { RecipeRating } from "@flayva-monorepo/shared/types";
+import type { RecipeRating } from "@flayva/backend-types";
 
 export const RatingsInfiniteGrid = ({
   recipeId,

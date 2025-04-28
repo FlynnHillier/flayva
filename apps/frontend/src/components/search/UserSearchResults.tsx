@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { User } from "@flayva-monorepo/shared/types";
+import type { User } from "@flayva/types";
 import { useInfiniteUserSearch } from "@/hooks/social.hooks";
 import { useDebounce } from "@/hooks/useDebounce.hooks";
 import { useInView } from "react-intersection-observer";

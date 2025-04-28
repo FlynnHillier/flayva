@@ -1,5 +1,5 @@
 import { request } from "@/lib/network";
-import { RecipeTag } from "@flayva-monorepo/shared/types";
+import { RecipeTag } from "@flayva/types";
 
 export const tags = {
   getTagList: async () => {

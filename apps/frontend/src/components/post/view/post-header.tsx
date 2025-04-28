@@ -1,7 +1,7 @@
 import { Skeleton } from "@/components/ui/skeleton";
 import { usePost } from "@/contexts/post.context";
 import { capitalizeFirstLetter, cn } from "@/lib/utils";
-import { User } from "@flayva-monorepo/shared/types";
+import type { User } from "@flayva/types";
 import { ProfilePicture } from "@/components/profile/profile-common";
 import { Link } from "react-router-dom";
 import { PostRatingSummary } from "./post-interactions";

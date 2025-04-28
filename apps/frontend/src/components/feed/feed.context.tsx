@@ -1,5 +1,5 @@
 import { useInfiniteScrollFeed } from "@/hooks/post.hooks";
-import { Post } from "@flayva-monorepo/shared/types";
+import type { Post } from "@flayva/backend-types";
 import {
   createContext,
   useCallback,

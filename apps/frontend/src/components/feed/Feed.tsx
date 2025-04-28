@@ -7,7 +7,7 @@ import {
 } from "../ui/carousel";
 import { useFeed } from "./feed.context";
 import { ChevronDown, ChevronUp, ExternalLink } from "lucide-react";
-import { Post } from "../../../../backend/src/types/exported/post.types";
+import type { Post } from "@flayva/backend-types";
 import { cn } from "@/lib/utils";
 import React, { useEffect, useRef, useState } from "react";
 import { FeedSidebar } from "./FeedSidebar";

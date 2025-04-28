@@ -1,5 +1,5 @@
 // TagSelectorSidebar.tsx
-import { RecipeTag } from "@flayva-monorepo/shared/types";
+import { RecipeTag } from "@flayva/types";
 import { useSearchBar } from "../search/context/searchBar.context";
 import { TagSelector } from "./TagSelector";
 import { cn } from "@/lib/utils";

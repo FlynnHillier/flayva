@@ -1,5 +1,5 @@
 import { ProfilePicture } from "@/components/profile/profile-common";
-import { type RecipeRating } from "@flayva-monorepo/shared/types";
+import type { RecipeRating } from "@flayva/backend-types";
 import { PostRating } from "./ratings-common";
 import { ClassNameValue } from "tailwind-merge";
 import { cn } from "@/lib/utils";

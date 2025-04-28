@@ -3,7 +3,7 @@ import { X } from "lucide-react";
 import { useSearchBar } from "../search/context/searchBar.context";
 import { TagSelector } from "./TagSelector";
 import { cn } from "@/lib/utils";
-import { RecipeTag } from "@flayva-monorepo/shared/types";
+import { RecipeTag } from "@flayva/types";
 
 export function TagSelectorMobile() {
   const { setShowFilters, showFilters, setFilterTagIds, filterTagIds } =

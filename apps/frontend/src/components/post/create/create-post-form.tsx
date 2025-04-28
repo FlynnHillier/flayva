@@ -12,9 +12,8 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
-import { POST as POST_VALIDATOR } from "@flayva-monorepo/shared/validation";
+import { POST } from "@flayva/validation";
 import { toast } from "sonner";
 import { Input } from "../../ui/input";
 import IngredientsHandler from "./ingredients/ingredients";
@@ -26,15 +25,14 @@ import {
 } from "./instructions/instructions";
 import { useNavigate } from "react-router-dom";
 import { TagSelector } from "@/components/tags/TagSelector";
-import { RECIPE } from "@flayva-monorepo/shared/constants";
-
-const { createNewPostSchema } = POST_VALIDATOR;
+import { CreateNewPostFormSchemaType, RecipeTag } from "@flayva/types";
 
 export default function CreateNewPostForm() {
   const [isDisabled, setIsDisabled] = useState<boolean>(false);
   const navigate = useNavigate();
-  const form = useForm<z.infer<typeof createNewPostSchema>>({
-    resolver: zodResolver(createNewPostSchema),
+  const form = useForm<CreateNewPostFormSchemaType>({
+    //@ts-ignore //TODO: remove!
+    resolver: zodResolver(POST.createNewPostFormSchema),
     defaultValues: {
       images: [],
       recipe: {
@@ -70,7 +68,7 @@ export default function CreateNewPostForm() {
   });
 
   const handleSubmit = useCallback(
-    (values: z.infer<typeof createNewPostSchema>) => {
+    (values: CreateNewPostFormSchemaType) => {
       mutate(values);
     },
     [mutate]
@@ -156,7 +154,7 @@ export default function CreateNewPostForm() {
             // field.value is an array of RecipeTag objects
             const selectedTagIds = field.value.map((tag) => tag.id);
 
-            const handleToggleTag = (tag) => {
+            const handleToggleTag = (tag: RecipeTag) => {
               if (selectedTagIds.includes(tag.id)) {
                 const updated = field.value.filter((t) => t.id !== tag.id);
                 form.setValue("recipe.tags", updated);

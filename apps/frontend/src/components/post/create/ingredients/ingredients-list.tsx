@@ -1,7 +1,7 @@
 import { Card } from "@components/ui/card";
 import { Button } from "@components/ui/button";
-import { Pen, Trash2 } from "lucide-react";
-import { RecipeIngredientEntry } from "@flayva-monorepo/shared/types";
+import { Trash2 } from "lucide-react";
+import type { RecipeIngredientEntry } from "@flayva/types";
 
 /**
  * A component that displays a single complete ingredient item

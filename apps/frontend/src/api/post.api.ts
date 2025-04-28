@@ -1,12 +1,9 @@
 import { UnexpectedResponseFormatError } from "@/api/errors/api-errors";
 import { request } from "@/lib/network";
-import { Post, PostPreview } from "@flayva-monorepo/shared/types";
-import { createNewPostSchema } from "@flayva-monorepo/shared/validation/post.validation";
-import { z } from "zod";
+import { Post, PostPreview } from "@flayva/backend-types";
+import type { CreateNewPostFormSchemaType } from "@flayva/types";
 
-export async function createNewPost(
-  postData: z.infer<typeof createNewPostSchema>
-) {
+export async function createNewPost(postData: CreateNewPostFormSchemaType) {
   const fd = new FormData();
 
   postData.images.forEach((image) => {

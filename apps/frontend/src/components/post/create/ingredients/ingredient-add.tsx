@@ -7,13 +7,14 @@ import {
   SelectItem,
 } from "@/components/ui/select";
 
-import { RECIPE } from "@flayva-monorepo/shared/validation";
+import { RECIPE } from "@flayva/validation";
 import { useCallback, useMemo, useState } from "react";
-import {
+import type {
   RecipeIngredientEntry,
-  RecipeIngredientItem,
   RecipeIngredientUnit,
-} from "@flayva-monorepo/shared/types";
+} from "@flayva/types";
+import type { RecipeIngredientItem } from "@flayva/backend-types";
+
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { IngredientSelect } from "./ingredient-select";

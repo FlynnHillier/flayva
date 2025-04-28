@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { RecipeTag } from "@flayva-monorepo/shared/types";
+import type { RecipeTag } from "@flayva/types";
 import { ClassNameValue } from "tailwind-merge";
 
 export default function Tag({

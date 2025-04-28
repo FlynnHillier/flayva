@@ -7,7 +7,10 @@ import { Input } from "../../../ui/input";
 import { useState, useRef, useCallback, useMemo, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { type InstructionItem as InstructionItemType } from "./instructions";
-import { RECIPE } from "@flayva-monorepo/shared/constants";
+import {
+  RECIPE_INSTRUCTION_MIN_STEP_LENGTH,
+  RECIPE_INSTRUCTION_MAX_STEP_LENGTH,
+} from "@flayva/constants";
 
 /**
  * A component to view and manage a single instruction item in the recipe creation process.
@@ -35,10 +38,8 @@ export const InstructionItem = ({
 
   const isValidEdit = useMemo(
     () =>
-      instructionTextPreview.length >=
-        RECIPE.RECIPE_INSTRUCTION_MIN_STEP_LENGTH &&
-      instructionTextPreview.length <=
-        RECIPE.RECIPE_INSTRUCTION_MAX_STEP_LENGTH,
+      instructionTextPreview.length >= RECIPE_INSTRUCTION_MIN_STEP_LENGTH &&
+      instructionTextPreview.length <= RECIPE_INSTRUCTION_MAX_STEP_LENGTH,
     [instructionTextPreview]
   );
 

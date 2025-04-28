@@ -1,4 +1,4 @@
-import { type PostPreview as PostPreviewType } from "@flayva-monorepo/shared/types";
+import { type PostPreview as PostPreviewType } from "@flayva/backend-types";
 import { Link } from "react-router-dom";
 import PostPreviewTags from "../tags/PostPreviewTags";
 import { uploadThingFileUrlFromKey } from "@/lib/ut";

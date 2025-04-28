@@ -1,9 +1,8 @@
 import { useAddRecipeRating } from "@/hooks/recipe.hooks";
-import { RECIPE } from "@flayva-monorepo/shared/validation";
+import { RECIPE } from "@flayva/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { z } from "zod";
 import { PostRating } from "./ratings-common";
 import {
   Form,
@@ -15,6 +14,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { CreateNewRatingFormSchemaType } from "@flayva/types";
 
 const RecipeRatingPhrase = ({ rating }: { rating: number }) => {
   switch (rating) {
@@ -49,8 +49,8 @@ export const AddRecipeRatingForm = ({
       toast.success("Rating added successfully!");
     },
   });
-  const form = useForm<z.infer<typeof RECIPE.createNewRatingSchema>>({
-    resolver: zodResolver(RECIPE.createNewRatingSchema),
+  const form = useForm<CreateNewRatingFormSchemaType>({
+    resolver: zodResolver(RECIPE.createNewRatingFormSchema),
     defaultValues: {
       rating: 0,
       review: "",

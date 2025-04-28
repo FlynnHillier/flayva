@@ -1,4 +1,4 @@
-import { User } from "@flayva-monorepo/shared/types";
+import { User } from "@flayva/types";
 import { Skeleton } from "../ui/skeleton";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { ClassNameValue } from "tailwind-merge";
@@ -11,7 +11,8 @@ export const ProfilePicture = ({
   user?: User;
   className?: ClassNameValue;
 }) => {
-  if (!user) return <Skeleton className={cn("w-20 h-20", className, "rounded-full")} />;
+  if (!user)
+    return <Skeleton className={cn("w-20 h-20", className, "rounded-full")} />;
 
   return (
     <Avatar className={cn("w-20 h-20 border-2", className)}>

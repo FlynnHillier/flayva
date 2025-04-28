@@ -24,16 +24,19 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ClassNameValue } from "tailwind-merge";
-import { POST } from "@flayva-monorepo/shared/constants";
+import {
+  POST_IMAGE_MAX_COUNT,
+  POST_IMAGE_MAX_FILE_SIZE,
+} from "@flayva/constants";
 
 /**
  * Dropzone configuration
  * Used to configure the dropzone options for file upload
  */
 const DROPZONE_CONFIG: DropzoneOptions = {
-  maxFiles: POST.POST_IMAGE_MAX_COUNT,
-  maxSize: POST.POST_IMAGE_MAX_FILE_SIZE,
-  multiple: POST.POST_IMAGE_MAX_COUNT > 1,
+  maxFiles: POST_IMAGE_MAX_COUNT,
+  maxSize: POST_IMAGE_MAX_FILE_SIZE,
+  multiple: POST_IMAGE_MAX_COUNT > 1,
   accept: {
     "image/*": [],
   },

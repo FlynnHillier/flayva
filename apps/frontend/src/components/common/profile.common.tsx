@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { User } from "@flayva-monorepo/shared/types";
+import { User } from "@flayva/types";
 import { Link } from "react-router-dom";
 import { ProfilePicture } from "../profile/profile-common";
 import { Skeleton } from "../ui/skeleton";

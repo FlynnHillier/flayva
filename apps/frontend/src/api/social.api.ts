@@ -1,9 +1,11 @@
 import { UnexpectedResponseFormatError } from "@/api/errors/api-errors";
 import { request } from "@/lib/network";
 import { NoRetryQueryError } from "@/lib/query";
-import { ProfilePreview, User } from "@flayva-monorepo/shared/types";
-import { updateProfileFormSchema } from "@flayva-monorepo/shared/validation/social.validation";
-import { z } from "zod";
+import {
+  ProfilePreview,
+  User,
+  UpdateProfileFormSchemaType,
+} from "@flayva/types";
 
 /**
  * Fetches the user's profile information from the server.
@@ -89,9 +91,7 @@ export async function getOwnFollowingUserStatus(userId: string) {
   return { isFollowing: data.isFollowing } as { isFollowing: boolean };
 }
 
-export async function updateProfile(
-  postData: z.infer<typeof updateProfileFormSchema>
-) {
+export async function updateProfile(postData: UpdateProfileFormSchemaType) {
   const fd = new FormData();
 
   if (postData.avatar) {

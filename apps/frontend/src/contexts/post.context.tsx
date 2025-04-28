@@ -1,6 +1,12 @@
 import { useGetPostById } from "@/hooks/post.hooks";
-import { Post } from "@flayva-monorepo/shared/types";
-import { createContext, ReactNode, useContext, useEffect, useState } from "react";
+import type { Post } from "@flayva/backend-types";
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 
 interface PostViewContextType {
   post?: Post;

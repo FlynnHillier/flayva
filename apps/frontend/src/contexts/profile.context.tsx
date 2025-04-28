@@ -1,5 +1,5 @@
 import { useFetchProfilePreview } from "@/hooks/social.hooks";
-import { ProfilePreview } from "@flayva-monorepo/shared/types";
+import type { ProfilePreview } from "@flayva/types";
 import { createContext, ReactNode, useContext, useState } from "react";
 
 interface ProfileContextType {

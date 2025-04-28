@@ -1,7 +1,7 @@
 import { Skeleton } from "@/components/ui/skeleton";
 import { usePost } from "@/contexts/post.context";
 import { cn } from "@/lib/utils";
-import { Post } from "@flayva-monorepo/shared/types";
+import type { Post } from "@flayva/backend-types";
 import { useMemo } from "react";
 import { ClassNameValue } from "tailwind-merge";
 

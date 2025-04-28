@@ -1,4 +1,4 @@
-import { RecipeTag } from "@flayva-monorepo/shared/types";
+import type { RecipeTag } from "@flayva/types";
 import Tag from "./Tag";
 import { useEffect, useRef, useState } from "react";
 

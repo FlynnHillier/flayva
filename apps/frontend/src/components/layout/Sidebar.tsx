@@ -15,8 +15,6 @@ import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { useMemo } from "react";
 import { cn } from "@/lib/utils";
-import { Avatar, AvatarImage } from "../ui/avatar";
-import { AvatarFallback } from "@radix-ui/react-avatar";
 import { ProfilePicture } from "../profile/profile-common";
 
 const items = [

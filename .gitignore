@@ -9,4 +9,4 @@ dist
 
 
 # data
-/backend/data/*.json
+/apps/backend/data/*.json

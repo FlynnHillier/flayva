@@ -1,0 +1,15 @@
+{
+  "name": "@flayva/backend-types",
+  "type": "module",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "dependencies": {
+    "@flayva/backend": "workspace:../../apps/backend"
+  },
+  "scripts": {
+    "build": "tsc --build",
+    "clean": "rimraf dist",
+    "prebuild": "pnpm run clean"
+  }
+}

@@ -1,18 +1,34 @@
+// {
+//   "compilerOptions": {
+//     "target": "ES2020",
+//     "module": "commonjs",
+//     "lib": ["ES2020"],
+//     "strict": true,
+//     "moduleResolution": "node",
+//     "skipLibCheck": true,
+//     "forceConsistentCasingInFileNames": true,
+//     "resolveJsonModule": true,
+//     "sourceMap": true,
+//     "baseUrl": ".",
+//     "paths": {
+//       "@flayva-monorepo/shared": ["shared/src"]
+//     }
+//   },
+//   "exclude": ["node_modules", "**/dist"]
+// }
 {
   "compilerOptions": {
-    "target": "ES2020",
-    "module": "commonjs",
-    "lib": ["ES2020"],
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
     "strict": true,
-    "moduleResolution": "node",
-    "skipLibCheck": true,
+    "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "declaration": true,
+    "declarationMap": true,
     "sourceMap": true,
-    "baseUrl": ".",
-    "paths": {
-      "@flayva-monorepo/shared": ["shared/src"]
-    }
-  },
-  "exclude": ["node_modules", "**/dist"]
+    "incremental": true,
+    "composite": true
+  }
 }

@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "baseUrl": "."
+  },
+  "extends": "./tsconfig.base.json",
+  "files": [],
+  "references": [
+    { "path": "./apps/frontend" },
+    { "path": "./apps/backend" },
+    { "path": "./packages/constants" },
+    { "path": "./packages/validation" },
+    { "path": "./packages/types" },
+    { "path": "./packages/backend-types" }
+  ]
+}

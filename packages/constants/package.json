@@ -1,0 +1,12 @@
+{
+  "name": "@flayva/constants",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "dependencies": {},
+  "scripts": {
+    "build": "tsc --build",
+    "clean": "rimraf dist",
+    "prebuild": "pnpm run clean"
+  }
+}

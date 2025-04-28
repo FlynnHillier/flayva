@@ -1,0 +1,19 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "outDir": "dist",
+    "rootDir": "src",
+    "declarationDir": "dist/types",
+    "paths": {
+      "@flayva/*": ["../*/src"]
+    }
+  },
+  "include": ["src/**/*"],
+  "exclude": ["dist/**/*", "node_modules/**/*", "**/*.test.ts"],
+  "references": [
+    {
+      "path": "../constants"
+    }
+  ]
+}

@@ -17,16 +17,17 @@ Flayva is a food-oriented social media web app, that combines the social emphasi
 
 ### Enviroment
 
-1. In both the `backend` & `frontend` folders replace `.env.example` with a file called `.env.local` filling in each variable specified appropriately
+1. In both the `apps/` folders replace `.env.example` with a file called `.env.local` filling in each variable specified appropriately
 2. Values marked with a `?=` instead of a `=` are optional, however it is still recommended to specify them
 
-### Shared folder
+### Packages
 
-1. When changes have been made to the `shared` directory, run `pnpnm run build` while in the `shared` directory to build changes for access throughout the rest of the project
+1. The repository makes use of workspace packages to function - to install these use `pnpm run -w build`
+2. If error still exist after downloading, try manually deleting `node_modules/@flayva` from the affected folder and re-run `pnpm i`
 
 ### Extras
 
-1. Extra setup steps are specified in `backend/readme.md` & `frontend/readme.md` respectively
+1. Extra setup steps are specified in `apps/backend/readme.md` & `apps/frontend/readme.md` respectively
 
 # Running
 

@@ -1,0 +1,26 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "files": [],
+  "references": [
+    { "path": "./tsconfig.app.json" },
+    { "path": "./tsconfig.node.json" },
+    {
+      "path": "../../packages/constants"
+    },
+    {
+      "path": "../../packages/validation"
+    },
+    {
+      "path": "../../packages/types"
+    },
+    {
+      "path": "../../packages/backend-types"
+    }
+  ],
+  "compilerOptions": {
+    "baseUrl": "./",
+    "paths": {
+      "@/*": ["src/*"]
+    }
+  }
+}

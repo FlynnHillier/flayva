@@ -1,0 +1,15 @@
+{
+  "name": "@flayva/types",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "types": "dist/types/index.d.ts",
+  "dependencies": {
+    "@flayva/validation": "workspace:*",
+    "zod": "3.24.2"
+  },
+  "scripts": {
+    "build": "tsc --build",
+    "clean": "rimraf dist && rimraf tsconfig.tsbuildinfo",
+    "prebuild": "pnpm run clean"
+  }
+}

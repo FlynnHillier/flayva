@@ -1,0 +1,44 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "outDir": "./dist",
+    "rootDir": "./",
+    "strict": true,
+    "baseUrl": "./",
+    "paths": {
+      "@flayva/*": ["../../packages/*/src"],
+      "@/*": ["src/*"],
+      "@server/*": ["src/server/*"],
+      "@controllers/*": ["src/server/controllers/*"],
+      "@routes/*": ["src/server/routes/*"],
+      "@middleware/*": ["src/server/middleware/*"],
+      "@auth/*": ["src/auth/*"],
+      "@constants/*": ["src/constants/*"],
+      "@apptypes/*": ["src/types/*"]
+    },
+    "composite": true,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true
+  },
+  "include": ["src/**/*", "scripts/**/*"],
+  "exclude": ["../shared/node_modules"],
+  "references": [
+    {
+      "path": "../../packages/constants"
+    },
+    {
+      "path": "../../packages/validation"
+    },
+    {
+      "path": "../../packages/types"
+    }
+  ],
+  "tsc-alias": {
+    "resolveFullPaths": true
+  }
+}

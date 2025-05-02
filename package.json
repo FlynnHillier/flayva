@@ -6,10 +6,13 @@
   "main": "index.js",
   "scripts": {
     "start:dev": "pnpm --stream -r run start:dev",
-    "build": "pnpm --stream -r run build",
     "start": "pnpm --stream -r run start",
     "dev:frontend": "pnpm --filter frontend run start:dev",
-    "dev:backend": "pnpm --filter backend run start:dev"
+    "dev:backend": "pnpm --filter backend run start:dev",
+    "build:packages": "pnpm -r --filter \"@flayva/constants\" --filter \"@flayva/validation\" --filter \"@flayva/types\" --filter --workspace-concurrency 1 build",
+    "prebuild": "pnpm i",
+    "clean": "pnpm -r clean",
+    "build": "pnpm run build:packages && pnpm --filter \"backend\" run build && pnpm --filter \"@flayva/backend-types\" --workspace-concurrency 1 build"
   },
   "keywords": [],
   "author": "flynnhillier",
@@ -17,6 +20,7 @@
   "devDependencies": {
     "@types/node": "^22.13.4",
     "nodemon": "^3.1.9",
+    "rimraf": "^6.0.1",
     "tsx": "^4.19.2",
     "typescript": "~5.7.2"
   }
